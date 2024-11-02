@@ -14,9 +14,9 @@
 
 以下の目的のために作りました。
 
-[x] スクリプトフローと実際の動作を直感的に一致させる
-[x] スクリプトの依存関係をシーンに対する一方向にまとめる
-[x] 他のアドオンの待機にまつわる処理を共通化する
+* スクリプトフローと実際の動作を直感的に一致させる
+* スクリプトの依存関係をシーンに対する一方向にまとめる
+* 他のアドオンの待機にまつわる処理を共通化する
 
 <br />
 
@@ -34,7 +34,7 @@
 3. プロジェクト設定から XDUT Task を有効にします。
 
 > [!TIP]
-> このアドオンは [Godot Engine](https://github.com/godotengine/godot) 及び [Redot Engine](https://github.com/Redot-Engine/redot-engine) に対応しています。
+> このアドオンは Godot Engine 及び Redot Engine に対応しています。
 >
 > * Godot Engine 4.3 ~
 > * Redot Engine 4.3 Beta 2 ~
@@ -43,19 +43,18 @@
 
 ## クラスリファレンス
 
-[Wiki](https://github.com/ydipeepo/xdut-task/wiki) にまとめてあります。
+📖 [Wiki](https://github.com/ydipeepo/xdut-task/wiki) にまとめてあります。
 
 <br />
 
 ## バグの報告など
 
-バグの報告やドキュメント翻訳、改善の提案など歓迎いたします。<br />
-[Issues](https://github.com/ydipeepo/xdut-task/issues) からお願いします。
+バグの報告やドキュメント翻訳、改善の提案など歓迎いたします。
 
 <br />
 
 ## ライセンス
 
-[MIT](https://github.com/ydipeepo/xdut-task/blob/main/README) ライセンスです。
+[MIT](https://github.com/ydipeepo/xdut-task/blob/main/README.md) ライセンスです。
 
 <br />
