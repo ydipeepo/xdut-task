@@ -6,7 +6,7 @@
 非同期的スクリプティングを補助するためのアドオンです。
 
 > [!TIP]
-> [XDUT Wait](/ydipeepo/xdut-wait) もあります。
+> [XDUT Wait](https://github.com/ydipeepo/xdut-wait) もあります。
 
 <br />
 
@@ -34,7 +34,7 @@
 3. プロジェクト設定から XDUT Task を有効にします。
 
 > [!TIP]
-> このアドオンは [Godot Engine](/godotengine/godot) 及び [Redot Engine](/Redot-Engine/redot-engine) に対応しています。
+> このアドオンは [Godot Engine](https://github.com/godotengine/godot) 及び [Redot Engine](https://github.com/Redot-Engine/redot-engine) に対応しています。
 >
 > * Godot Engine 4.3 ~
 > * Redot Engine 4.3 Beta 2 ~
@@ -43,19 +43,19 @@
 
 ## クラスリファレンス
 
-[Wiki](./wiki) にまとめてあります。
+[Wiki](https://github.com/ydipeepo/xdut-task/wiki) にまとめてあります。
 
 <br />
 
 ## バグの報告など
 
 バグの報告やドキュメント翻訳、改善の提案など歓迎いたします。<br />
-[Issues](./issues) からお願いします。
+[Issues](https://github.com/ydipeepo/xdut-task/issues) からお願いします。
 
 <br />
 
 ## ライセンス
 
-[MIT](./blob/main/README.md) ライセンスです。
+[MIT](https://github.com/ydipeepo/xdut-task/blob/main/README) ライセンスです。
 
 <br />
