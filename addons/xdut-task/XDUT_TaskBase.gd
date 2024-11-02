@@ -31,6 +31,13 @@ class_name XDUT_TaskBase extends Task
 #	METHODS
 #-------------------------------------------------------------------------------
 
+static func get_canonical() -> Node:
+	if _canonical == null:
+		var main_loop := Engine.get_main_loop()
+		_canonical = main_loop.root.get_node("/root/XDUT_TaskCanonical")
+		assert(_canonical != null)
+	return _canonical
+
 func get_state() -> int:
 	return _state
 
@@ -108,13 +115,6 @@ static var _canonical: Node
 var _state: int = STATE_PENDING
 var _result: Variant
 var _cancel: Cancel
-
-static func get_canonical() -> Node:
-	if _canonical == null:
-		var main_loop := Engine.get_main_loop()
-		_canonical = main_loop.root.get_node("/root/XDUT_TaskCanonical")
-		assert(_canonical != null)
-	return _canonical
 
 func _wait() -> void:
 	assert(_state == STATE_PENDING_WITH_WAITERS)
