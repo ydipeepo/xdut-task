@@ -6,7 +6,7 @@
 非同期的スクリプティングを補助するためのアドオンです。
 
 > [!TIP]
-> 🔗 [XDUT Wait](https://github.com/ydipeepo/xdut-wait) もあります。
+> 🔗 抽象化とキャンセルを排除した軽量版の [XDUT Wait](https://github.com/ydipeepo/xdut-wait) もあります。
 
 <br />
 
