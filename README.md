@@ -55,6 +55,6 @@
 
 ## ライセンス
 
-[MIT](https://github.com/ydipeepo/xdut-task/blob/main/README.md) ライセンスです。
+[MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE) ライセンスです。
 
 <br />
