@@ -1,0 +1,53 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="XDUT Task"
+config/description="将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、非同期的スクリプティングを補助するためのアドオンです。"
+config/tags=PackedStringArray("xdut")
+run/main_scene="res://Test_Task.tscn"
+config/features=PackedStringArray("4.3", "GL Compatibility")
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/show_image=false
+boot_splash/fullsize=false
+boot_splash/use_filter=false
+
+[autoload]
+
+XDUT_TaskCanonical="*res://addons/xdut-task/XDUT_TaskCanonical.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=640
+window/size/resizable=false
+window/vsync/vsync_mode=0
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/xdut-task/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://addons/xdut-task/": "pink"
+}
+
+[filesystem]
+
+import/fbx2gltf/enabled=false
+import/blender/enabled=false
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)

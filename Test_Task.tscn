@@ -1,0 +1,628 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfu1el70148bc"]
+
+[ext_resource type="Script" path="res://Test_Task.gd" id="1_6j14v"]
+
+[node name="Test_Task" type="MarginContainer"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+localize_numeral_system = false
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
+script = ExtResource("1_6j14v")
+
+[node name="Container" type="VBoxContainer" parent="."]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+layout_mode = 2
+localize_numeral_system = false
+theme_override_constants/separation = 0
+
+[node name="Header" type="VBoxContainer" parent="Container"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+layout_mode = 2
+size_flags_horizontal = 3
+localize_numeral_system = false
+theme_override_constants/separation = 0
+metadata/_edit_group_ = true
+
+[node name="Title" type="Label" parent="Container/Header"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+localize_numeral_system = false
+theme_override_font_sizes/font_size = 20
+text = "XDUT Task"
+vertical_alignment = 1
+
+[node name="Description" type="Label" parent="Container/Header"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_font_sizes/font_size = 12
+text = "将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、非同期的スクリプティングを補助するためのアドオンです。"
+vertical_alignment = 1
+
+[node name="Separator_1" type="HSeparator" parent="Container"]
+auto_translate_mode = 2
+modulate = Color(1, 1, 1, 0.247059)
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+localize_numeral_system = false
+
+[node name="Content" type="HBoxContainer" parent="Container"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+layout_mode = 2
+size_flags_vertical = 3
+localize_numeral_system = false
+theme_override_constants/separation = 0
+metadata/_edit_group_ = true
+
+[node name="Column_1_0_0" type="VBoxContainer" parent="Container/Content"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+localize_numeral_system = false
+theme_override_constants/separation = 0
+metadata/_edit_group_ = true
+
+[node name="Title" type="Label" parent="Container/Content/Column_1_0_0"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+localize_numeral_system = false
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "1.0.0 に含まれる機能"
+vertical_alignment = 1
+
+[node name="Row" type="HBoxContainer" parent="Container/Content/Column_1_0_0"]
+layout_mode = 2
+
+[node name="Column_1" type="VBoxContainer" parent="Container/Content/Column_1_0_0/Row"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+
+[node name="Completed" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.completed()"
+
+[node name="Canceled" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.canceled()"
+
+[node name="Never" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.never()"
+
+[node name="From" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from()"
+
+[node name="FromMethod" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_method()"
+
+[node name="FromMethodName" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_method_name()"
+
+[node name="FromCallback" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_callback()"
+
+[node name="FromCallbackName" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_callback_name()"
+
+[node name="FromSignal" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_signal()"
+
+[node name="FromSignalName" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_signal_name()"
+
+[node name="FromConditionalSignal" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_conditional_signal()"
+
+[node name="FromConditionalSignalName" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_conditional_signal_name()"
+
+[node name="Column_2" type="VBoxContainer" parent="Container/Content/Column_1_0_0/Row"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+
+[node name="All" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.all()"
+
+[node name="AllSettled" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.all_settled()"
+
+[node name="Any" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.any()"
+
+[node name="Race" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.race()"
+
+[node name="Defer" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.defer()"
+
+[node name="DeferProcess" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.defer_process()"
+
+[node name="DeferProcessFrame" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.defer_process_frame()"
+
+[node name="DeferPhysics" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.defer_physics()"
+
+[node name="DeferPhysicsFrame" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.defer_physics_frame()"
+
+[node name="Delay" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.delay()"
+
+[node name="DelayMsec" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.delay_msec()"
+
+[node name="DelayUsec" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_2"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.delay_usec()"
+
+[node name="Column_3" type="VBoxContainer" parent="Container/Content/Column_1_0_0/Row"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+
+[node name="Then" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_3"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.then()"
+
+[node name="ThenMethod" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_3"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.then_method()"
+
+[node name="ThenMethodName" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_3"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.then_method_name()"
+
+[node name="ThenCallback" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_3"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.then_callback()"
+
+[node name="ThenCallbackName" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_3"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.then_callback_name()"
+
+[node name="Unwrap" type="CheckBox" parent="Container/Content/Column_1_0_0/Row/Column_3"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.unwrap()"
+
+[node name="Separator_2" type="HSeparator" parent="Container"]
+auto_translate_mode = 2
+modulate = Color(1, 1, 1, 0.247059)
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+localize_numeral_system = false
+
+[node name="Footer" type="HBoxContainer" parent="Container"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+layout_mode = 2
+localize_numeral_system = false
+theme_override_constants/separation = 0
+metadata/_edit_group_ = true
+
+[node name="Status" type="Label" parent="Container/Footer"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+localize_numeral_system = false
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_font_sizes/font_size = 12
+text = "読み込み中..."
+vertical_alignment = 1
