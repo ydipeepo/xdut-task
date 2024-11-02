@@ -6,7 +6,7 @@
 非同期的スクリプティングを補助するためのアドオンです。
 
 > [!TIP]
-> [XDUT Wait](https://github.com/ydipeepo/xdut-wait) もあります。
+> 🔗 [XDUT Wait](https://github.com/ydipeepo/xdut-wait) もあります。
 
 <br />
 
@@ -55,6 +55,6 @@
 
 ## ライセンス
 
-[MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE) ライセンスです。
+🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE) ライセンスです。
 
 <br />
