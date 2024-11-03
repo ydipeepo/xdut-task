@@ -32,7 +32,7 @@ class_name XDUT_TaskBase extends Task
 #-------------------------------------------------------------------------------
 
 static func get_canonical() -> Node:
-	if _canonical == null:
+	if not is_instance_valid(_canonical):
 		var main_loop := Engine.get_main_loop()
 		_canonical = main_loop.root.get_node("/root/XDUT_TaskCanonical")
 		assert(_canonical != null)
