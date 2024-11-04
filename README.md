@@ -1,60 +1,54 @@
 <br />
 
+English | [日本語](README_ja_JP.md)
+
+<br />
+
 # XDUT Task
 
-将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、<br />
-非同期的スクリプティングを補助するためのアドオンです。
-
-> [!TIP]
-> 🔗 抽象化とキャンセルを排除した軽量版の [XDUT Wait](https://github.com/ydipeepo/xdut-wait) もあります。
+This add-on helps pseudo-asynchronous scripting, including a set of classes to handle future-determined values through a shared interface.
 
 <br />
 
-## 目的
+## Objective
 
-以下の目的のために作りました。
+It was created for the following purposes:
 
-* スクリプトフローと実際の動作を一致させる
-* スクリプトの依存関係をシーンに対する一方向にまとめる
-* 他のアドオンの待機にまつわる処理を共通化する
+* Transform scripts in callback hell into intuitive flows.
+* Make script (with scene) dependencies unidirectional toward the scene.
+* Perform safe and unified **await**-ing through a shared interface.
 
 <br />
 
-## インストール
+## Quick start
 
-#### デモを確認する場合
+#### Checking the demo
 
-1. `git clone https://github.com/ydipeepo/xdut-task.git` し、
-2. プロジェクトを開いて実行します。
+1. `git clone https://github.com/ydipeepo/xdut-task.git`
+2. Then open XDUT Task project and run it.
 
-#### プロジェクトにアドオンを追加する場合
+#### Installation
 
-1. `git clone https://github.com/ydipeepo/xdut-task.git` し、
-2. `addons/xdut-task` をプロジェクトに複製し、
-3. プロジェクト設定から XDUT Task を有効にします。
+1. `git clone https://github.com/ydipeepo/xdut-task.git`
+2. Then copy `addons/xdut-task` directory into your project.
+3. And enable XDUT Task from your project settings.
 
 > [!TIP]
-> このアドオンは Godot Engine 及び Redot Engine に対応しています。
+> This add-on is compat with Godot Engine and Redot Engine.
 >
 > * Godot Engine 4.3 ~
 > * Redot Engine 4.3 Beta 2 ~
 
 <br />
 
-## リファレンス
+## Reference
 
-📖 [Wiki](https://github.com/ydipeepo/xdut-task/wiki) にまとめてあります。
-
-<br />
-
-## バグの報告など
-
-バグの報告やドキュメント翻訳、改善の提案など歓迎いたします。
+📖 [Wiki](https://github-com.translate.goog/ydipeepo/xdut-task/wiki?_x_tr_sl=ja&_x_tr_tl=en) (Google Translated)
 
 <br />
 
-## ライセンス
+## License
 
-🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE) ライセンスです。
+🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE)
 
 <br />
