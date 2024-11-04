@@ -25,12 +25,12 @@
 
 #### デモを確認する
 
-1. `git clone https://github.com/ydipeepo/xdut-task.git` し、
+1. `git clone https://github.com/ydipeepo/xdut-task.git` もしくは、[ダウンロード](https://github.com/ydipeepo/xdut-task/releases)し、
 2. プロジェクトを開いて実行します。
 
 #### アドオンを追加する
 
-1. `git clone https://github.com/ydipeepo/xdut-task.git` し、
+1. `git clone https://github.com/ydipeepo/xdut-task.git` もしくは、[ダウンロード](https://github.com/ydipeepo/xdut-task/releases)し、
 2. `addons/xdut-task` をプロジェクトにコピーし、
 3. プロジェクト設定から XDUT Task を有効にします。
 

@@ -1,6 +1,6 @@
 <br />
 
-English | [日本語](README_ja_JP.md)
+English | [日本語](README.ja_JP.md)
 
 <br />
 
@@ -24,12 +24,12 @@ It was created for the following purposes:
 
 #### Checking the demo
 
-1. `git clone https://github.com/ydipeepo/xdut-task.git`
+1. `git clone https://github.com/ydipeepo/xdut-task.git` or [download release](https://github.com/ydipeepo/xdut-task/releases).
 2. Then open XDUT Task project and run it.
 
 #### Installation
 
-1. `git clone https://github.com/ydipeepo/xdut-task.git`
+1. `git clone https://github.com/ydipeepo/xdut-task.git` or [download release](https://github.com/ydipeepo/xdut-task/releases).
 2. Then copy `addons/xdut-task` directory into your project.
 3. And enable XDUT Task from your project settings.
 
