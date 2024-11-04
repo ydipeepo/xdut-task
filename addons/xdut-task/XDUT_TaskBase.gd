@@ -131,12 +131,14 @@ func _wait_with_exotic_cancel(cancel: Cancel) -> void:
 		cancel.requested.disconnect(release_cancel)
 
 func _init(cancel: Cancel, monitor_deadlock: bool) -> void:
+	if monitor_deadlock:
+		var canonical := get_canonical()
+		if canonical == null:
+			release_cancel()
+			return
+		canonical.monitor_deadlock(self)
+
 	if cancel != null:
 		assert(not cancel.is_requested)
 		_cancel = cancel
 		_cancel.requested.connect(on_canceled)
-
-	if monitor_deadlock:
-		var canonical := get_canonical()
-		assert(canonical != null)
-		canonical.monitor_deadlock(self)
