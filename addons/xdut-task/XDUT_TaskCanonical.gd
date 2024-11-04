@@ -68,10 +68,10 @@ var _deadlock_monitor_idle_spin: int
 var _deadlock_monitor_task_wrefs: Array[WeakRef] = []
 
 func _process(delta: float) -> void:
-	process.emit(get_process_delta_time())
+	process.emit(delta)
 
 func _physics_process(delta: float) -> void:
-	physics.emit(get_physics_process_delta_time())
+	physics.emit(delta)
 
 func _enter_tree() -> void:
 	_deadlock_monitor_enabled = ProjectSettings.get_setting("xdut/task/deadlock_monitor/enabled", true)

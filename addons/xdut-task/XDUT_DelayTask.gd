@@ -56,11 +56,15 @@ func _init(
 	assert(MIN_TIMEOUT <= timeout)
 
 	super(cancel, false)
-	_timer = get_canonical().create_timer(
-		timeout,
-		ignore_pause,
-		ignore_time_scale)
-	_timer.timeout.connect(_on_timeout)
+	var canonical := get_canonical()
+	if canonical != null:
+		_timer = canonical.create_timer(
+			timeout,
+			ignore_pause,
+			ignore_time_scale)
+		_timer.timeout.connect(_on_timeout)
+	else:
+		release_cancel()
 
 func _on_timeout() -> void:
 	if _timer != null:

@@ -33,9 +33,10 @@ class_name XDUT_TaskBase extends Task
 
 static func get_canonical() -> Node:
 	if not is_instance_valid(_canonical):
-		var main_loop := Engine.get_main_loop()
-		_canonical = main_loop.root.get_node("/root/XDUT_TaskCanonical")
-		assert(_canonical != null)
+		_canonical = Engine \
+			.get_main_loop() \
+			.root \
+			.get_node("/root/XDUT_TaskCanonical")
 	return _canonical
 
 func get_state() -> int:
@@ -136,4 +137,6 @@ func _init(cancel: Cancel, monitor_deadlock: bool) -> void:
 		_cancel.requested.connect(on_canceled)
 
 	if monitor_deadlock:
-		get_canonical().monitor_deadlock(self)
+		var canonical := get_canonical()
+		assert(canonical != null)
+		canonical.monitor_deadlock(self)

@@ -52,11 +52,13 @@ var is_requested: bool:
 #	METHODS
 #-------------------------------------------------------------------------------
 
+## キャンセルされていない [Cancel] を作成します。
+static func create() -> Cancel:
+	return XDUT_CancelBase.new()
+
 ## 既にキャンセルが要求された状態の [Cancel] を作成します。
 static func canceled() -> Cancel:
-	var cancel := new()
-	cancel.request()
-	return cancel
+	return XDUT_CanceledCancel.new()
 
 ## フレームの末尾でキャンセルを要求する [Cancel] を作成します。
 static func deferred() -> Cancel:
@@ -75,14 +77,17 @@ static func timeout(
 
 ## キャンセルが要求されていれば [code]true[/code]、それ以外の場合は [code]false[/code] を返します。
 func get_requested() -> bool:
-	return _requested
+	#
+	# 継承先で実装する必要があります。
+	#
+	
+	assert(false)
+	return false
 
 ## キャンセルを要求します。
 func request() -> void:
-	if not _requested:
-		_requested = true
-		requested.emit()
+	#
+	# 継承先で実装する必要があります。
+	#
 
-#-------------------------------------------------------------------------------
-
-var _requested := false
+	assert(false)

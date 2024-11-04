@@ -32,16 +32,24 @@ class_name XDUT_DeferProcessTask extends XDUT_TaskBase
 #-------------------------------------------------------------------------------
 
 func on_canceled() -> void:
-	get_canonical().process.disconnect(_on_completed)
+	var canonical := get_canonical()
+	if canonical != null:
+		canonical.process.disconnect(_on_completed)
 	super()
 
 #-------------------------------------------------------------------------------
 
 func _init(cancel: Cancel) -> void:
 	super(cancel, false)
-	get_canonical().process.connect(_on_completed)
+	var canonical := get_canonical()
+	if canonical != null:
+		canonical.process.connect(_on_completed)
+	else:
+		release_cancel()
 
 func _on_completed(delta: float) -> void:
-	get_canonical().process.disconnect(_on_completed)
+	var canonical := get_canonical()
+	if canonical != null:
+		canonical.process.disconnect(_on_completed)
 	if is_pending:
 		release_complete(delta)

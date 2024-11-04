@@ -25,30 +25,14 @@
 #
 #-------------------------------------------------------------------------------
 
-class_name XDUT_CancelBase extends Cancel
+class_name XDUT_CanceledCancel extends Cancel
 
 #-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
 
-static func get_canonical() -> Node:
-	if not is_instance_valid(_canonical):
-		_canonical = Engine \
-			.get_main_loop() \
-			.root \
-			.get_node("/root/XDUT_TaskCanonical")
-	return _canonical
-
 func get_requested() -> bool:
-	return _requested
+	return true
 
 func request() -> void:
-	if not _requested:
-		_requested = true
-		requested.emit()
-
-#-------------------------------------------------------------------------------
-
-static var _canonical: Node
-
-var _requested := false
+	pass

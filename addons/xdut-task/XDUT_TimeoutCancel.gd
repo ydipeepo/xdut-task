@@ -36,8 +36,13 @@ func _init(
 	ignore_pause: bool,
 	ignore_time_scale: bool) -> void:
 
-	_timer = get_canonical().create_timer(timeout, ignore_pause, ignore_time_scale)
-	_timer.timeout.connect(_on_timeout)
+	var canonical := get_canonical()
+	if canonical != null:
+		_timer = canonical.create_timer(
+			timeout,
+			ignore_pause,
+			ignore_time_scale)
+		_timer.timeout.connect(_on_timeout)
 
 func _on_timeout() -> void:
 	if _timer != null:
