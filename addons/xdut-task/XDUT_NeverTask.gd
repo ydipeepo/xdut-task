@@ -28,6 +28,23 @@
 class_name XDUT_NeverTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
+#	METHODS
+#-------------------------------------------------------------------------------
+
+static func create(
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return canceled()
+		else:
+			cancel = null
+
+	return new(cancel)
+
+#-------------------------------------------------------------------------------
 
 func _init(cancel: Cancel) -> void:
 	super(cancel, false)

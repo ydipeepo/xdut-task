@@ -28,25 +28,43 @@
 class_name XDUT_FromMethodTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
-#	CONSTANTS
-#-------------------------------------------------------------------------------
-
-const ACCEPTIBLE_METHOD_ARGC: Array[int] = [0, 1]
-
-#-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
+
+static func create(
+	method: Callable,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if not method.is_valid():
+		push_error("Invalid object associated with method.")
+		return XDUT_CanceledTask.new()
+	if not method.get_argument_count() in _VALID_METHOD_ARGC:
+		push_error("Invalid method argument count: ", method.get_argument_count())
+		return XDUT_CanceledTask.new()
+
+	return new(
+		method,
+		cancel)
 
 func is_orphaned() -> bool:
 	return is_pending and not _method.is_valid()
 
 #-------------------------------------------------------------------------------
 
+const _VALID_METHOD_ARGC: Array[int] = [0, 1]
+
 var _method: Callable
 
-func _init(method: Callable, cancel: Cancel) -> void:
-	assert(method.is_valid())
-	assert(method.get_argument_count() in ACCEPTIBLE_METHOD_ARGC)
+func _init(
+	method: Callable,
+	cancel: Cancel) -> void:
 
 	super(cancel, true)
 	_method = method

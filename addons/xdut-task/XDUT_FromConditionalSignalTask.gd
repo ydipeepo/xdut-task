@@ -29,12 +29,42 @@ class_name XDUT_FromConditionalSignalTask extends XDUT_FromSignalTask
 
 #--------------------------------------------------------------------------------
 
+static func create_conditional(
+	signal_: Signal,
+	signal_args: Array,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if not is_instance_valid(signal_.get_object()) or signal_.is_null():
+		push_error("Invalid object associated with signal.")
+		return XDUT_CanceledTask.new()
+	if MAX_SIGNAL_ARGC < signal_args.size():
+		push_error("Invalid signal argument count: ", signal_args.size())
+		return XDUT_CanceledTask.new()
+
+	return new(
+		signal_,
+		signal_args,
+		cancel)
+
+#--------------------------------------------------------------------------------
+
 var _signal_args: Array
 
 static func _match(a: Variant, b: Variant) -> bool:
 	return a is Object and a == SKIP or typeof(a) == typeof(b) and a == b
 
-func _init(signal_: Signal, signal_args: Array, cancel: Cancel) -> void:
+func _init(
+	signal_: Signal,
+	signal_args: Array,
+	cancel: Cancel) -> void:
+
 	super(signal_, signal_args.size(), cancel)
 	_signal_args = signal_args
 

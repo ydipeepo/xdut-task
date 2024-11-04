@@ -28,17 +28,43 @@
 class_name XDUT_AnyTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
+#	METHODS
+#-------------------------------------------------------------------------------
+
+static func create(
+	from_inits: Array,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if from_inits.is_empty():
+		return XDUT_CanceledTask.new()
+
+	return new(
+		from_inits,
+		cancel)
+
+#-------------------------------------------------------------------------------
 
 var _remaining: int
 
-func _init(from_inits: Array, cancel: Cancel) -> void:
-	assert(not from_inits.is_empty())
+func _init(
+	from_inits: Array,
+	cancel: Cancel) -> void:
 
 	super(cancel, false)
 	var from_inits_size := from_inits.size()
 	_remaining = from_inits_size
 	for task_index: int in from_inits_size:
-		var task := from(from_inits[task_index], cancel)
+		var task := XDUT_FromTask.create(
+			from_inits[task_index],
+			cancel,
+			true)
 		_perform(
 			task,
 			task_index,

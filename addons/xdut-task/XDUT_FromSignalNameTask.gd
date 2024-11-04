@@ -37,6 +37,35 @@ const MAX_SIGNAL_ARGC := 5
 #	METHODS
 #-------------------------------------------------------------------------------
 
+static func create(
+	object: Object,
+	signal_name: StringName,
+	signal_argc: int,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if not is_instance_valid(object):
+		push_error("Invalid object.")
+		return XDUT_CanceledTask.new()
+	if not object.has_signal(signal_name):
+		push_error("Invalid signal name: ", signal_name)
+		return XDUT_CanceledTask.new()
+	if signal_argc < 0 and MAX_SIGNAL_ARGC < signal_argc:
+		push_error("Invalid signal argument count: ", signal_argc)
+		return XDUT_CanceledTask.new()
+
+	return new(
+		object,
+		signal_name,
+		signal_argc,
+		cancel)
+
 func on_canceled() -> void:
 	if is_instance_valid(_object):
 		match _signal_argc:
@@ -55,9 +84,6 @@ var _signal_name: StringName
 var _signal_argc: int
 
 func _init(object: Object, signal_name: StringName, signal_argc: int, cancel: Cancel) -> void:
-	assert(is_instance_valid(object) and object.has_signal(signal_name))
-	assert(0 <= signal_argc and signal_argc <= MAX_SIGNAL_ARGC)
-
 	super(cancel, false)
 	_object = object
 	_signal_name = signal_name

@@ -28,13 +28,42 @@
 class_name XDUT_RaceTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
+#	METHODS
+#-------------------------------------------------------------------------------
 
-func _init(from_inits: Array, cancel: Cancel) -> void:
-	assert(not from_inits.is_empty())
+static func create(
+	from_inits: Array,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if from_inits.is_empty():
+		push_warning("Invalid inputs.")
+		return XDUT_NeverTask.create(
+			cancel,
+			true)
+
+	return new(
+		from_inits,
+		cancel)
+
+#-------------------------------------------------------------------------------
+
+func _init(
+	from_inits: Array,
+	cancel: Cancel) -> void:
 
 	super(cancel, false)
 	for task_index: int in from_inits.size():
-		var task := from(from_inits[task_index], cancel)
+		var task := XDUT_FromTask.create(
+			from_inits[task_index],
+			cancel,
+			true)
 		_perform(
 			task,
 			task_index,
@@ -49,8 +78,8 @@ func _perform(
 	if is_pending:
 		match task.get_state():
 			STATE_COMPLETED:
-				release_complete(completed(result))
+				release_complete(XDUT_CompletedTask.new(result))
 			STATE_CANCELED:
-				release_complete(canceled())
+				release_complete(XDUT_CanceledTask.new())
 			_:
 				error_bad_state_at(task, task_index)

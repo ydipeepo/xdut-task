@@ -46,7 +46,7 @@ func wait(cancel: Cancel = null) -> Variant:
 	if _state == STATE_PENDING:
 		_state = STATE_PENDING_WITH_WAITERS
 	if _state == STATE_PENDING_WITH_WAITERS:
-		if cancel != null:
+		if is_instance_valid(cancel):
 			await _wait_with_exotic_cancel(cancel)
 		else:
 			await _wait()

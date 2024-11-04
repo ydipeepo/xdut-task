@@ -28,18 +28,44 @@
 class_name XDUT_AllSettledTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
+#	METHODS
+#-------------------------------------------------------------------------------
+
+static func create(
+	from_inits: Array,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+
+	if from_inits.is_empty():
+		return XDUT_CompletedTask.new([])
+	return new(
+		from_inits,
+		cancel)
+
+#-------------------------------------------------------------------------------
 
 var _remaining: int
 
-func _init(from_inits: Array, cancel: Cancel) -> void:
-	assert(not from_inits.is_empty())
+func _init(
+	from_inits: Array,
+	cancel: Cancel) -> void:
 
 	super(cancel, false)
 	var from_inits_size := from_inits.size()
 	var result_set := []; result_set.resize(from_inits_size)
 	_remaining = from_inits_size
 	for task_index: int in from_inits_size:
-		var task := from(from_inits[task_index], cancel)
+		var task := XDUT_FromTask.create(
+			from_inits[task_index],
+			cancel,
+			true)
 		_perform(
 			task,
 			task_index,
@@ -56,12 +82,12 @@ func _perform(
 	if is_pending:
 		match task.get_state():
 			STATE_COMPLETED:
-				result_set[task_index] = completed(result)
+				result_set[task_index] = XDUT_CompletedTask.new(result)
 				_remaining -= 1
 				if _remaining == 0:
 					release_complete(result_set)
 			STATE_CANCELED:
-				result_set[task_index] = canceled()
+				result_set[task_index] = XDUT_CanceledTask.new()
 				_remaining -= 1
 				if _remaining == 0:
 					release_complete(result_set)

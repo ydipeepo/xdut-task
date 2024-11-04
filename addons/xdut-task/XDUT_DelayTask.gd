@@ -28,14 +28,33 @@
 class_name XDUT_DelayTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
-#	CONSTANTS
-#-------------------------------------------------------------------------------
-
-const MIN_TIMEOUT := 0.0
-
-#-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
+
+static func create(
+	timeout: float,
+	ignore_pause: bool,
+	ignore_time_scale: bool,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+
+	if timeout < _MIN_TIMEOUT:
+		push_warning("Invalid timeout.")
+		return XDUT_CompletedTask.new(null)
+	if timeout == _MIN_TIMEOUT:
+		return XDUT_CompletedTask.new(null)
+	return new(
+		timeout,
+		ignore_pause,
+		ignore_time_scale,
+		cancel)
 
 func on_canceled() -> void:
 	if _timer != null:
@@ -45,6 +64,8 @@ func on_canceled() -> void:
 
 #-------------------------------------------------------------------------------
 
+const _MIN_TIMEOUT := 0.0
+
 var _timer: SceneTreeTimer
 
 func _init(
@@ -52,8 +73,6 @@ func _init(
 	ignore_pause: bool,
 	ignore_time_scale: bool,
 	cancel: Cancel) -> void:
-
-	assert(MIN_TIMEOUT <= timeout)
 
 	super(cancel, false)
 	var canonical := get_canonical()

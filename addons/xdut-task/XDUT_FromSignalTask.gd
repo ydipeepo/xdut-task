@@ -37,6 +37,30 @@ const MAX_SIGNAL_ARGC := 5
 #	METHODS
 #-------------------------------------------------------------------------------
 
+static func create(
+	signal_: Signal,
+	signal_argc: int,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if not is_instance_valid(signal_.get_object()) or signal_.is_null():
+		push_error("Invalid object associated with signal.")
+		return XDUT_CanceledTask.new()
+	if signal_argc < 0 and MAX_SIGNAL_ARGC < signal_argc:
+		push_error("Invalid signal argument count: ", signal_argc)
+		return XDUT_CanceledTask.new()
+
+	return new(
+		signal_,
+		signal_argc,
+		cancel)
+
 func is_orphaned() -> bool:
 	return is_pending and not is_instance_valid(_signal.get_object()) or _signal.is_null()
 
@@ -56,9 +80,10 @@ func on_canceled() -> void:
 var _signal: Signal
 var _signal_argc: int
 
-func _init(signal_: Signal, signal_argc: int, cancel: Cancel) -> void:
-	assert(is_instance_valid(signal_.get_object()) and not signal_.is_null())
-	assert(0 <= signal_argc and signal_argc <= MAX_SIGNAL_ARGC)
+func _init(
+	signal_: Signal,
+	signal_argc: int,
+	cancel: Cancel) -> void:
 
 	super(cancel, true)
 	_signal = signal_

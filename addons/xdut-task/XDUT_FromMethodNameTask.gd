@@ -28,19 +28,47 @@
 class_name XDUT_FromMethodNameTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
-#	CONSTANTS
+#	METHODS
 #-------------------------------------------------------------------------------
 
-const ACCEPTIBLE_METHOD_ARGC: Array[int] = [0, 1]
+static func create(
+	object: Object,
+	method_name: StringName,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if not is_instance_valid(object):
+		push_error("Invalid object.")
+		return XDUT_CanceledTask.new()
+	if not object.has_method(method_name):
+		push_error("Invalid method name: ", method_name)
+		return XDUT_CanceledTask.new()
+	if not object.get_method_argument_count(method_name) in _VALID_METHOD_ARGC:
+		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
+		return XDUT_CanceledTask.new()
+
+	return new(
+		object,
+		method_name,
+		cancel)
 
 #-------------------------------------------------------------------------------
+
+const _VALID_METHOD_ARGC: Array[int] = [0, 1]
 
 var _object: Object
 var _method_name: StringName
 
-func _init(object: Object, method_name: StringName, cancel: Cancel) -> void:
-	assert(is_instance_valid(object) and object.has_method(method_name))
-	assert(object.get_method_argument_count(method_name) in ACCEPTIBLE_METHOD_ARGC)
+func _init(
+	object: Object,
+	method_name: StringName,
+	cancel: Cancel) -> void:
 
 	super(cancel, false)
 	_object = object

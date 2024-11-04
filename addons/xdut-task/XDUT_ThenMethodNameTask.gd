@@ -28,30 +28,65 @@
 class_name XDUT_ThenMethodNameTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
-#	CONSTANTS
+#	METHODS
 #-------------------------------------------------------------------------------
 
-const ACCEPTIBLE_METHOD_ARGC: Array[int] = [0, 1, 2]
+static func create(
+	source_awaitable: Awaitable,
+	object: Object,
+	method_name: StringName,
+	cancel: Cancel,
+	skip_pre_validation := false) -> Task:
+
+	if not skip_pre_validation:
+		if not is_instance_valid(source_awaitable) or source_awaitable.is_canceled:
+			return XDUT_CanceledTask.new()
+		if is_instance_valid(cancel):
+			if cancel.is_requested:
+				return XDUT_CanceledTask.new()
+		else:
+			cancel = null
+	if not is_instance_valid(object):
+		push_error("Invalid object.")
+		return XDUT_CanceledTask.new()
+	if not object.has_method(method_name):
+		push_error("Invalid method name: ", method_name)
+		return XDUT_CanceledTask.new()
+	if not object.get_method_argument_count(method_name) in _VALID_METHOD_ARGC:
+		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
+		return XDUT_CanceledTask.new()
+
+	return new(
+		source_awaitable,
+		object,
+		method_name,
+		cancel)
 
 #-------------------------------------------------------------------------------
+
+const _VALID_METHOD_ARGC: Array[int] = [0, 1, 2]
 
 var _object: Object
 var _method_name: StringName
 
-func _init(prev: Awaitable, object: Object, method_name: StringName, cancel: Cancel) -> void:
-	assert(is_instance_valid(prev))
-	assert(is_instance_valid(object) and object.has_method(method_name))	
-	assert(object.get_method_argument_count(method_name) in ACCEPTIBLE_METHOD_ARGC)
+func _init(
+	source_awaitable: Awaitable,
+	object: Object,
+	method_name: StringName,
+	cancel: Cancel) -> void:
 
 	super(cancel, false)
 	_object = object
 	_method_name = method_name
-	_perform(prev, cancel)
+	_perform(source_awaitable, cancel)
 
-func _perform(prev: Awaitable, cancel: Cancel) -> void:
-	var result: Variant = await prev.wait(cancel)
+func _perform(
+	source_awaitable: Awaitable,
+	cancel: Cancel) -> void:
+
+	var result: Variant = await source_awaitable.wait(cancel)
 	if is_pending:
-		match prev.get_state():
+		match source_awaitable.get_state():
 			STATE_COMPLETED:
 				if is_instance_valid(_object):
 					match _object.get_method_argument_count(_method_name):
@@ -65,4 +100,4 @@ func _perform(prev: Awaitable, cancel: Cancel) -> void:
 			STATE_CANCELED:
 				release_cancel()
 			_:
-				error_bad_state(prev)
+				error_bad_state(source_awaitable)

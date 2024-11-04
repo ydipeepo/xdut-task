@@ -53,10 +53,7 @@ static func canceled() -> Task:
 ## [br]
 ## この [Task] は [param cancel] 引数を指定するか、[method wait] に [Cancel] を渡さない限りキャンセルできません。
 static func never(cancel: Cancel = null) -> Task:
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return XDUT_NeverTask.new(cancel)
+	return XDUT_NeverTask.create(cancel)
 
 ## [Task] に変換します。[br]
 ## [br]
@@ -65,98 +62,9 @@ static func from(
 	from_init: Variant,
 	cancel: Cancel = null) -> Task:
 
-	if from_init is Array:
-		match from_init.size():
-			3:
-				if from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
-					if from_init[2] is int:
-						return from_signal_name(
-							from_init[0],
-							from_init[1],
-							from_init[2],
-							cancel)
-					if from_init[2] is Array:
-						return from_conditional_signal_name(
-							from_init[0],
-							from_init[1],
-							from_init[2],
-							cancel)
-			2:
-				if from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
-					if from_init[0].has_method(from_init[1]):
-						return from_method_name(
-							from_init[0],
-							from_init[1],
-							cancel)
-					if from_init[0].has_signal(from_init[1]):
-						return from_signal_name(
-							from_init[0],
-							from_init[1],
-							0,
-							cancel)
-				if from_init[0] is Signal:
-					if from_init[1] is int:
-						return from_signal(
-							from_init[0],
-							from_init[1],
-							cancel)
-					if from_init[1] is Array:
-						return from_conditional_signal(
-							from_init[0],
-							from_init[1],
-							cancel)
-			1:
-				if from_init[0] is Awaitable:
-					return from_init[0]
-				if from_init[0] is Object:
-					if from_init[0].has_method(&"wait"):
-						return from_method_name(
-							from_init[0],
-							&"wait",
-							cancel)
-					if from_init[0].has_signal(&"completed"):
-						return from_signal_name(
-							from_init[0],
-							&"completed",
-							0,
-							cancel)
-				if from_init[0] is Callable:
-					return from_method(
-						from_init[0],
-						cancel)
-				if from_init[0] is Signal:
-					return from_signal(
-						from_init[0],
-						0,
-						cancel)
-	if from_init is Awaitable:
-		return from_init
-	if from_init is Object:
-		if from_init.has_method(&"wait"):
-			return from_method_name(
-				from_init,
-				&"wait",
-				cancel)
-		if from_init.has_signal(&"completed"):
-			return from_signal_name(
-				from_init,
-				&"completed",
-				0,
-				cancel)
-	if from_init is Callable:
-		return from_method(
-			from_init,
-			cancel)
-	if from_init is Signal:
-		return from_signal(
-			from_init,
-			0,
-			cancel)
-
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return completed(from_init)
+	return XDUT_FromTask.create(
+		from_init,
+		cancel)
 
 ## メソッドを [Task] に変換します。[br]
 ## [br]
@@ -168,16 +76,7 @@ static func from_method(
 	method: Callable,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not method.is_valid():
-		push_error("Invalid object associated with method.")
-		return canceled()
-	if not method.get_argument_count() in XDUT_FromMethodTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", method.get_argument_count())
-		return canceled()
-
-	return XDUT_FromMethodTask.new(
+	return XDUT_FromMethodTask.create(
 		method,
 		cancel)
 
@@ -193,19 +92,7 @@ static func from_method_name(
 	method_name: StringName,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(object):
-		push_error("Invalid object.")
-		return canceled()
-	if not object.has_method(method_name):
-		push_error("Invalid method name: ", method_name)
-		return canceled()
-	if not object.get_method_argument_count(method_name) in XDUT_FromMethodNameTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return canceled()
-
-	return XDUT_FromMethodNameTask.new(
+	return XDUT_FromMethodNameTask.create(
 		object,
 		method_name,
 		cancel)
@@ -221,16 +108,7 @@ static func from_callback(
 	method: Callable,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not method.is_valid():
-		push_error("Invalid object associated with method.")
-		return canceled()
-	if not method.get_argument_count() in XDUT_FromCallbackTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", method.get_argument_count())
-		return canceled()
-
-	return XDUT_FromCallbackTask.new(
+	return XDUT_FromCallbackTask.create(
 		method,
 		cancel)
 
@@ -246,19 +124,7 @@ static func from_callback_name(
 	method_name: StringName,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(object):
-		push_error("Invalid object.")
-		return canceled()
-	if not object.has_method(method_name):
-		push_error("Invalid method name: ", method_name)
-		return canceled()
-	if not object.get_method_argument_count(method_name) in XDUT_FromCallbackNameTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return canceled()
-
-	return XDUT_FromCallbackNameTask.new(
+	return XDUT_FromCallbackNameTask.create(
 		object,
 		method_name,
 		cancel)
@@ -272,16 +138,7 @@ static func from_signal(
 	signal_argc := 0,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(signal_.get_object()) or signal_.is_null():
-		push_error("Invalid object associated with signal.")
-		return canceled()
-	if signal_argc < 0 and XDUT_FromSignalTask.MAX_SIGNAL_ARGC < signal_argc:
-		push_error("Invalid signal argument count: ", signal_argc)
-		return canceled()
-
-	return XDUT_FromSignalTask.new(
+	return XDUT_FromSignalTask.create(
 		signal_,
 		signal_argc,
 		cancel)
@@ -297,19 +154,7 @@ static func from_signal_name(
 	signal_argc := 0,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(object):
-		push_error("Invalid object.")
-		return canceled()
-	if not object.has_signal(signal_name):
-		push_error("Invalid signal name: ", signal_name)
-		return canceled()
-	if signal_argc < 0 and XDUT_FromSignalNameTask.MAX_SIGNAL_ARGC < signal_argc:
-		push_error("Invalid signal argument count: ", signal_argc)
-		return canceled()
-
-	return XDUT_FromSignalNameTask.new(
+	return XDUT_FromSignalNameTask.create(
 		object,
 		signal_name,
 		signal_argc,
@@ -323,16 +168,7 @@ static func from_conditional_signal(
 	signal_args := [],
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(signal_.get_object()) or signal_.is_null():
-		push_error("Invalid object associated with signal.")
-		return canceled()
-	if XDUT_FromConditionalSignalTask.MAX_SIGNAL_ARGC < signal_args.size():
-		push_error("Invalid signal argument count: ", signal_args.size())
-		return canceled()
-
-	return XDUT_FromConditionalSignalTask.new(
+	return XDUT_FromConditionalSignalTask.create_conditional(
 		signal_,
 		signal_args,
 		cancel)
@@ -347,19 +183,7 @@ static func from_conditional_signal_name(
 	signal_args := [],
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(object):
-		push_error("Invalid object.")
-		return canceled()
-	if not object.has_signal(signal_name):
-		push_error("Invalid signal name: ", signal_name)
-		return canceled()
-	if XDUT_FromConditionalSignalNameTask.MAX_SIGNAL_ARGC < signal_args.size():
-		push_error("Invalid signal argument count: ", signal_args.size())
-		return canceled()
-
-	return XDUT_FromConditionalSignalNameTask.new(
+	return XDUT_FromConditionalSignalNameTask.create_conditional(
 		object,
 		signal_name,
 		signal_args,
@@ -369,10 +193,7 @@ static func from_conditional_signal_name(
 ## [br]
 ## ここでのアイドル状態とは、プロセス、物理プロセスを抜けた直後、すなわち [method Node.call_deferred] で遅延した処理が開始されるタイミングを指します。
 static func defer(cancel: Cancel = null) -> Task:
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return XDUT_DeferTask.new()
+	return XDUT_DeferTask.create(cancel)
 
 ## 次のルートプロセスフレームまで待機する [Task] を作成します。[br]
 ## [br]
@@ -380,10 +201,7 @@ static func defer(cancel: Cancel = null) -> Task:
 ## [method defer_process] より優先しますが、フレーム末尾 ([method Node._process] の末尾) まで待機することはできません。[br]
 ## [method Node.get_process_delta_time] の戻り値がこの [Task] の結果となります。
 static func defer_process_frame(cancel: Cancel = null) -> Task:
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return XDUT_DeferProcessFrameTask.new(cancel)
+	return XDUT_DeferProcessFrameTask.create(cancel)
 
 ## 次のルート物理フレームまで待機する [Task] を作成します。[br]
 ## [br]
@@ -391,30 +209,21 @@ static func defer_process_frame(cancel: Cancel = null) -> Task:
 ## [method defer_physics] より優先しますが、フレーム末尾 ([method Node._physics_process] の末尾) まで待機することはできません。[br]
 ## [method Node.get_physics_process_delta_time] の戻り値がこの [Task] の結果となります。
 static func defer_physics_frame(cancel: Cancel = null) -> Task:
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return XDUT_DeferPhysicsFrameTask.new(cancel)
+	return XDUT_DeferPhysicsFrameTask.create(cancel)
 
 ## 次のプロセスフレームまで待機する [Task] を作成します。[br]
 ## [br]
 ## ここでのプロセスフレームとは、カノニカルの [method Node._process] が呼ばれるタイミングを指します。[br]
 ## [code]delta[/code] がこの [Task] の結果となります。
 static func defer_process(cancel: Cancel = null) -> Task:
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return XDUT_DeferProcessTask.new(cancel)
+	return XDUT_DeferProcessTask.create(cancel)
 
 ## 次の物理フレームまで待機する [Task] を作成します。[br]
 ## [br]
 ## ここでの物理フレームとは、カノニカルの [method Node._physics_process] が呼ばれるタイミングを指します。[br]
 ## [code]delta[/code] がこの [Task] の結果となります。
 static func defer_physics(cancel: Cancel = null) -> Task:
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return XDUT_DeferPhysicsTask.new(cancel)
+	return XDUT_DeferPhysicsTask.create(cancel)
 
 ## タイムアウトするまで待機する [Task] を作成します。[br]
 ## [br]
@@ -425,15 +234,7 @@ static func delay(
 	ignore_time_scale := false,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if timeout < XDUT_DelayTask.MIN_TIMEOUT:
-		push_warning("Invalid timeout.")
-		return completed()
-	if timeout == XDUT_DelayTask.MIN_TIMEOUT:
-		return completed()
-
-	return XDUT_DelayTask.new(
+	return XDUT_DelayTask.create(
 		timeout,
 		ignore_pause,
 		ignore_time_scale,
@@ -473,12 +274,7 @@ static func all(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if from_inits.is_empty():
-		return completed([])
-
-	return XDUT_AllTask.new(
+	return XDUT_AllTask.create(
 		from_inits,
 		cancel)
 
@@ -490,12 +286,7 @@ static func all_settled(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if from_inits.is_empty():
-		return completed([])
-
-	return XDUT_AllSettledTask.new(
+	return XDUT_AllSettledTask.create(
 		from_inits,
 		cancel)
 
@@ -507,12 +298,7 @@ static func any(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if from_inits.is_empty():
-		return canceled()
-
-	return XDUT_AnyTask.new(
+	return XDUT_AnyTask.create(
 		from_inits,
 		cancel)
 
@@ -524,13 +310,7 @@ static func race(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if from_inits.is_empty():
-		push_warning("Invalid inputs.")
-		return never(cancel)
-
-	return XDUT_RaceTask.new(
+	return XDUT_RaceTask.create(
 		from_inits,
 		cancel)
 
@@ -623,121 +403,47 @@ static func wait_race(
 
 ## 結果を受け取り継続させる [Task] を作成します。
 static func create_then(
-	prev: Awaitable,
+	source_awaitable: Awaitable,
 	then_init: Variant,
 	cancel: Cancel = null) -> Task:
 
-	if then_init is Array:
-		match then_init.size():
-			2:
-				if then_init[0] is Object and (then_init[1] is String or then_init[1] is StringName):
-					if then_init[0].has_method(then_init[1]):
-						return create_then_method_name(
-							prev,
-							then_init[0],
-							then_init[1],
-							cancel)
-			1:
-				if then_init[0] is Object:
-					if then_init[0].has_method(&"wait"):
-						return create_then_method_name(
-							prev,
-							then_init[0],
-							&"wait",
-							cancel)
-				if then_init[0] is Callable:
-					return create_then_method(
-						prev,
-						then_init[0],
-						cancel)
-	if then_init is Awaitable:
-		return XDUT_ThenTask.new(
-			prev,
-			then_init,
-			cancel)
-	if then_init is Object:
-		if then_init.has_method(&"wait"):
-			return create_then_method_name(
-				prev,
-				then_init,
-				&"wait",
-				cancel)
-	if then_init is Callable:
-		return create_then_method(
-			prev,
-			then_init,
-			cancel)
-
-	if is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-
-	return XDUT_ThenTask.new(
-		prev,
+	return XDUT_ThenTask.create(
+		source_awaitable,
 		then_init,
 		cancel)
 
 ## 結果をメソッドで受け取り継続させる [Task] を作成します。
 static func create_then_method(
-	prev: Awaitable,
+	source_awaitable: Awaitable,
 	method: Callable,
 	cancel: Cancel = null) -> Task:
 
-	if not is_instance_valid(prev) or prev.is_canceled or is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not method.is_valid():
-		push_error("Invalid object associated with method.")
-		return canceled()
-	if not method.get_argument_count() in XDUT_ThenMethodTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", method.get_argument_count())
-		return canceled()
-
-	return XDUT_ThenMethodTask.new(
-		prev,
+	return XDUT_ThenMethodTask.create(
+		source_awaitable,
 		method,
 		cancel)
 
 ## 結果をオブジェクトに定義されているメソッドで受け取り継続させる [Task] を作成します。
 static func create_then_method_name(
-	prev: Awaitable,
+	source_awaitable: Awaitable,
 	object: Object,
 	method_name: StringName,
 	cancel: Cancel = null) -> Task:
 
-	if not is_instance_valid(prev) or prev.is_canceled or is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(object):
-		push_error("Invalid object.")
-		return canceled()
-	if not object.has_method(method_name):
-		push_error("Invalid method name: ", method_name)
-		return canceled()
-	if not object.get_method_argument_count(method_name) in XDUT_ThenMethodNameTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return canceled()
-
-	return XDUT_ThenMethodNameTask.new(
-		prev,
+	return XDUT_ThenMethodNameTask.create(
+		source_awaitable,
 		object,
 		method_name,
 		cancel)
 
 ## 結果をコールバックで受け取り継続させる [Task] を作成します。
 static func create_then_callback(
-	prev: Awaitable,
+	source_awaitable: Awaitable,
 	method: Callable,
 	cancel: Cancel = null) -> Task:
 
-	if not is_instance_valid(prev) or prev.is_canceled or is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not method.is_valid():
-		push_error("Invalid object associated with method.")
-		return canceled()
-	if not method.get_argument_count() in XDUT_ThenCallbackTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", method.get_argument_count())
-		return canceled()
-
-	return XDUT_ThenCallbackTask.new(
-		prev,
+	return XDUT_ThenCallbackTask.create(
+		source_awaitable,
 		method,
 		cancel)
 
@@ -748,19 +454,7 @@ static func create_then_callback_name(
 	method_name: StringName,
 	cancel: Cancel = null) -> Task:
 
-	if not is_instance_valid(prev) or prev.is_canceled or is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if not is_instance_valid(object):
-		push_error("Invalid object.")
-		return canceled()
-	if not object.has_method(method_name):
-		push_error("Invalid method name: ", method_name)
-		return canceled()
-	if not object.get_method_argument_count(method_name) in XDUT_ThenCallbackNameTask.ACCEPTIBLE_METHOD_ARGC:
-		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return canceled()
-
-	return XDUT_ThenCallbackNameTask.new(
+	return XDUT_ThenCallbackNameTask.create(
 		prev,
 		object,
 		method_name,
@@ -768,20 +462,12 @@ static func create_then_callback_name(
 
 ## 結果をアンラップする [Task] を作成します。
 static func create_unwrap(
-	prev: Awaitable,
+	source_awaitable: Awaitable,
 	depth := 1,
 	cancel: Cancel = null) -> Task:
 
-	if not is_instance_valid(prev) or is_instance_valid(cancel) and cancel.is_requested:
-		return canceled()
-	if depth < 0:
-		push_error("Invalid depth.")
-		return canceled()
-	if depth == 0:
-		return prev
-
-	return XDUT_UnwrapTask.new(
-		prev,
+	return XDUT_UnwrapTask.create(
+		source_awaitable,
 		depth,
 		cancel)
 
