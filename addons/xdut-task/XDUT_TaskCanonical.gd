@@ -93,7 +93,7 @@ func _exit_tree() -> void:
 				if task_wref != null:
 					var task: XDUT_TaskBase = task_wref.get_ref()
 					if task != null:
-						task.on_orphaned()
+						task.release_cancel_with_cleanup()
 			_deadlock_monitor_task_wrefs.clear()
 
 func _on_process_frame() -> void:
