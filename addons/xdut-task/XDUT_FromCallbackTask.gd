@@ -34,24 +34,26 @@ class_name XDUT_FromCallbackTask extends XDUT_TaskBase
 static func create(
 	method: Callable,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"FromCallbackTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 	if not method.is_valid():
 		push_error("Invalid object associated with method.")
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if not method.get_argument_count() in _VALID_METHOD_ARGC:
 		push_error("Invalid method argument count: ", method.get_argument_count())
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 
 	return new(
 		method,
-		cancel)
+		cancel,
+		name)
 
 func is_indefinitely_pending() -> bool:
 	return is_pending and not _method.is_valid()
@@ -64,9 +66,10 @@ var _method: Callable
 
 func _init(
 	method: Callable,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, true)
+	super(cancel, true, name)
 	_method = method
 	_perform(cancel)
 
@@ -86,18 +89,3 @@ func _set_core(result: Variant = null) -> void:
 func _cancel_core() -> void:
 	if is_pending:
 		release_cancel()
-
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<FromCallbackTask#%d>" % get_instance_id()

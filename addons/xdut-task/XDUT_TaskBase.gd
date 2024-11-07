@@ -110,6 +110,7 @@ signal _release
 
 static var _canonical: Node
 
+var _name: StringName
 var _state: int = STATE_PENDING
 var _result: Variant
 var _cancel: Cancel
@@ -127,7 +128,13 @@ func _wait_with_exotic_cancel(cancel: Cancel) -> void:
 		await _release
 		cancel.requested.disconnect(release_cancel_with_cleanup)
 
-func _init(cancel: Cancel, monitor_deadlock: bool) -> void:
+func _init(
+	cancel: Cancel,
+	monitor_deadlock: bool,
+	name: StringName) -> void:
+
+	_name = name
+
 	if monitor_deadlock:
 		var canonical := get_canonical()
 		if canonical == null:
@@ -139,3 +146,18 @@ func _init(cancel: Cancel, monitor_deadlock: bool) -> void:
 		assert(not cancel.is_requested)
 		_cancel = cancel
 		_cancel.requested.connect(release_cancel_with_cleanup)
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return "%s<%s#%d>" % [str, _name, get_instance_id()]

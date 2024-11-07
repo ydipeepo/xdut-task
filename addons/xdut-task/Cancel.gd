@@ -54,7 +54,7 @@ var is_requested: bool:
 
 ## キャンセルされていない [Cancel] を作成します。
 static func create() -> Cancel:
-	return XDUT_CancelBase.new()
+	return XDUT_CancelBase.new(&"Cancel")
 
 ## 既にキャンセルが要求された状態の [Cancel] を作成します。
 static func canceled() -> Cancel:

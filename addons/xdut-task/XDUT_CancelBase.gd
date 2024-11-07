@@ -51,4 +51,17 @@ func request() -> void:
 
 static var _canonical: Node
 
+var _name: StringName
 var _requested := false
+
+func _init(name: StringName) -> void:
+	_name = name
+
+func _to_string() -> String:
+	var str: String
+	match get_requested():
+		false:
+			str = "(pending)"
+		true:
+			str = "(requested)"
+	return "%s<%s#%d>" % [str, _name, get_instance_id()]

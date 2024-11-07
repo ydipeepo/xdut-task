@@ -36,6 +36,7 @@ func _init(
 	ignore_pause: bool,
 	ignore_time_scale: bool) -> void:
 
+	super(&"TimeoutCancel")
 	var canonical := get_canonical()
 	if canonical != null:
 		_timer = canonical.create_timer(

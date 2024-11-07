@@ -53,7 +53,7 @@ static func canceled() -> Task:
 ## [br]
 ## この [Task] は [param cancel] 引数を指定するか、[method wait] に [Cancel] を渡さない限りキャンセルできません。
 static func never(cancel: Cancel = null) -> Task:
-	return XDUT_NeverTask.create(cancel)
+	return XDUT_NeverTask.create(cancel, false)
 
 ## [Task] に変換します。[br]
 ## [br]
@@ -64,7 +64,8 @@ static func from(
 
 	return XDUT_FromTask.create(
 		from_init,
-		cancel)
+		cancel,
+		false)
 
 ## メソッドを [Task] に変換します。[br]
 ## [br]
@@ -78,7 +79,8 @@ static func from_method(
 
 	return XDUT_FromMethodTask.create(
 		method,
-		cancel)
+		cancel,
+		false)
 
 ## オブジェクトに定義されているメソッドを [Task] 変換します。[br]
 ## [br]
@@ -95,7 +97,8 @@ static func from_method_name(
 	return XDUT_FromMethodNameTask.create(
 		object,
 		method_name,
-		cancel)
+		cancel,
+		false)
 
 ## コールバックを [Task] に変換します。[br]
 ## [br]
@@ -110,7 +113,8 @@ static func from_callback(
 
 	return XDUT_FromCallbackTask.create(
 		method,
-		cancel)
+		cancel,
+		false)
 
 ## オブジェクトに定義されているコールバックを [Task] に変換します。[br]
 ## [br]
@@ -127,7 +131,8 @@ static func from_callback_name(
 	return XDUT_FromCallbackNameTask.create(
 		object,
 		method_name,
-		cancel)
+		cancel,
+		false)
 
 ## シグナルを [Task] に変換します。[br]
 ## [br]
@@ -141,7 +146,8 @@ static func from_signal(
 	return XDUT_FromSignalTask.create(
 		signal_,
 		signal_argc,
-		cancel)
+		cancel,
+		false)
 
 ## オブジェクトに定義されているシグナルを [Task] に変換します。[br]
 ## [br]
@@ -158,7 +164,8 @@ static func from_signal_name(
 		object,
 		signal_name,
 		signal_argc,
-		cancel)
+		cancel,
+		false)
 
 ## シグナルが条件に一致する引数で発火したとき完了する [Task] を作成します。[br]
 ## [br]
@@ -171,7 +178,8 @@ static func from_conditional_signal(
 	return XDUT_FromConditionalSignalTask.create_conditional(
 		signal_,
 		signal_args,
-		cancel)
+		cancel,
+		false)
 
 ## オブジェクトに定義されているシグナルが条件に一致する引数で発火したとき完了する [Task] を作成します。[br]
 ## [br]
@@ -187,13 +195,16 @@ static func from_conditional_signal_name(
 		object,
 		signal_name,
 		signal_args,
-		cancel)
+		cancel,
+		false)
 
 ## アイドル状態となるまで待機する [Task] を作成します。[br]
 ## [br]
 ## ここでのアイドル状態とは、プロセス、物理プロセスを抜けた直後、すなわち [method Node.call_deferred] で遅延した処理が開始されるタイミングを指します。
 static func defer(cancel: Cancel = null) -> Task:
-	return XDUT_DeferTask.create(cancel)
+	return XDUT_DeferTask.create(
+		cancel,
+		false)
 
 ## 次のルートプロセスフレームまで待機する [Task] を作成します。[br]
 ## [br]
@@ -201,7 +212,9 @@ static func defer(cancel: Cancel = null) -> Task:
 ## [method defer_process] より優先しますが、フレーム末尾 ([method Node._process] の末尾) まで待機することはできません。[br]
 ## [method Node.get_process_delta_time] の戻り値がこの [Task] の結果となります。
 static func defer_process_frame(cancel: Cancel = null) -> Task:
-	return XDUT_DeferProcessFrameTask.create(cancel)
+	return XDUT_DeferProcessFrameTask.create(
+		cancel,
+		false)
 
 ## 次のルート物理フレームまで待機する [Task] を作成します。[br]
 ## [br]
@@ -209,21 +222,27 @@ static func defer_process_frame(cancel: Cancel = null) -> Task:
 ## [method defer_physics] より優先しますが、フレーム末尾 ([method Node._physics_process] の末尾) まで待機することはできません。[br]
 ## [method Node.get_physics_process_delta_time] の戻り値がこの [Task] の結果となります。
 static func defer_physics_frame(cancel: Cancel = null) -> Task:
-	return XDUT_DeferPhysicsFrameTask.create(cancel)
+	return XDUT_DeferPhysicsFrameTask.create(
+		cancel,
+		false)
 
 ## 次のプロセスフレームまで待機する [Task] を作成します。[br]
 ## [br]
 ## ここでのプロセスフレームとは、カノニカルの [method Node._process] が呼ばれるタイミングを指します。[br]
 ## [code]delta[/code] がこの [Task] の結果となります。
 static func defer_process(cancel: Cancel = null) -> Task:
-	return XDUT_DeferProcessTask.create(cancel)
+	return XDUT_DeferProcessTask.create(
+		cancel,
+		false)
 
 ## 次の物理フレームまで待機する [Task] を作成します。[br]
 ## [br]
 ## ここでの物理フレームとは、カノニカルの [method Node._physics_process] が呼ばれるタイミングを指します。[br]
 ## [code]delta[/code] がこの [Task] の結果となります。
 static func defer_physics(cancel: Cancel = null) -> Task:
-	return XDUT_DeferPhysicsTask.create(cancel)
+	return XDUT_DeferPhysicsTask.create(
+		cancel,
+		false)
 
 ## タイムアウトするまで待機する [Task] を作成します。[br]
 ## [br]
@@ -238,7 +257,8 @@ static func delay(
 		timeout,
 		ignore_pause,
 		ignore_time_scale,
-		cancel)
+		cancel,
+		false)
 
 ## タイムアウト (ミリ秒で指定) するまで待機する [Task] を作成します。[br]
 ## [br]
@@ -276,7 +296,8 @@ static func all(
 
 	return XDUT_AllTask.create(
 		from_inits,
-		cancel)
+		cancel,
+		false)
 
 ## 全ての入力が完了もしくはキャンセルされるまで待機する [Task] を作成します。[br]
 ## [br]
@@ -288,7 +309,8 @@ static func all_settled(
 
 	return XDUT_AllSettledTask.create(
 		from_inits,
-		cancel)
+		cancel,
+		false)
 
 ## 入力の内どれかひとつが完了するまで待機する [Task] を作成します。[br]
 ## [br]
@@ -300,7 +322,8 @@ static func any(
 
 	return XDUT_AnyTask.create(
 		from_inits,
-		cancel)
+		cancel,
+		false)
 
 ## 入力の内どれかひとつが完了もしくはキャンセルされるまで待機する [Task] を作成します。[br]
 ## [br]
@@ -312,7 +335,8 @@ static func race(
 
 	return XDUT_RaceTask.create(
 		from_inits,
-		cancel)
+		cancel,
+		false)
 
 ## アイドル状態となるまで待機します。
 static func wait_defer(cancel: Cancel = null) -> Variant:
@@ -410,7 +434,8 @@ static func create_then(
 	return XDUT_ThenTask.create(
 		source_awaitable,
 		then_init,
-		cancel)
+		cancel,
+		false)
 
 ## 結果をメソッドで受け取り継続させる [Task] を作成します。
 static func create_then_method(
@@ -421,7 +446,8 @@ static func create_then_method(
 	return XDUT_ThenMethodTask.create(
 		source_awaitable,
 		method,
-		cancel)
+		cancel,
+		false)
 
 ## 結果をオブジェクトに定義されているメソッドで受け取り継続させる [Task] を作成します。
 static func create_then_method_name(
@@ -434,7 +460,8 @@ static func create_then_method_name(
 		source_awaitable,
 		object,
 		method_name,
-		cancel)
+		cancel,
+		false)
 
 ## 結果をコールバックで受け取り継続させる [Task] を作成します。
 static func create_then_callback(
@@ -445,7 +472,8 @@ static func create_then_callback(
 	return XDUT_ThenCallbackTask.create(
 		source_awaitable,
 		method,
-		cancel)
+		cancel,
+		false)
 
 ## 結果をオブジェクトに定義されているコールバックで受け取り継続させる [Task] を作成します。
 static func create_then_callback_name(
@@ -458,7 +486,8 @@ static func create_then_callback_name(
 		prev,
 		object,
 		method_name,
-		cancel)
+		cancel,
+		false)
 
 ## 結果をアンラップする [Task] を作成します。
 static func create_unwrap(
@@ -469,7 +498,8 @@ static func create_unwrap(
 	return XDUT_UnwrapTask.create(
 		source_awaitable,
 		depth,
-		cancel)
+		cancel,
+		false)
 
 ## この [Task] の完了後、結果を受け取り継続させる [Task] を作成します。[br]
 ## [br]
@@ -557,20 +587,3 @@ func unwrap(
 		self,
 		depth,
 		cancel)
-
-#-------------------------------------------------------------------------------
-
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<Task#%d>" % get_instance_id()

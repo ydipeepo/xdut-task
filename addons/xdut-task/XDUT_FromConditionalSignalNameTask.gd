@@ -36,29 +36,31 @@ static func create_conditional(
 	signal_name: StringName,
 	signal_args: Array,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"FromConditionalSignalNameTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 	if not is_instance_valid(object):
 		push_error("Invalid object.")
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if not object.has_signal(signal_name):
 		push_error("Invalid signal name: ", signal_name)
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if MAX_SIGNAL_ARGC < signal_args.size():
 		push_error("Invalid signal argument count: ", signal_args.size())
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 
 	return new(
 		object,
 		signal_name,
 		signal_args,
-		cancel)
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
@@ -71,9 +73,15 @@ func _init(
 	object: Object,
 	signal_name: StringName,
 	signal_args: Array,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(object, signal_name, signal_args.size(), cancel)
+	super(
+		object,
+		signal_name,
+		signal_args.size(),
+		cancel,
+		name)
 	_signal_args = signal_args
 
 func _on_completed_1(arg1: Variant) -> void:

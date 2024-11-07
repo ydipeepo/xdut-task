@@ -35,34 +35,37 @@ static func create(
 	source_awaitable: Awaitable,
 	depth: int,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"UnwrapTask") -> Task:
 
 	if not skip_pre_validation:
 		if not is_instance_valid(source_awaitable) or source_awaitable.is_canceled:
-			return canceled()
+			return XDUT_CanceledTask.new(name)
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return canceled()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 	if depth < 0:
 		push_error("Invalid depth.")
-		return canceled()
+		return XDUT_CanceledTask.new(name)
 	if depth == 0:
 		return source_awaitable
 	return new(
 		source_awaitable,
 		depth,
-		cancel)
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
 func _init(
 	source_awaitable: Awaitable,
 	depth: int,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, false)
+	super(cancel, false, name)
 	_perform(source_awaitable, depth, cancel)
 
 func _perform(
@@ -83,18 +86,3 @@ func _perform(
 				release_cancel()
 			_:
 				error_bad_state(source)
-
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<UnwrapTask#%d>" % get_instance_id()

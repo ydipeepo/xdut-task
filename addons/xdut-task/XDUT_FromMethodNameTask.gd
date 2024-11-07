@@ -35,28 +35,30 @@ static func create(
 	object: Object,
 	method_name: StringName,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"FromMethodNameTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 	if not is_instance_valid(object):
 		push_error("Invalid object.")
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if not object.has_method(method_name):
 		push_error("Invalid method name: ", method_name)
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if not object.get_method_argument_count(method_name) in _VALID_METHOD_ARGC:
 		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 
 	return new(
 		object,
 		method_name,
-		cancel)
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
@@ -68,9 +70,10 @@ var _method_name: StringName
 func _init(
 	object: Object,
 	method_name: StringName,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, false)
+	super(cancel, false, name)
 	_object = object
 	_method_name = method_name
 	_perform(cancel)
@@ -82,18 +85,3 @@ func _perform(cancel: Cancel) -> void:
 		1: result = await _object.call(_method_name, cancel)
 	if is_pending:
 		release_complete(result)
-
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<FromMethodNameTask#%d>" % get_instance_id()

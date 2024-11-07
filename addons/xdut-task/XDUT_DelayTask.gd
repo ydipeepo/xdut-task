@@ -36,25 +36,27 @@ static func create(
 	ignore_pause: bool,
 	ignore_time_scale: bool,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"DelayTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
 	if timeout < _MIN_TIMEOUT:
 		push_warning("Invalid timeout.")
-		return XDUT_CompletedTask.new(null)
+		return XDUT_CompletedTask.new(null, name)
 	if timeout == _MIN_TIMEOUT:
-		return XDUT_CompletedTask.new(null)
+		return XDUT_CompletedTask.new(null, name)
 	return new(
 		timeout,
 		ignore_pause,
 		ignore_time_scale,
-		cancel)
+		cancel,
+		name)
 
 func release_cancel_with_cleanup() -> void:
 	if _timer != null:
@@ -72,9 +74,10 @@ func _init(
 	timeout: float,
 	ignore_pause: bool,
 	ignore_time_scale: bool,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, false)
+	super(cancel, false, name)
 	var canonical := get_canonical()
 	if canonical != null:
 		_timer = canonical.create_timer(
@@ -91,18 +94,3 @@ func _on_timeout() -> void:
 		_timer = null
 	if is_pending:
 		release_complete()
-
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<DelayTask#%d>" % get_instance_id()

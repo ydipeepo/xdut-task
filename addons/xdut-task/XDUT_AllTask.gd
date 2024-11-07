@@ -34,20 +34,22 @@ class_name XDUT_AllTask extends XDUT_TaskBase
 static func create(
 	from_inits: Array,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"AllTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
 	if from_inits.is_empty():
-		return XDUT_CompletedTask.new([])
+		return XDUT_CompletedTask.new([], name)
 	return new(
 		from_inits,
-		cancel)
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
@@ -55,9 +57,10 @@ var _remaining: int
 
 func _init(
 	from_inits: Array,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, false)
+	super(cancel, false, name)
 	var from_inits_size := from_inits.size()
 	var result_set := []; result_set.resize(from_inits_size)
 	_remaining = from_inits_size
@@ -90,18 +93,3 @@ func _perform(
 				release_cancel()
 			_:
 				error_bad_state_at(task, task_index)
-
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<AllTask#%d>" % get_instance_id()

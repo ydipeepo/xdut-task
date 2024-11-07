@@ -33,33 +33,24 @@ class_name XDUT_NeverTask extends XDUT_TaskBase
 
 static func create(
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"NeverTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return canceled()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
-	return new(cancel)
+	return new(
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
-func _init(cancel: Cancel) -> void:
-	super(cancel, false)
+func _init(
+	cancel: Cancel,
+	name: StringName) -> void:
 
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<FromNeverTask#%d>" % get_instance_id()
+	super(cancel, false, name)

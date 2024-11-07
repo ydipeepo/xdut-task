@@ -33,38 +33,29 @@ class_name XDUT_DeferTask extends XDUT_TaskBase
 
 static func create(
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"DeferTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
-	return new(cancel)
+	return new(
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
-func _init(cancel: Cancel) -> void:
-	super(cancel, false)
+func _init(
+	cancel: Cancel,
+	name: StringName) -> void:
+
+	super(cancel, false, name)
 	_on_completed.call_deferred()
 
 func _on_completed() -> void:
 	if is_pending:
 		release_complete()
-
-func _to_string() -> String:
-	var str: String
-	match get_state():
-		STATE_PENDING:
-			str = "(pending)"
-		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
-		STATE_CANCELED:
-			str = "(canceled)"
-		STATE_COMPLETED:
-			str = "(completed)"
-		_:
-			assert(false)
-	return str + "<DeferTask#%d>" % get_instance_id()
