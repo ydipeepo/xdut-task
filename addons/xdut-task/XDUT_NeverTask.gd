@@ -48,3 +48,18 @@ static func create(
 
 func _init(cancel: Cancel) -> void:
 	super(cancel, false)
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<FromNeverTask#%d>" % get_instance_id()

@@ -36,3 +36,10 @@ func get_state() -> int:
 
 func wait(cancel: Cancel = null) -> Variant:
 	return null
+
+#-------------------------------------------------------------------------------
+
+func _to_string() -> String:
+	var str: String
+	str = "(canceled)"
+	return str + "<CanceledTask#%d>" % get_instance_id()

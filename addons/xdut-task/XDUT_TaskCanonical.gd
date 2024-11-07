@@ -119,9 +119,9 @@ func _on_monitor_deadlock() -> void:
 			_deadlock_monitor_task_wrefs[index] = null
 			index += 1
 			continue
-		if task.is_orphaned():
+		if task.is_indefinitely_pending():
 			_deadlock_monitor_task_wrefs[index] = null
-			task.on_orphaned()
+			task.release_cancel_with_cleanup()
 			index += 1
 			continue
 		index += 1

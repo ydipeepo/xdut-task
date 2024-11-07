@@ -44,7 +44,7 @@ static func create(
 
 	return new(cancel)
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	var canonical := get_canonical()
 	if canonical != null:
 		canonical.physics.disconnect(_on_completed)
@@ -66,3 +66,18 @@ func _on_completed(delta: float) -> void:
 		canonical.physics.disconnect(_on_completed)
 	if is_pending:
 		release_complete(delta)
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<DeferPhysicsTask#%d>" % get_instance_id()

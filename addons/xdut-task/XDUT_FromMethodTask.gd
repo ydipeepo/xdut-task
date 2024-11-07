@@ -53,7 +53,7 @@ static func create(
 		method,
 		cancel)
 
-func is_orphaned() -> bool:
+func is_indefinitely_pending() -> bool:
 	return is_pending and not _method.is_valid()
 
 #-------------------------------------------------------------------------------
@@ -80,3 +80,18 @@ func _perform(cancel: Cancel) -> void:
 			release_complete(result)
 		else:
 			release_cancel()
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<FromMethodTask#%d>" % get_instance_id()

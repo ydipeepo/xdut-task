@@ -87,3 +87,18 @@ func _on_completed_4(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant)
 func _on_completed_5(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant, arg5: Variant) -> void:
 	if _match(_signal_args[0], arg1) and _match(_signal_args[1], arg2) and _match(_signal_args[2], arg3) and _match(_signal_args[3], arg4) and _match(_signal_args[4], arg5):
 		super(arg1, arg2, arg3, arg4, arg5)
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<FromConditionalSignalTask#%d>" % get_instance_id()

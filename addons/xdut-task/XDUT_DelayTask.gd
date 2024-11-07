@@ -56,7 +56,7 @@ static func create(
 		ignore_time_scale,
 		cancel)
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	if _timer != null:
 		_timer.timeout.disconnect(_on_timeout)
 		_timer = null
@@ -91,3 +91,18 @@ func _on_timeout() -> void:
 		_timer = null
 	if is_pending:
 		release_complete()
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<DelayTask#%d>" % get_instance_id()

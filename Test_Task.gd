@@ -7060,14 +7060,14 @@ func test_defer() -> void:
 		t = Task.defer(Cancel.deferred())
 		assert(t.is_pending)
 		assert(await t.wait() == null)
-		assert(t.is_completed)
+		assert(t.is_canceled)
 
 		t = Task.defer(Cancel.deferred())
 		assert(t.is_pending)
 		await wait_defer()
-		assert(t.is_completed)
+		assert(t.is_canceled)
 		assert(await t.wait() == null)
-		assert(t.is_completed)
+		assert(t.is_canceled)
 
 	if "即時キャンセル":
 
@@ -7103,9 +7103,9 @@ func test_defer() -> void:
 		t = Task.defer(Cancel.deferred())
 		assert(t.is_pending)
 		await wait_defer()
-		assert(t.is_completed)
+		assert(t.is_canceled)
 		assert(await t.wait(Cancel.canceled()) == null)
-		assert(t.is_completed)
+		assert(t.is_canceled)
 
 	if "遅延キャンセル":
 
@@ -7136,14 +7136,14 @@ func test_defer() -> void:
 		t = Task.defer(Cancel.deferred())
 		assert(t.is_pending)
 		assert(await t.wait(Cancel.deferred()) == null)
-		assert(t.is_completed)
+		assert(t.is_canceled)
 
 		t = Task.defer(Cancel.deferred())
 		assert(t.is_pending)
 		await wait_defer()
-		assert(t.is_completed)
+		assert(t.is_canceled)
 		assert(await t.wait(Cancel.deferred()) == null)
-		assert(t.is_completed)
+		assert(t.is_canceled)
 
 	%Defer.button_pressed = true
 
@@ -7781,12 +7781,12 @@ func test_then() -> void:
 	
 	if "配列 1 要素":
 
-		g = ScopeWithWait.new(); t = Task.completed().from([g])
+		g = ScopeWithWait.new(); t = Task.completed().then([g])
 		assert(t.is_completed)
 		assert(await t.wait() == null)
 		assert(t.is_completed)
 
-		g = Scope.new(); t = Task.completed().from([g.from_immediate])
+		g = Scope.new(); t = Task.completed().then([g.from_immediate])
 		assert(t.is_completed)
 		assert(await t.wait() == null)
 		assert(t.is_completed)

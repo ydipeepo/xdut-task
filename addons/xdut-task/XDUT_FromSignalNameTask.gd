@@ -66,7 +66,7 @@ static func create(
 		signal_argc,
 		cancel)
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	if is_instance_valid(_object):
 		match _signal_argc:
 			0: _object.disconnect(_signal_name, _on_completed_0)
@@ -131,3 +131,18 @@ func _on_completed_5(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant,
 		_object.disconnect(_signal_name, _on_completed_5)
 	if is_pending:
 		release_complete([arg1, arg2, arg3, arg4, arg5])
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<FromSignalNameTask#%d>" % get_instance_id()

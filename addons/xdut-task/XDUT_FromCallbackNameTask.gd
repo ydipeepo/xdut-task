@@ -80,3 +80,18 @@ func _perform(cancel: Cancel) -> void:
 		1: await _object.call(_method_name, release_complete)
 		2: await _object.call(_method_name, release_complete, release_cancel)
 		3: await _object.call(_method_name, release_complete, release_cancel, cancel)
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<FromCallbackNameTask#%d>" % get_instance_id()

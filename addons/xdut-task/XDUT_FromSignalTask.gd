@@ -61,10 +61,10 @@ static func create(
 		signal_argc,
 		cancel)
 
-func is_orphaned() -> bool:
+func is_indefinitely_pending() -> bool:
 	return is_pending and not is_instance_valid(_signal.get_object()) or _signal.is_null()
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
 		match _signal_argc:
 			0: _signal.disconnect(_on_completed_0)
@@ -131,3 +131,18 @@ func _on_completed_5(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant,
 		_signal.disconnect(_on_completed_5)
 	if is_pending:
 		release_complete([arg1, arg2, arg3, arg4, arg5])
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return str + "<FromSignalTask#%d>" % get_instance_id()

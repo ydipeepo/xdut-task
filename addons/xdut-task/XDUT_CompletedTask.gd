@@ -43,3 +43,8 @@ var _result: Variant
 
 func _init(result: Variant) -> void:
 	_result = result
+
+func _to_string() -> String:
+	var str: String
+	str = "(completed)"
+	return str + "<CompletedTask#%d>" % get_instance_id()
