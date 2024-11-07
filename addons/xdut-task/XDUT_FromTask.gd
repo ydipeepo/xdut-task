@@ -34,12 +34,13 @@ class_name XDUT_FromTask # extends XDUT_TaskBase
 static func create(
 	from_init: Variant,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"FromTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
@@ -53,14 +54,16 @@ static func create(
 							from_init[1],
 							from_init[2],
 							cancel,
-							true)
+							true,
+							name)
 					if from_init[2] is Array:
 						return XDUT_FromConditionalSignalNameTask.create_conditional(
 							from_init[0],
 							from_init[1],
 							from_init[2],
 							cancel,
-							true)
+							true,
+							name)
 			2:
 				if from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
 					if from_init[0].has_method(from_init[1]):
@@ -68,27 +71,31 @@ static func create(
 							from_init[0],
 							from_init[1],
 							cancel,
-							true)
+							true,
+							name)
 					if from_init[0].has_signal(from_init[1]):
 						return XDUT_FromSignalNameTask.create(
 							from_init[0],
 							from_init[1],
 							0,
 							cancel,
-							true)
+							true,
+							name)
 				if from_init[0] is Signal:
 					if from_init[1] is int:
 						return XDUT_FromSignalTask.create(
 							from_init[0],
 							from_init[1],
 							cancel,
-							true)
+							true,
+							name)
 					if from_init[1] is Array:
 						return XDUT_FromConditionalSignalTask.create_conditional(
 							from_init[0],
 							from_init[1],
 							cancel,
-							true)
+							true,
+							name)
 			1:
 				if from_init[0] is Awaitable:
 					return from_init[0]
@@ -98,25 +105,29 @@ static func create(
 							from_init[0],
 							&"wait",
 							cancel,
-							true)
+							true,
+							name)
 					if from_init[0].has_signal(&"completed"):
 						return XDUT_FromSignalNameTask.create(
 							from_init[0],
 							&"completed",
 							0,
 							cancel,
-							true)
+							true,
+							name)
 				if from_init[0] is Callable:
 					return XDUT_FromMethodTask.create(
 						from_init[0],
 						cancel,
-						true)
+						true,
+						name)
 				if from_init[0] is Signal:
 					return XDUT_FromSignalTask.create(
 						from_init[0],
 						0,
 						cancel,
-						true)
+						true,
+						name)
 	if from_init is Awaitable:
 		return from_init
 	if from_init is Object:
@@ -125,23 +136,29 @@ static func create(
 				from_init,
 				&"wait",
 				cancel,
-				true)
+				true,
+				name)
 		if from_init.has_signal(&"completed"):
 			return XDUT_FromSignalNameTask.create(
 				from_init,
 				&"completed",
 				0,
 				cancel,
-				true)
+				true,
+				name)
 	if from_init is Callable:
 		return XDUT_FromMethodTask.create(
 			from_init,
 			cancel,
-			true)
+			true,
+			name)
 	if from_init is Signal:
 		return XDUT_FromSignalTask.create(
 			from_init,
 			0,
 			cancel,
-			true)
-	return XDUT_CompletedTask.new(from_init)
+			true,
+			name)
+	return XDUT_CompletedTask.new(
+		from_init,
+		name)

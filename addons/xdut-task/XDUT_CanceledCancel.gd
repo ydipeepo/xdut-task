@@ -36,3 +36,8 @@ func get_requested() -> bool:
 
 func request() -> void:
 	pass
+
+#-------------------------------------------------------------------------------
+
+func _to_string() -> String:
+	return "(requested)<CanceledCancel#%d>" % get_instance_id()

@@ -56,13 +56,13 @@ func release_complete(result: Variant = null) -> void:
 	match _state:
 		STATE_PENDING:
 			if _cancel != null:
-				_cancel.requested.disconnect(on_canceled)
+				_cancel.requested.disconnect(release_cancel_with_cleanup)
 				_cancel = null
 			_result = result
 			_state = STATE_COMPLETED
 		STATE_PENDING_WITH_WAITERS:
 			if _cancel != null:
-				_cancel.requested.disconnect(on_canceled)
+				_cancel.requested.disconnect(release_cancel_with_cleanup)
 				_cancel = null
 			_result = result
 			_state = STATE_COMPLETED
@@ -72,17 +72,17 @@ func release_cancel() -> void:
 	match _state:
 		STATE_PENDING:
 			if _cancel != null:
-				_cancel.requested.disconnect(on_canceled)
+				_cancel.requested.disconnect(release_cancel_with_cleanup)
 				_cancel = null
 			_state = STATE_CANCELED
 		STATE_PENDING_WITH_WAITERS:
 			if _cancel != null:
-				_cancel.requested.disconnect(on_canceled)
+				_cancel.requested.disconnect(release_cancel_with_cleanup)
 				_cancel = null
 			_state = STATE_CANCELED
 			_release.emit()
 
-func is_orphaned() -> bool:
+func is_indefinitely_pending() -> bool:
 	#
 	# 継承先で実装する必要があります。
 	#
@@ -90,10 +90,7 @@ func is_orphaned() -> bool:
 	assert(false)
 	return false
 
-func on_orphaned() -> void:
-	release_cancel()
-
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	release_cancel()
 
 func error_bad_state_at(input: Variant, input_index: int) -> void:
@@ -113,6 +110,7 @@ signal _release
 
 static var _canonical: Node
 
+var _name: StringName
 var _state: int = STATE_PENDING
 var _result: Variant
 var _cancel: Cancel
@@ -124,13 +122,19 @@ func _wait() -> void:
 func _wait_with_exotic_cancel(cancel: Cancel) -> void:
 	assert(_state == STATE_PENDING_WITH_WAITERS)
 	if cancel.is_requested:
-		release_cancel()
+		release_cancel_with_cleanup()
 	else:
-		cancel.requested.connect(release_cancel)
+		cancel.requested.connect(release_cancel_with_cleanup)
 		await _release
-		cancel.requested.disconnect(release_cancel)
+		cancel.requested.disconnect(release_cancel_with_cleanup)
 
-func _init(cancel: Cancel, monitor_deadlock: bool) -> void:
+func _init(
+	cancel: Cancel,
+	monitor_deadlock: bool,
+	name: StringName) -> void:
+
+	_name = name
+
 	if monitor_deadlock:
 		var canonical := get_canonical()
 		if canonical == null:
@@ -141,4 +145,19 @@ func _init(cancel: Cancel, monitor_deadlock: bool) -> void:
 	if cancel != null:
 		assert(not cancel.is_requested)
 		_cancel = cancel
-		_cancel.requested.connect(on_canceled)
+		_cancel.requested.connect(release_cancel_with_cleanup)
+
+func _to_string() -> String:
+	var str: String
+	match get_state():
+		STATE_PENDING:
+			str = "(pending)"
+		STATE_PENDING_WITH_WAITERS:
+			str = "(pending_with_waiters)"
+		STATE_CANCELED:
+			str = "(canceled)"
+		STATE_COMPLETED:
+			str = "(completed)"
+		_:
+			assert(false)
+	return "%s<%s#%d>" % [str, _name, get_instance_id()]

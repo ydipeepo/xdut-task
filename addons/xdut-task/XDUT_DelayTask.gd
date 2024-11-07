@@ -36,27 +36,29 @@ static func create(
 	ignore_pause: bool,
 	ignore_time_scale: bool,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"DelayTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
 	if timeout < _MIN_TIMEOUT:
 		push_warning("Invalid timeout.")
-		return XDUT_CompletedTask.new(null)
+		return XDUT_CompletedTask.new(null, name)
 	if timeout == _MIN_TIMEOUT:
-		return XDUT_CompletedTask.new(null)
+		return XDUT_CompletedTask.new(null, name)
 	return new(
 		timeout,
 		ignore_pause,
 		ignore_time_scale,
-		cancel)
+		cancel,
+		name)
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	if _timer != null:
 		_timer.timeout.disconnect(_on_timeout)
 		_timer = null
@@ -72,9 +74,10 @@ func _init(
 	timeout: float,
 	ignore_pause: bool,
 	ignore_time_scale: bool,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, false)
+	super(cancel, false, name)
 	var canonical := get_canonical()
 	if canonical != null:
 		_timer = canonical.create_timer(

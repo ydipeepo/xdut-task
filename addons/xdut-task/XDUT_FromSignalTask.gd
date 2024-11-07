@@ -41,30 +41,32 @@ static func create(
 	signal_: Signal,
 	signal_argc: int,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"FromSignalTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 	if not is_instance_valid(signal_.get_object()) or signal_.is_null():
 		push_error("Invalid object associated with signal.")
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if signal_argc < 0 and MAX_SIGNAL_ARGC < signal_argc:
 		push_error("Invalid signal argument count: ", signal_argc)
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 
 	return new(
 		signal_,
 		signal_argc,
-		cancel)
+		cancel,
+		name)
 
-func is_orphaned() -> bool:
+func is_indefinitely_pending() -> bool:
 	return is_pending and not is_instance_valid(_signal.get_object()) or _signal.is_null()
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
 		match _signal_argc:
 			0: _signal.disconnect(_on_completed_0)
@@ -83,9 +85,10 @@ var _signal_argc: int
 func _init(
 	signal_: Signal,
 	signal_argc: int,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, true)
+	super(cancel, true, name)
 	_signal = signal_
 	_signal_argc = signal_argc
 	match _signal_argc:

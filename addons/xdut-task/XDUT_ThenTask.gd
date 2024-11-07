@@ -35,14 +35,15 @@ static func create(
 	source_awaitable: Awaitable,
 	then_init: Variant,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"ThenTask") -> Task:
 
 	if not skip_pre_validation:
 		if not is_instance_valid(source_awaitable) or source_awaitable.is_canceled:
-			return XDUT_CanceledTask.new()
+			return XDUT_CanceledTask.new(name)
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
@@ -56,13 +57,15 @@ static func create(
 							then_init[0],
 							then_init[1],
 							cancel,
-							true)
+							true,
+							name)
 			1:
 				if then_init[0] is Awaitable:
 					return new(
 						source_awaitable,
 						then_init[0],
-						cancel)
+						cancel,
+						name)
 				if then_init[0] is Object:
 					if then_init[0].has_method(&"wait"):
 						return XDUT_ThenMethodNameTask.create(
@@ -70,18 +73,21 @@ static func create(
 							then_init[0],
 							&"wait",
 							cancel,
-							true)
+							true,
+							name)
 				if then_init[0] is Callable:
 					return XDUT_ThenMethodTask.create(
 						source_awaitable,
 						then_init[0],
 						cancel,
-						true)
+						true,
+						name)
 	if then_init is Awaitable:
 		return new(
 			source_awaitable,
 			then_init,
-			cancel)
+			cancel,
+			name)
 	if then_init is Object:
 		if then_init.has_method(&"wait"):
 			return XDUT_ThenMethodNameTask.create(
@@ -89,17 +95,20 @@ static func create(
 				then_init,
 				&"wait",
 				cancel,
-				true)
+				true,
+				name)
 	if then_init is Callable:
 		return XDUT_ThenMethodTask.create(
 			source_awaitable,
 			then_init,
 			cancel,
-			true)
+			true,
+			name)
 	return new(
 		source_awaitable,
 		then_init,
-		cancel)
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
@@ -108,9 +117,10 @@ var _then: Variant
 func _init(
 	source_awaitable: Awaitable,
 	then: Variant,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, false)
+	super(cancel, false, name)
 	_then = then
 	_perform(source_awaitable, cancel)
 

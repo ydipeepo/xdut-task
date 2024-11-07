@@ -36,31 +36,33 @@ static func create(
 	object: Object,
 	method_name: StringName,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"ThenCallbackNameTask") -> Task:
 
 	if not skip_pre_validation:
 		if not is_instance_valid(source_awaitable) or source_awaitable.is_canceled:
-			return XDUT_CanceledTask.new()
+			return XDUT_CanceledTask.new(name)
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 	if not is_instance_valid(object):
 		push_error("Invalid object.")
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if not object.has_method(method_name):
 		push_error("Invalid method name: ", method_name)
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if not object.get_method_argument_count(method_name) in _VALID_METHOD_ARGC:
 		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 
 	return new(
 		source_awaitable,
 		object,
 		method_name,
-		cancel)
+		cancel,
+		name)
 
 #-------------------------------------------------------------------------------
 
@@ -73,9 +75,10 @@ func _init(
 	source_awaitable: Awaitable,
 	object: Object,
 	method_name: StringName,
-	cancel: Cancel) -> void:
+	cancel: Cancel,
+	name: StringName) -> void:
 
-	super(cancel, false)
+	super(cancel, false, name)
 	_object = object
 	_method_name = method_name
 	_perform(source_awaitable, cancel)

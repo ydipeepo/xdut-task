@@ -33,18 +33,21 @@ class_name XDUT_DeferPhysicsTask extends XDUT_TaskBase
 
 static func create(
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"DeferPhysicsTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 
-	return new(cancel)
+	return new(
+		cancel,
+		name)
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	var canonical := get_canonical()
 	if canonical != null:
 		canonical.physics.disconnect(_on_completed)
@@ -52,8 +55,11 @@ func on_canceled() -> void:
 
 #-------------------------------------------------------------------------------
 
-func _init(cancel: Cancel) -> void:
-	super(cancel, false)
+func _init(
+	cancel: Cancel,
+	name: StringName) -> void:
+
+	super(cancel, false, name)
 	var canonical := get_canonical()
 	if canonical != null:
 		canonical.physics.connect(_on_completed)

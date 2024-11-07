@@ -42,31 +42,33 @@ static func create(
 	signal_name: StringName,
 	signal_argc: int,
 	cancel: Cancel,
-	skip_pre_validation := false) -> Task:
+	skip_pre_validation: bool,
+	name := &"FromSignalNameTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
 			if cancel.is_requested:
-				return XDUT_CanceledTask.new()
+				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
 	if not is_instance_valid(object):
 		push_error("Invalid object.")
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if not object.has_signal(signal_name):
 		push_error("Invalid signal name: ", signal_name)
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 	if signal_argc < 0 and MAX_SIGNAL_ARGC < signal_argc:
 		push_error("Invalid signal argument count: ", signal_argc)
-		return XDUT_CanceledTask.new()
+		return XDUT_CanceledTask.new(name)
 
 	return new(
 		object,
 		signal_name,
 		signal_argc,
-		cancel)
+		cancel,
+		name)
 
-func on_canceled() -> void:
+func release_cancel_with_cleanup() -> void:
 	if is_instance_valid(_object):
 		match _signal_argc:
 			0: _object.disconnect(_signal_name, _on_completed_0)
@@ -83,8 +85,14 @@ var _object: Object
 var _signal_name: StringName
 var _signal_argc: int
 
-func _init(object: Object, signal_name: StringName, signal_argc: int, cancel: Cancel) -> void:
-	super(cancel, false)
+func _init(
+	object: Object,
+	signal_name: StringName,
+	signal_argc: int,
+	cancel: Cancel,
+	name: StringName) -> void:
+
+	super(cancel, false, name)
 	_object = object
 	_signal_name = signal_name
 	_signal_argc = signal_argc
