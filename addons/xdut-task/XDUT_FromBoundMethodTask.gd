@@ -25,7 +25,7 @@
 #
 #-------------------------------------------------------------------------------
 
-class_name XDUT_FromMethodTask extends XDUT_TaskBase
+class_name XDUT_FromBoundMethodTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -33,9 +33,10 @@ class_name XDUT_FromMethodTask extends XDUT_TaskBase
 
 static func create(
 	method: Callable,
+	method_args: Array,
 	cancel: Cancel,
 	skip_pre_validation: bool,
-	name := &"FromMethodTask") -> Task:
+	name := &"FromBoundMethodTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
@@ -43,11 +44,19 @@ static func create(
 				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
+
+	if method_args.is_empty():
+		return XDUT_FromMethodTask.create(
+			method,
+			cancel,
+			true,
+			name)
+
 	if not method.is_valid():
 		push_error("Invalid object associated with method.")
 		return XDUT_CanceledTask.new(name)
 	var method_argc := method.get_argument_count()
-	match method_argc:
+	match method_argc - method_args.size():
 		0, 1:
 			pass
 		_:
@@ -57,6 +66,7 @@ static func create(
 	return new(
 		method,
 		method_argc,
+		method_args,
 		cancel,
 		name)
 
@@ -70,21 +80,23 @@ var _method: Callable
 func _init(
 	method: Callable,
 	method_argc: int,
+	method_args: Array,
 	cancel: Cancel,
 	name: StringName) -> void:
 
 	super(cancel, true, name)
 	_method = method
-	_perform(method_argc, cancel)
+	_perform(method_argc, method_args, cancel)
 
 func _perform(
 	method_argc: int,
+	method_args: Array,
 	cancel: Cancel) -> void:
 
 	var result: Variant
-	match method_argc:
-		0: result = await _method.call()
-		1: result = await _method.call(cancel)
+	match method_argc - method_args.size():
+		0: result = await _method.callv(method_args)
+		1: result = await _method.callv(method_args + [cancel])
 	if is_pending:
 		if _method.is_valid():
 			release_complete(result)

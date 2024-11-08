@@ -53,38 +53,42 @@ static func create(
 	if not object.has_method(method_name):
 		push_error("Invalid method name: ", method_name)
 		return XDUT_CanceledTask.new(name)
-	if not object.get_method_argument_count(method_name) in _VALID_METHOD_ARGC:
-		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return XDUT_CanceledTask.new(name)
+	var method_argc := object.get_method_argument_count(method_name)
+	match method_argc:
+		0, 1, 2:
+			pass
+		_:
+			push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
+			return XDUT_CanceledTask.new(name)
 
 	return new(
 		source_awaitable,
 		object,
 		method_name,
+		method_argc,
 		cancel,
 		name)
 
 #-------------------------------------------------------------------------------
 
-const _VALID_METHOD_ARGC: Array[int] = [0, 1, 2]
-
 var _object: Object
-var _method_name: StringName
 
 func _init(
 	source_awaitable: Awaitable,
 	object: Object,
 	method_name: StringName,
+	method_argc: int,
 	cancel: Cancel,
 	name: StringName) -> void:
 
 	super(cancel, false, name)
 	_object = object
-	_method_name = method_name
-	_perform(source_awaitable, cancel)
+	_perform(source_awaitable, method_name, method_argc, cancel)
 
 func _perform(
 	source_awaitable: Awaitable,
+	method_name: StringName,
+	method_argc: int,
 	cancel: Cancel) -> void:
 
 	var result: Variant = await source_awaitable.wait(cancel)
@@ -92,10 +96,10 @@ func _perform(
 		match source_awaitable.get_state():
 			STATE_COMPLETED:
 				if is_instance_valid(_object):
-					match _object.get_method_argument_count(_method_name):
-						0: result = await _object.call(_method_name)
-						1: result = await _object.call(_method_name, result)
-						2: result = await _object.call(_method_name, result, cancel)
+					match method_argc:
+						0: result = await _object.call(method_name)
+						1: result = await _object.call(method_name, result)
+						2: result = await _object.call(method_name, result, cancel)
 					if is_pending:
 						release_complete(result)
 				else:

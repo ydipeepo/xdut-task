@@ -25,17 +25,19 @@
 #
 #-------------------------------------------------------------------------------
 
-class_name XDUT_FromMethodTask extends XDUT_TaskBase
+class_name XDUT_FromBoundMethodNameTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
 
 static func create(
-	method: Callable,
+	object: Object,
+	method_name: StringName,
+	method_args: Array,
 	cancel: Cancel,
 	skip_pre_validation: bool,
-	name := &"FromMethodTask") -> Task:
+	name := &"FromBoundMethodNameTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
@@ -43,11 +45,23 @@ static func create(
 				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
-	if not method.is_valid():
-		push_error("Invalid object associated with method.")
+
+	if method_args.is_empty():
+		return XDUT_FromMethodNameTask.create(
+			object,
+			method_name,
+			cancel,
+			true,
+			name)
+
+	if not is_instance_valid(object):
+		push_error("Invalid object.")
 		return XDUT_CanceledTask.new(name)
-	var method_argc := method.get_argument_count()
-	match method_argc:
+	if not object.has_method(method_name):
+		push_error("Invalid method name: ", method_name)
+		return XDUT_CanceledTask.new(name)
+	var method_argc := object.get_method_argument_count(method_name)
+	match method_argc - method_args.size():
 		0, 1:
 			pass
 		_:
@@ -55,38 +69,38 @@ static func create(
 			return XDUT_CanceledTask.new(name)
 
 	return new(
-		method,
+		object,
+		method_name,
 		method_argc,
+		method_args,
 		cancel,
 		name)
 
-func is_indefinitely_pending() -> bool:
-	return is_pending and not _method.is_valid()
-
 #-------------------------------------------------------------------------------
 
-var _method: Callable
+var _object: Object
 
 func _init(
-	method: Callable,
+	object: Object,
+	method_name: StringName,
 	method_argc: int,
+	method_args: Array,
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, true, name)
-	_method = method
-	_perform(method_argc, cancel)
+	super(cancel, false, name)
+	_object = object
+	_perform(method_name, method_argc, method_args, cancel)
 
 func _perform(
+	method_name: StringName,
 	method_argc: int,
+	method_args: Array,
 	cancel: Cancel) -> void:
 
 	var result: Variant
-	match method_argc:
-		0: result = await _method.call()
-		1: result = await _method.call(cancel)
+	match method_argc - method_args.size():
+		0: result = await _object.callv(method_name, method_args)
+		1: result = await _object.callv(method_name, method_args + [cancel])
 	if is_pending:
-		if _method.is_valid():
-			release_complete(result)
-		else:
-			release_cancel()
+		release_complete(result)

@@ -595,6 +595,131 @@ theme_override_font_sizes/font_size = 10
 button_mask = 0
 text = "Task.unwrap()"
 
+[node name="Column_1_1_0" type="VBoxContainer" parent="Container/Content"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+localize_numeral_system = false
+theme_override_constants/separation = 0
+metadata/_edit_group_ = true
+
+[node name="Title" type="Label" parent="Container/Content/Column_1_1_0"]
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+localize_numeral_system = false
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "1.1.0 に含まれる機能"
+vertical_alignment = 1
+
+[node name="Row" type="HBoxContainer" parent="Container/Content/Column_1_1_0"]
+layout_mode = 2
+
+[node name="Column_1" type="VBoxContainer" parent="Container/Content/Column_1_1_0/Row"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+
+[node name="FromBoundMethod" type="CheckBox" parent="Container/Content/Column_1_1_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_bound_method()"
+
+[node name="FromBoundMethodName" type="CheckBox" parent="Container/Content/Column_1_1_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.from_bound_method_name()"
+
+[node name="ThenBoundMethod" type="CheckBox" parent="Container/Content/Column_1_1_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.then_bound_method()"
+
+[node name="ThenBoundMethodName" type="CheckBox" parent="Container/Content/Column_1_1_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.then_bound_method_name()"
+
+[node name="AnyIndex" type="CheckBox" parent="Container/Content/Column_1_1_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.any_index()"
+
+[node name="AllCount" type="CheckBox" parent="Container/Content/Column_1_1_0/Row/Column_1"]
+unique_name_in_owner = true
+auto_translate_mode = 2
+texture_filter = 1
+texture_repeat = 1
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+localize_numeral_system = false
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
+theme_override_constants/h_separation = 8
+theme_override_font_sizes/font_size = 10
+button_mask = 0
+text = "Task.all_count()"
+
 [node name="Separator_2" type="HSeparator" parent="Container"]
 auto_translate_mode = 2
 modulate = Color(1, 1, 1, 0.247059)

@@ -10379,6 +10379,2728 @@ func test_unwrap() -> void:
 
 	%Unwrap.button_pressed = true
 
+func test_from_bound_method() -> void:
+	var g: Scope
+	var t: Task
+
+	if "到達可能な RefCounted":
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と即時キャンセル":
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と遅延キャンセル":
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method(g.from_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+	if "到達不能な RefCounted":
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+	if "到達不能な RefCounted と即時キャンセル":
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+	if "到達不能な RefCounted と遅延キャンセル":
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_immediate_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.from_bound_method(l.from_bound_deferred_return, l.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+	%FromBoundMethod.button_pressed = true
+
+func test_from_bound_method_name() -> void:
+	var g: Scope
+	var t: Task
+
+	if "到達可能な RefCounted":
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と即時キャンセル":
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と遅延キャンセル":
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.from_bound_method_name(g, &"from_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+	%FromBoundMethodName.button_pressed = true
+
+func test_then_bound_method() -> void:
+	var g: Scope
+	var t: Task
+
+	if "到達可能な RefCounted":
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と即時キャンセル":
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と遅延キャンセル":
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method(g.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+	if "到達不能な RefCounted":
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+	if "到達不能な RefCounted と即時キャンセル":
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+	if "到達不能な RefCounted と遅延キャンセル":
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS)
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_immediate_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_completed)
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS)
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.canceled())
+			assert(t.is_canceled)
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		if true:
+			var l := Scope.new()
+			t = Task.completed().then_bound_method(l.then_bound_deferred_return, g.BOUND_ARGS, Cancel.deferred())
+			assert(t.is_pending)
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+	%ThenBoundMethod.button_pressed = true
+
+func test_then_bound_method_name() -> void:
+	var g: Scope
+	var t: Task
+
+	if "到達可能な RefCounted":
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait() == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait() == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と即時キャンセル":
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.canceled()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.canceled()) == null)
+		assert(t.is_canceled)
+
+	if "到達可能な RefCounted と遅延キャンセル":
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS)
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_immediate_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_completed)
+		await wait_defer()
+		assert(t.is_completed)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS)
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == Scope.RETURN)
+		assert(t.is_completed)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.canceled())
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+
+		g = Scope.new(); t = Task.completed().then_bound_method_name(g, &"then_bound_deferred_return", g.BOUND_ARGS, Cancel.deferred())
+		assert(t.is_pending)
+		await wait_defer()
+		assert(t.is_canceled)
+		assert(await t.wait(Cancel.deferred()) == null)
+		assert(t.is_canceled)
+	
+	%ThenBoundMethodName.button_pressed = true
+
+func test_any_index() -> void:
+	var t: Task
+	var p: Permutation
+
+	t = Task.any_index([])
+	assert(t.is_canceled)
+	assert(await t.wait() == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.canceled())
+	assert(t.is_canceled)
+	assert(await t.wait() == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.deferred())
+	assert(t.is_canceled)
+	assert(await t.wait() == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.deferred())
+	assert(t.is_canceled)
+	await wait_defer()
+	assert(t.is_canceled)
+	assert(await t.wait() == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([])
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.canceled()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.canceled())
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.canceled()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.deferred())
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.canceled()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.deferred())
+	assert(t.is_canceled)
+	await wait_defer()
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.canceled()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([])
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.deferred()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.canceled())
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.deferred()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.deferred())
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.deferred()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([], Cancel.deferred())
+	assert(t.is_canceled)
+	await wait_defer()
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.deferred()) == null)
+	assert(t.is_canceled)
+
+	t = Task.any_index([
+		Task.defer(),
+		Task.delay(0.1),
+		Task.canceled(),
+	])
+	assert(t.is_pending)
+	assert(await t.wait() == 0)
+	assert(t.is_completed)
+
+	t = Task.any_index([
+		Task.canceled(),
+		Task.defer(),
+		Task.delay(0.1),
+	])
+	assert(t.is_pending)
+	assert(await t.wait() == 1)
+	assert(t.is_completed)
+
+	t = Task.any_index([
+		Task.delay(0.1),
+		Task.canceled(),
+		Task.defer(),
+	])
+	assert(t.is_pending)
+	assert(await t.wait() == 2)
+	assert(t.is_completed)
+
+	if "直値":
+
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push(Scope.ARG1)
+			p.push(Scope.ARG2)
+			p.push(Scope.ARG3)
+			while p.next():
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+				
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+				
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+				
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+				
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+				
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+				
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+	if "ラップされたタスク":
+
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push_completed(Scope.ARG1)
+			p.push_completed(Scope.ARG2)
+			p.push_completed(Scope.ARG3)
+			while p.next():
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+	if "キャンセルされたタスク":
+		
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push_canceled()
+			p.push_canceled()
+			p.push_canceled()
+			while p.next():
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_canceled)
+				await wait_defer()
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_canceled)
+				await wait_defer()
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_canceled)
+				await wait_defer()
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+	if "遷移":
+
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push_defer()
+			p.push_defer()
+			p.push_defer()
+			while p.next():
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_pending)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+				t = Task.any_index(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+	%AnyIndex.button_pressed = true
+
+func test_all_count() -> void:
+	var t: Task
+	var p: Permutation
+
+	t = Task.all_count([])
+	assert(t.is_completed)
+	assert(await t.wait() == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([], Cancel.canceled())
+	assert(t.is_canceled)
+	assert(await t.wait() == null)
+	assert(t.is_canceled)
+
+	t = Task.all_count([], Cancel.deferred())
+	assert(t.is_completed)
+	assert(await t.wait() == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([], Cancel.deferred())
+	assert(t.is_completed)
+	await wait_defer()
+	assert(t.is_completed)
+	assert(await t.wait() == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([])
+	assert(t.is_completed)
+	assert(await t.wait(Cancel.canceled()) == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([], Cancel.canceled())
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.canceled()) == null)
+	assert(t.is_canceled)
+
+	t = Task.all_count([], Cancel.deferred())
+	assert(t.is_completed)
+	assert(await t.wait(Cancel.canceled()) == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([], Cancel.deferred())
+	assert(t.is_completed)
+	await wait_defer()
+	assert(t.is_completed)
+	assert(await t.wait(Cancel.canceled()) == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([])
+	assert(t.is_completed)
+	assert(await t.wait(Cancel.deferred()) == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([], Cancel.canceled())
+	assert(t.is_canceled)
+	assert(await t.wait(Cancel.deferred()) == null)
+	assert(t.is_canceled)
+
+	t = Task.all_count([], Cancel.deferred())
+	assert(t.is_completed)
+	assert(await t.wait(Cancel.deferred()) == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([], Cancel.deferred())
+	assert(t.is_completed)
+	await wait_defer()
+	assert(t.is_completed)
+	assert(await t.wait(Cancel.deferred()) == 0)
+	assert(t.is_completed)
+
+	t = Task.all_count([
+		Task.completed(),
+		Task.canceled(),
+		Task.canceled(),
+	])
+	assert(t.is_completed)
+	assert(await t.wait() == 1)
+	assert(t.is_completed)
+
+	t = Task.all_count([
+		Task.canceled(),
+		Task.completed(),
+		Task.canceled(),
+	])
+	assert(t.is_completed)
+	assert(await t.wait() == 1)
+	assert(t.is_completed)
+
+	t = Task.all_count([
+		Task.canceled(),
+		Task.canceled(),
+		Task.completed(),
+	])
+	assert(t.is_completed)
+	assert(await t.wait() == 1)
+	assert(t.is_completed)
+
+	if "直値":
+
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push(Scope.ARG1)
+			p.push(Scope.ARG2)
+			p.push(Scope.ARG3)
+			while p.next():
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+				
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+				
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+				
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+				
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+				
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+	if "ラップされたタスク":
+
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push_completed(Scope.ARG1)
+			p.push_completed(Scope.ARG2)
+			p.push_completed(Scope.ARG3)
+			while p.next():
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+	if "キャンセルされたタスク":
+
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push_canceled()
+			p.push_canceled()
+			p.push_canceled()
+			while p.next():
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait() == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_completed)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == 0)
+				assert(t.is_completed)
+
+	if "遷移":
+
+		for d: int in 2:
+			p = Permutation.new(d + 1)
+			p.push_defer()
+			p.push_defer()
+			p.push_defer()
+			while p.next():
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_pending)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait() == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait() == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.canceled()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.canceled()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.deferred()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.canceled())
+				assert(t.is_canceled)
+				assert(await t.wait(Cancel.deferred()) == null)
+				assert(t.is_canceled)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				assert(await t.wait(Cancel.deferred()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+				t = Task.all_count(p.get_inputs(), Cancel.deferred())
+				assert(t.is_pending)
+				await wait_defer()
+				assert(t.is_completed)
+				assert(await t.wait(Cancel.deferred()) == p.get_outputs().size())
+				assert(t.is_completed)
+
+	%AllCount.button_pressed = true
+
 #-------------------------------------------------------------------------------
 
 var _test_array: Array[Callable] = [
@@ -10395,7 +13117,6 @@ var _test_array: Array[Callable] = [
 	test_from_signal_name,
 	test_from_conditional_signal,
 	test_from_conditional_signal_name,
-
 	test_all,
 	test_all_settled,
 	test_any,
@@ -10408,13 +13129,20 @@ var _test_array: Array[Callable] = [
 	test_delay,
 	test_delay_msec,
 	test_delay_usec,
-
 	test_then,
 	test_then_method,
 	test_then_method_name,
 	test_then_callback,
 	test_then_callback_name,
 	test_unwrap,
+	
+	# 1.1.0
+	test_from_bound_method,
+	test_from_bound_method_name,
+	test_then_bound_method,
+	test_then_bound_method_name,
+	test_any_index,
+	test_all_count,
 ]
 
 var _samples: Array[Dictionary] = []
