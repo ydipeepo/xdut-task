@@ -11,6 +11,11 @@ const ARG3 := true
 const ARG4 := null
 const ARG5 := 0.5
 
+# BUG:
+# //github.com/godotengine/godot/issues/93600
+# const BOUND_ARGS := [1, 2, 3]
+var BOUND_ARGS := [1, 2, 3]
+
 #-------------------------------------------------------------------------------
 #	SIGNALS
 #-------------------------------------------------------------------------------
@@ -53,14 +58,40 @@ func emit_signal_5(arg1: Variant = ARG1, arg2: Variant = ARG2, arg3: Variant = A
 func from_immediate() -> void:
 	pass
 
+func from_bound_immediate(arg1: int, arg2: int, arg3: int) -> void:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
+
 func from_immediate_return() -> int:
+	return RETURN
+
+func from_bound_immediate_return(arg1: int, arg2: int, arg3: int) -> int:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
 	return RETURN
 
 func from_deferred() -> void:
 	emit_signal.call_deferred("_defer")
 	await _defer
 
+func from_bound_deferred(arg1: int, arg2: int, arg3: int) -> void:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
+	emit_signal.call_deferred("_defer")
+	await _defer
+
 func from_deferred_return() -> int:
+	emit_signal.call_deferred("_defer")
+	await _defer
+	return RETURN
+
+func from_bound_deferred_return(arg1: int, arg2: int, arg3: int) -> int:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
 	emit_signal.call_deferred("_defer")
 	await _defer
 	return RETURN
@@ -86,14 +117,40 @@ func from_callback_deferred_cancel(_set: Callable, cancel: Callable) -> void:
 func then_immediate(_input: Variant) -> void:
 	pass
 
+func then_bound_immediate(arg1: int, arg2: int, arg3: int, _input: Variant) -> void:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
+
 func then_immediate_return(_input: Variant) -> int:
+	return RETURN
+
+func then_bound_immediate_return(arg1: int, arg2: int, arg3: int, _input: Variant) -> int:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
 	return RETURN
 
 func then_deferred(_input: Variant) -> void:
 	emit_signal.call_deferred("_defer")
 	await _defer
 
+func then_bound_deferred(arg1: int, arg2: int, arg3: int, _input: Variant) -> void:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
+	emit_signal.call_deferred("_defer")
+	await _defer
+
 func then_deferred_return(_input: Variant) -> int:
+	emit_signal.call_deferred("_defer")
+	await _defer
+	return RETURN
+
+func then_bound_deferred_return(arg1: int, arg2: int, arg3: int, _input: Variant) -> int:
+	assert(arg1 == BOUND_ARGS[0])
+	assert(arg2 == BOUND_ARGS[1])
+	assert(arg3 == BOUND_ARGS[2])
 	emit_signal.call_deferred("_defer")
 	await _defer
 	return RETURN

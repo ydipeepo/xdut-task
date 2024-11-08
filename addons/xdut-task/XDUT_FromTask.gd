@@ -48,22 +48,32 @@ static func create(
 		match from_init.size():
 			3:
 				if from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
-					if from_init[2] is int:
-						return XDUT_FromSignalNameTask.create(
-							from_init[0],
-							from_init[1],
-							from_init[2],
-							cancel,
-							true,
-							name)
-					if from_init[2] is Array:
-						return XDUT_FromConditionalSignalNameTask.create_conditional(
-							from_init[0],
-							from_init[1],
-							from_init[2],
-							cancel,
-							true,
-							name)
+					if from_init[0].has_method(from_init[1]):
+						if from_init[2] is Array:
+							return XDUT_FromBoundMethodNameTask.create(
+								from_init[0],
+								from_init[1],
+								from_init[2],
+								cancel,
+								true,
+								name)
+					if from_init[0].has_signal(from_init[1]):
+						if from_init[2] is int:
+							return XDUT_FromSignalNameTask.create(
+								from_init[0],
+								from_init[1],
+								from_init[2],
+								cancel,
+								true,
+								name)
+						if from_init[2] is Array:
+							return XDUT_FromConditionalSignalNameTask.create_conditional(
+								from_init[0],
+								from_init[1],
+								from_init[2],
+								cancel,
+								true,
+								name)
 			2:
 				if from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
 					if from_init[0].has_method(from_init[1]):
@@ -78,6 +88,14 @@ static func create(
 							from_init[0],
 							from_init[1],
 							0,
+							cancel,
+							true,
+							name)
+				if from_init[0] is Callable:
+					if from_init[1] is Array:
+						return XDUT_FromBoundMethodTask.create(
+							from_init[0],
+							from_init[1],
 							cancel,
 							true,
 							name)

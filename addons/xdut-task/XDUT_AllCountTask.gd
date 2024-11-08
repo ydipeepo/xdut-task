@@ -25,17 +25,17 @@
 #
 #-------------------------------------------------------------------------------
 
-class_name XDUT_FromMethodTask extends XDUT_TaskBase
+class_name XDUT_AllCountTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
 
 static func create(
-	method: Callable,
+	from_inits: Array,
 	cancel: Cancel,
 	skip_pre_validation: bool,
-	name := &"FromMethodTask") -> Task:
+	name := &"AllCountTask") -> Task:
 
 	if not skip_pre_validation:
 		if is_instance_valid(cancel):
@@ -43,50 +43,54 @@ static func create(
 				return XDUT_CanceledTask.new(name)
 		else:
 			cancel = null
-	if not method.is_valid():
-		push_error("Invalid object associated with method.")
-		return XDUT_CanceledTask.new(name)
-	var method_argc := method.get_argument_count()
-	match method_argc:
-		0, 1:
-			pass
-		_:
-			push_error("Invalid method argument count: ", method_argc)
-			return XDUT_CanceledTask.new(name)
 
+	if from_inits.is_empty():
+		return XDUT_CompletedTask.new(0, name)
 	return new(
-		method,
-		method_argc,
+		from_inits,
 		cancel,
 		name)
 
-func is_indefinitely_pending() -> bool:
-	return is_pending and not _method.is_valid()
-
 #-------------------------------------------------------------------------------
 
-var _method: Callable
+var _remaining: int
+var _count: int
 
 func _init(
-	method: Callable,
-	method_argc: int,
+	from_inits: Array,
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, true, name)
-	_method = method
-	_perform(method_argc, cancel)
+	super(cancel, false, name)
+	var from_inits_size := from_inits.size()
+	var result_set := []; result_set.resize(from_inits_size)
+	_remaining = from_inits_size
+	for task_index: int in from_inits_size:
+		var task := XDUT_FromTask.create(
+			from_inits[task_index],
+			cancel,
+			true)
+		_perform(
+			task,
+			task_index,
+			cancel)
 
 func _perform(
-	method_argc: int,
+	task: Awaitable,
+	task_index: int,
 	cancel: Cancel) -> void:
 
-	var result: Variant
-	match method_argc:
-		0: result = await _method.call()
-		1: result = await _method.call(cancel)
+	await task.wait(cancel)
 	if is_pending:
-		if _method.is_valid():
-			release_complete(result)
-		else:
-			release_cancel()
+		match task.get_state():
+			STATE_COMPLETED:
+				_remaining -= 1
+				_count += 1
+				if _remaining == 0:
+					release_complete(_count)
+			STATE_CANCELED:
+				_remaining -= 1
+				if _remaining == 0:
+					release_complete(_count)
+			_:
+				error_bad_state_at(task, task_index)

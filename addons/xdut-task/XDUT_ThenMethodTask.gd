@@ -49,13 +49,18 @@ static func create(
 	if not method.is_valid():
 		push_error("Invalid object associated with method.")
 		return XDUT_CanceledTask.new(name)
-	if not method.get_argument_count() in _VALID_METHOD_ARGC:
-		push_error("Invalid method argument count: ", method.get_argument_count())
-		return XDUT_CanceledTask.new(name)
+	var method_argc := method.get_argument_count()
+	match method_argc:
+		0, 1, 2:
+			pass
+		_:
+			push_error("Invalid method argument count: ", method.get_argument_count())
+			return XDUT_CanceledTask.new(name)
 
 	return new(
 		source_awaitable,
 		method,
+		method_argc,
 		cancel,
 		name)
 
@@ -64,22 +69,22 @@ func is_indefinitely_pending() -> bool:
 
 #-------------------------------------------------------------------------------
 
-const _VALID_METHOD_ARGC: Array[int] = [0, 1, 2]
-
 var _method: Callable
 
 func _init(
 	source_awaitable: Awaitable,
 	method: Callable,
+	method_argc: int,
 	cancel: Cancel,
 	name: StringName) -> void:
 
 	super(cancel, true, name)
 	_method = method
-	_perform(source_awaitable, cancel)
+	_perform(source_awaitable, method_argc, cancel)
 
 func _perform(
 	source_awaitable: Awaitable,
+	method_argc: int,
 	cancel: Cancel) -> void:
 
 	var result: Variant = await source_awaitable.wait(cancel)
@@ -87,7 +92,7 @@ func _perform(
 		match source_awaitable.get_state():
 			STATE_COMPLETED:
 				if _method.is_valid():
-					match _method.get_argument_count():
+					match method_argc:
 						0: result = await _method.call()
 						1: result = await _method.call(result)
 						2: result = await _method.call(result, cancel)

@@ -49,10 +49,31 @@ static func create(
 
 	if then_init is Array:
 		match then_init.size():
+			3:
+				if then_init[0] is Object and (then_init[1] is String or then_init[1] is StringName):
+					if then_init[0].has_method(then_init[1]):
+						if then_init[2] is Array:
+							return XDUT_ThenBoundMethodNameTask.create(
+								source_awaitable,
+								then_init[0],
+								then_init[1],
+								then_init[2],
+								cancel,
+								true,
+								name)
 			2:
 				if then_init[0] is Object and (then_init[1] is String or then_init[1] is StringName):
 					if then_init[0].has_method(then_init[1]):
 						return XDUT_ThenMethodNameTask.create(
+							source_awaitable,
+							then_init[0],
+							then_init[1],
+							cancel,
+							true,
+							name)
+				if then_init[0] is Callable:
+					if then_init[1] is Array:
+						return XDUT_ThenBoundMethodTask.create(
 							source_awaitable,
 							then_init[0],
 							then_init[1],

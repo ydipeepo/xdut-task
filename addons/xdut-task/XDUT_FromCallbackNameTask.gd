@@ -50,36 +50,42 @@ static func create(
 	if not object.has_method(method_name):
 		push_error("Invalid method name: ", method_name)
 		return XDUT_CanceledTask.new(name)
-	if not object.get_method_argument_count(method_name) in _VALID_METHOD_ARGC:
-		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
-		return XDUT_CanceledTask.new(name)
+	var method_argc := object.get_method_argument_count(method_name)
+	match method_argc:
+		1, 2, 3:
+			pass
+		_:
+			push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
+			return XDUT_CanceledTask.new(name)
 
 	return new(
 		object,
 		method_name,
+		method_argc,
 		cancel,
 		name)
 
 #--------------------------------------------------------------------------------
 
-const _VALID_METHOD_ARGC: Array[int] = [1, 2, 3]
-
 var _object: Object
-var _method_name: StringName
 
 func _init(
 	object: Object,
 	method_name: StringName,
+	method_argc: int,
 	cancel: Cancel,
 	name: StringName) -> void:
 
 	super(cancel, false, name)
 	_object = object
-	_method_name = method_name
-	_perform(cancel)
+	_perform(method_name, method_argc, cancel)
 
-func _perform(cancel: Cancel) -> void:
-	match _object.get_method_argument_count(_method_name):
-		1: await _object.call(_method_name, release_complete)
-		2: await _object.call(_method_name, release_complete, release_cancel)
-		3: await _object.call(_method_name, release_complete, release_cancel, cancel)
+func _perform(
+	method_name: StringName,
+	method_argc: int,
+	cancel: Cancel) -> void:
+
+	match method_argc:
+		1: await _object.call(method_name, release_complete)
+		2: await _object.call(method_name, release_complete, release_cancel)
+		3: await _object.call(method_name, release_complete, release_cancel, cancel)

@@ -67,6 +67,40 @@ static func from(
 		cancel,
 		false)
 
+## コールバックを [Task] に変換します。[br]
+## [br]
+## コールバックは以下のシグネチャに一致している必要があります。[br]
+## - [code](resolve: Callable) -> void[/code][br]
+## - [code](resolve: Callable, reject: Callable) -> void[/code][br]
+## - [code](resolve: Callable, reject: Callable, cancel: Cancel) -> void[/code][br]
+## [code]resolve[/code] に渡した引数がこの [Task] の結果となります。
+static func from_callback(
+	method: Callable,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_FromCallbackTask.create(
+		method,
+		cancel,
+		false)
+
+## オブジェクトに定義されているコールバックを [Task] に変換します。[br]
+## [br]
+## コールバックは以下のシグネチャに一致している必要があります。[br]
+## - [code](set_: Callable) -> void[/code][br]
+## - [code](set_: Callable, cancel: Callable) -> void[/code][br]
+## [code]resolve[/code] に渡した引数がこの [Task] の結果となります。[br]
+## この [Task] は [param object] に対する強い参照を保持します。
+static func from_callback_name(
+	object: Object,
+	method_name: StringName,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_FromCallbackNameTask.create(
+		object,
+		method_name,
+		cancel,
+		false)
+
 ## メソッドを [Task] に変換します。[br]
 ## [br]
 ## メソッドは以下のシグネチャに一致している必要があります。[br]
@@ -100,37 +134,29 @@ static func from_method_name(
 		cancel,
 		false)
 
-## コールバックを [Task] に変換します。[br]
-## [br]
-## コールバックは以下のシグネチャに一致している必要があります。[br]
-## - [code](resolve: Callable) -> void[/code][br]
-## - [code](resolve: Callable, reject: Callable) -> void[/code][br]
-## - [code](resolve: Callable, reject: Callable, cancel: Cancel) -> void[/code][br]
-## [code]resolve[/code] に渡した引数がこの [Task] の結果となります。
-static func from_callback(
+## 引数を束縛したメソッドを [Task] に変換します。
+static func from_bound_method(
 	method: Callable,
+	method_args: Array,
 	cancel: Cancel = null) -> Task:
 
-	return XDUT_FromCallbackTask.create(
+	return XDUT_FromBoundMethodTask.create(
 		method,
+		method_args,
 		cancel,
 		false)
 
-## オブジェクトに定義されているコールバックを [Task] に変換します。[br]
-## [br]
-## コールバックは以下のシグネチャに一致している必要があります。[br]
-## - [code](set_: Callable) -> void[/code][br]
-## - [code](set_: Callable, cancel: Callable) -> void[/code][br]
-## [code]resolve[/code] に渡した引数がこの [Task] の結果となります。[br]
-## この [Task] は [param object] に対する強い参照を保持します。
-static func from_callback_name(
+## オブジェクトに定義されている引数を束縛したメソッドを [Task] 変換します。
+static func from_bound_method_name(
 	object: Object,
 	method_name: StringName,
+	method_args: Array,
 	cancel: Cancel = null) -> Task:
 
-	return XDUT_FromCallbackNameTask.create(
+	return XDUT_FromBoundMethodNameTask.create(
 		object,
 		method_name,
+		method_args,
 		cancel,
 		false)
 
@@ -299,6 +325,16 @@ static func all(
 		cancel,
 		false)
 
+## 全ての入力が完了もしくはキャンセルされるまで待機し完了した入力数を返す [Task] を作成します。
+static func all_count(
+	from_inits: Array,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_AllCountTask.create(
+		from_inits,
+		cancel,
+		false)
+
 ## 全ての入力が完了もしくはキャンセルされるまで待機する [Task] を作成します。[br]
 ## [br]
 ## [param from_inits] はルールに沿って正規化されます。詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/task-クラス#正規化規則]正規化規則[/url]をご覧ください。[br]
@@ -321,6 +357,16 @@ static func any(
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_AnyTask.create(
+		from_inits,
+		cancel,
+		false)
+
+## 入力の内どれかひとつが完了するまで待機し完了した入力のインデックスを返す [Task] を作成します。
+static func any_index(
+	from_inits: Array,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_AnyIndexTask.create(
 		from_inits,
 		cancel,
 		false)
@@ -437,32 +483,6 @@ static func create_then(
 		cancel,
 		false)
 
-## 結果をメソッドで受け取り継続させる [Task] を作成します。
-static func create_then_method(
-	source_awaitable: Awaitable,
-	method: Callable,
-	cancel: Cancel = null) -> Task:
-
-	return XDUT_ThenMethodTask.create(
-		source_awaitable,
-		method,
-		cancel,
-		false)
-
-## 結果をオブジェクトに定義されているメソッドで受け取り継続させる [Task] を作成します。
-static func create_then_method_name(
-	source_awaitable: Awaitable,
-	object: Object,
-	method_name: StringName,
-	cancel: Cancel = null) -> Task:
-
-	return XDUT_ThenMethodNameTask.create(
-		source_awaitable,
-		object,
-		method_name,
-		cancel,
-		false)
-
 ## 結果をコールバックで受け取り継続させる [Task] を作成します。
 static func create_then_callback(
 	source_awaitable: Awaitable,
@@ -489,6 +509,62 @@ static func create_then_callback_name(
 		cancel,
 		false)
 
+## 結果をメソッドで受け取り継続させる [Task] を作成します。
+static func create_then_method(
+	source_awaitable: Awaitable,
+	method: Callable,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_ThenMethodTask.create(
+		source_awaitable,
+		method,
+		cancel,
+		false)
+
+## 結果をオブジェクトに定義されているメソッドで受け取り継続させる [Task] を作成します。
+static func create_then_method_name(
+	source_awaitable: Awaitable,
+	object: Object,
+	method_name: StringName,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_ThenMethodNameTask.create(
+		source_awaitable,
+		object,
+		method_name,
+		cancel,
+		false)
+
+## 結果を引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+static func create_then_bound_method(
+	source_awaitable: Awaitable,
+	method: Callable,
+	method_args: Array,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_ThenBoundMethodTask.create(
+		source_awaitable,
+		method,
+		method_args,
+		cancel,
+		false)
+
+## 結果をオブジェクトに定義されている引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+static func create_then_bound_method_name(
+	source_awaitable: Awaitable,
+	object: Object,
+	method_name: StringName,
+	method_args: Array,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_ThenBoundMethodNameTask.create(
+		source_awaitable,
+		object,
+		method_name,
+		method_args,
+		cancel,
+		false)
+
 ## 結果をアンラップする [Task] を作成します。
 static func create_unwrap(
 	source_awaitable: Awaitable,
@@ -509,39 +585,6 @@ func then(
 	cancel: Cancel = null) -> Task:
 
 	return create_then(self, then_init, cancel)
-
-## この [Task] の完了後、結果をメソッドで受け取り継続させる [Task] を作成します。[br]
-## [br]
-## メソッドは以下のシグネチャに一致している必要があります。[br]
-## - [code]() -> Variant[/code][br]
-## - [code](cancel: Cancel) -> Variant[/code][br]
-## メソッドの戻り値がこの [Task] の結果になります。
-func then_method(
-	method: Callable,
-	cancel: Cancel = null) -> Task:
-
-	return create_then_method(
-		self,
-		method,
-		cancel)
-
-## この [Task] の完了後、結果をオブジェクトに定義されているメソッドで受け取り継続させる [Task] を作成します。[br]
-## [br]
-## メソッドは以下のシグネチャに一致している必要があります。[br]
-## - [code]() -> Variant[/code][br]
-## - [code](cancel: Cancel) -> Variant[/code][br]
-## メソッドの戻り値がこの [Task] の結果になります。[br]
-## この [Task] は [param object] に対する強い参照を保持します。
-func then_method_name(
-	object: Object,
-	method_name: StringName,
-	cancel: Cancel = null) -> Task:
-
-	return create_then_method_name(
-		self,
-		object,
-		method_name,
-		cancel)
 
 ## この [Task] の完了後、結果をコールバックで受け取り継続させる [Task] を作成します。[br]
 ## [br]
@@ -576,6 +619,65 @@ func then_callback_name(
 		self,
 		object,
 		method_name,
+		cancel)
+
+## この [Task] の完了後、結果をメソッドで受け取り継続させる [Task] を作成します。[br]
+## [br]
+## メソッドは以下のシグネチャに一致している必要があります。[br]
+## - [code]() -> Variant[/code][br]
+## - [code](cancel: Cancel) -> Variant[/code][br]
+## メソッドの戻り値がこの [Task] の結果になります。
+func then_method(
+	method: Callable,
+	cancel: Cancel = null) -> Task:
+
+	return create_then_method(
+		self,
+		method,
+		cancel)
+
+## この [Task] の完了後、結果をオブジェクトに定義されているメソッドで受け取り継続させる [Task] を作成します。[br]
+## [br]
+## メソッドは以下のシグネチャに一致している必要があります。[br]
+## - [code]() -> Variant[/code][br]
+## - [code](cancel: Cancel) -> Variant[/code][br]
+## メソッドの戻り値がこの [Task] の結果になります。[br]
+## この [Task] は [param object] に対する強い参照を保持します。
+func then_method_name(
+	object: Object,
+	method_name: StringName,
+	cancel: Cancel = null) -> Task:
+
+	return create_then_method_name(
+		self,
+		object,
+		method_name,
+		cancel)
+
+## この [Task] の完了後、結果を引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+func then_bound_method(
+	method: Callable,
+	method_args: Array,
+	cancel: Cancel = null) -> Task:
+
+	return create_then_bound_method(
+		self,
+		method,
+		method_args,
+		cancel)
+
+## この [Task] の完了後、結果をオブジェクトに定義されている引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+func then_bound_method_name(
+	object: Object,
+	method_name: StringName,
+	method_args: Array,
+	cancel: Cancel = null) -> Task:
+
+	return create_then_bound_method_name(
+		self,
+		object,
+		method_name,
+		method_args,
 		cancel)
 
 ## この [Task] の完了後、結果をアンラップする [Task] を作成します。
