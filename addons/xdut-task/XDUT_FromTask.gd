@@ -25,7 +25,7 @@
 #
 #-------------------------------------------------------------------------------
 
-class_name XDUT_FromTask # extends XDUT_TaskBase
+class_name XDUT_FromTask extends Task
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -115,8 +115,10 @@ static func create(
 							true,
 							name)
 			1:
-				if from_init[0] is Awaitable:
+				if from_init[0] is Task:
 					return from_init[0]
+				if from_init[0] is Awaitable:
+					return new(from_init[0])
 				if from_init[0] is Object:
 					if from_init[0].has_method(&"wait"):
 						return XDUT_FromMethodNameTask.create(
@@ -146,8 +148,10 @@ static func create(
 						cancel,
 						true,
 						name)
-	if from_init is Awaitable:
+	if from_init is Task:
 		return from_init
+	if from_init is Awaitable:
+		return new(from_init)
 	if from_init is Object:
 		if from_init.has_method(&"wait"):
 			return XDUT_FromMethodNameTask.create(
@@ -180,3 +184,19 @@ static func create(
 	return XDUT_CompletedTask.new(
 		from_init,
 		name)
+
+func get_state() -> int:
+	return _awaitable.get_state()
+
+func wait(cancel: Cancel = null) -> Variant:
+	return await _awaitable.wait(cancel)
+
+#-------------------------------------------------------------------------------
+
+var _awaitable: Awaitable
+
+func _init(awaitable: Awaitable) -> void:
+	_awaitable = awaitable
+
+func _to_string() -> String:
+	return _awaitable.to_string()
