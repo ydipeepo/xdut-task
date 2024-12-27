@@ -384,6 +384,21 @@ static func race(
 		cancel,
 		false)
 
+## リソースを読み込むタスクを作成します。[br]
+## [br]
+## [param resource_path] はリソースパスを指定します。[br]
+## [param resource_type] はリソースのタイプヒントを指定します。
+static func load(
+	resource_path: String,
+	resource_type := &"",
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_LoadTask.create(
+		resource_path,
+		resource_type,
+		cancel,
+		false)
+
 ## アイドル状態となるまで待機します。
 static func wait_defer(cancel: Cancel = null) -> Variant:
 	return await defer(cancel).wait(cancel)

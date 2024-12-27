@@ -25,7 +25,7 @@
 #
 #-------------------------------------------------------------------------------
 
-class_name XDUT_FromTask extends Task
+class_name XDUT_FromTask extends XDUT_TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -115,10 +115,11 @@ static func create(
 							true,
 							name)
 			1:
-				if from_init[0] is Task:
-					return from_init[0]
 				if from_init[0] is Awaitable:
-					return new(from_init[0])
+					return new(
+						from_init[0],
+						cancel,
+						name)
 				if from_init[0] is Object:
 					if from_init[0].has_method(&"wait"):
 						return XDUT_FromMethodNameTask.create(
@@ -148,10 +149,11 @@ static func create(
 						cancel,
 						true,
 						name)
-	if from_init is Task:
-		return from_init
 	if from_init is Awaitable:
-		return new(from_init)
+		return new(
+			from_init,
+			cancel,
+			name)
 	if from_init is Object:
 		if from_init.has_method(&"wait"):
 			return XDUT_FromMethodNameTask.create(
@@ -185,18 +187,25 @@ static func create(
 		from_init,
 		name)
 
-func get_state() -> int:
-	return _awaitable.get_state()
-
-func wait(cancel: Cancel = null) -> Variant:
-	return await _awaitable.wait(cancel)
-
 #-------------------------------------------------------------------------------
 
-var _awaitable: Awaitable
+func _init(
+	source_awaitable: Awaitable,
+	cancel: Cancel,
+	name: StringName) -> void:
 
-func _init(awaitable: Awaitable) -> void:
-	_awaitable = awaitable
+	super(cancel, false, name)
 
-func _to_string() -> String:
-	return _awaitable.to_string()
+	_perform(source_awaitable, cancel)
+
+func _perform(
+	source_awaitable: Awaitable,
+	cancel: Cancel) -> void:
+
+	var result: Variant = await source_awaitable.wait(cancel)
+	if is_pending:
+		match source_awaitable.get_state():
+			STATE_COMPLETED:
+				release_complete(result)
+			STATE_CANCELED:
+				release_cancel()
