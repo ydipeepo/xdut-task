@@ -46,7 +46,7 @@ func wait(cancel: Cancel = null) -> Variant:
 	if _state == STATE_PENDING:
 		_state = STATE_PENDING_WITH_WAITERS
 	if _state == STATE_PENDING_WITH_WAITERS:
-		if is_instance_valid(cancel):
+		if is_instance_valid(cancel) and not cancel.requested.is_connected(release_cancel_with_cleanup):
 			await _wait_with_exotic_cancel(cancel)
 		else:
 			await _wait()
