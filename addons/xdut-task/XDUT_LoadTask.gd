@@ -45,20 +45,11 @@ static func create(
 		else:
 			cancel = null
 
-	if resource_path in _pending_map:
-		return XDUT_FromTask.create(
-			_pending_map[resource_path],
-			cancel,
-			true,
-			name)
-
-	var task := new(
+	return new(
 		resource_path,
 		resource_type,
 		cancel,
 		name)
-	_pending_map[resource_path] = task
-	return task
 
 func release_cancel_with_cleanup() -> void:
 	var canonical := get_canonical()
@@ -67,8 +58,6 @@ func release_cancel_with_cleanup() -> void:
 	super()
 
 #-------------------------------------------------------------------------------
-
-static var _pending_map := {}
 
 var _resource_path: String
 
@@ -102,22 +91,16 @@ func _on_process(delta: float) -> void:
 	match ResourceLoader.load_threaded_get_status(_resource_path):
 		ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 			printerr("Failed to load due to reached invalid resource: ", _resource_path)
-			if _resource_path in _pending_map:
-				_pending_map.erase(_resource_path)
 			release_cancel_with_cleanup()
 		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 			pass
 		ResourceLoader.THREAD_LOAD_FAILED:
 			printerr("Failed to load due to some error occurred: ", _resource_path)
-			if _resource_path in _pending_map:
-				_pending_map.erase(_resource_path)
 			release_cancel_with_cleanup()
 		ResourceLoader.THREAD_LOAD_LOADED:
 			var canonical := get_canonical()
 			if canonical != null:
 				canonical.process_frame.disconnect(_on_process)
-			if _resource_path in _pending_map:
-				_pending_map.erase(_resource_path)
 			var resource := ResourceLoader.load_threaded_get(_resource_path)
 			if is_pending:
 				release_complete(resource)
