@@ -46,7 +46,7 @@ func wait(cancel: Cancel = null) -> Variant:
 	if _state == STATE_PENDING:
 		_state = STATE_PENDING_WITH_WAITERS
 	if _state == STATE_PENDING_WITH_WAITERS:
-		if is_instance_valid(cancel) and not cancel.requested.is_connected(release_cancel_with_cleanup):
+		if is_instance_valid(cancel) and not cancel.requested.is_connected(release_cancel):
 			await _wait_with_exotic_cancel(cancel)
 		else:
 			await _wait()
@@ -55,15 +55,11 @@ func wait(cancel: Cancel = null) -> Variant:
 func release_complete(result: Variant = null) -> void:
 	match _state:
 		STATE_PENDING:
-			if _cancel != null:
-				_cancel.requested.disconnect(release_cancel_with_cleanup)
-				_cancel = null
+			cleanup()
 			_result = result
 			_state = STATE_COMPLETED
 		STATE_PENDING_WITH_WAITERS:
-			if _cancel != null:
-				_cancel.requested.disconnect(release_cancel_with_cleanup)
-				_cancel = null
+			cleanup()
 			_result = result
 			_state = STATE_COMPLETED
 			_release.emit()
@@ -71,16 +67,18 @@ func release_complete(result: Variant = null) -> void:
 func release_cancel() -> void:
 	match _state:
 		STATE_PENDING:
-			if _cancel != null:
-				_cancel.requested.disconnect(release_cancel_with_cleanup)
-				_cancel = null
+			cleanup()
 			_state = STATE_CANCELED
 		STATE_PENDING_WITH_WAITERS:
-			if _cancel != null:
-				_cancel.requested.disconnect(release_cancel_with_cleanup)
-				_cancel = null
+			cleanup()
 			_state = STATE_CANCELED
 			_release.emit()
+
+func cleanup() -> void:
+	if _cancel != null:
+		if _cancel.requested.is_connected(release_cancel):
+			_cancel.requested.disconnect(release_cancel)
+		_cancel = null
 
 func is_indefinitely_pending() -> bool:
 	#
@@ -89,9 +87,6 @@ func is_indefinitely_pending() -> bool:
 
 	assert(false)
 	return false
-
-func release_cancel_with_cleanup() -> void:
-	release_cancel()
 
 func error_bad_state_at(input: Variant, input_index: int) -> void:
 	push_error("Bad state: inputs[%d] (%s)" % [
@@ -122,11 +117,11 @@ func _wait() -> void:
 func _wait_with_exotic_cancel(cancel: Cancel) -> void:
 	assert(_state == STATE_PENDING_WITH_WAITERS)
 	if cancel.is_requested:
-		release_cancel_with_cleanup()
+		release_cancel()
 	else:
-		cancel.requested.connect(release_cancel_with_cleanup)
+		cancel.requested.connect(release_cancel)
 		await _release
-		cancel.requested.disconnect(release_cancel_with_cleanup)
+		cancel.requested.disconnect(release_cancel)
 
 func _init(
 	cancel: Cancel,
@@ -145,7 +140,7 @@ func _init(
 	if cancel != null:
 		assert(not cancel.is_requested)
 		_cancel = cancel
-		_cancel.requested.connect(release_cancel_with_cleanup)
+		_cancel.requested.connect(release_cancel)
 
 func _to_string() -> String:
 	var str: String

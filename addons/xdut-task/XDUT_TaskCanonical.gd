@@ -121,7 +121,7 @@ func _on_monitor_deadlock() -> void:
 			continue
 		if task.is_indefinitely_pending():
 			_deadlock_monitor_task_wrefs[index] = null
-			task.release_cancel_with_cleanup()
+			task.release_cancel()
 			index += 1
 			continue
 		index += 1

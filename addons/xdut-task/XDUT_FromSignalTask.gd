@@ -66,15 +66,27 @@ static func create(
 func is_indefinitely_pending() -> bool:
 	return is_pending and not is_instance_valid(_signal.get_object()) or _signal.is_null()
 
-func release_cancel_with_cleanup() -> void:
+func cleanup() -> void:
 	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
 		match _signal_argc:
-			0: _signal.disconnect(_on_completed_0)
-			1: _signal.disconnect(_on_completed_1)
-			2: _signal.disconnect(_on_completed_2)
-			3: _signal.disconnect(_on_completed_3)
-			4: _signal.disconnect(_on_completed_4)
-			5: _signal.disconnect(_on_completed_5)
+			0:
+				if _signal.is_connected(_on_completed_0):
+					_signal.disconnect(_on_completed_0)
+			1:
+				if _signal.is_connected(_on_completed_1):
+					_signal.disconnect(_on_completed_1)
+			2:
+				if _signal.is_connected(_on_completed_2):
+					_signal.disconnect(_on_completed_2)
+			3:
+				if _signal.is_connected(_on_completed_3):
+					_signal.disconnect(_on_completed_3)
+			4:
+				if _signal.is_connected(_on_completed_4):
+					_signal.disconnect(_on_completed_4)
+			5:
+				if _signal.is_connected(_on_completed_5):
+					_signal.disconnect(_on_completed_5)
 	super()
 
 #-------------------------------------------------------------------------------
@@ -100,37 +112,25 @@ func _init(
 		5: _signal.connect(_on_completed_5)
 
 func _on_completed_0() -> void:
-	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
-		_signal.disconnect(_on_completed_0)
 	if is_pending:
 		release_complete([])
 
 func _on_completed_1(arg1: Variant) -> void:
-	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
-		_signal.disconnect(_on_completed_1)
 	if is_pending:
 		release_complete([arg1])
 
 func _on_completed_2(arg1: Variant, arg2: Variant) -> void:
-	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
-		_signal.disconnect(_on_completed_2)
 	if is_pending:
 		release_complete([arg1, arg2])
 
 func _on_completed_3(arg1: Variant, arg2: Variant, arg3: Variant) -> void:
-	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
-		_signal.disconnect(_on_completed_3)
 	if is_pending:
 		release_complete([arg1, arg2, arg3])
 
 func _on_completed_4(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant) -> void:
-	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
-		_signal.disconnect(_on_completed_4)
 	if is_pending:
 		release_complete([arg1, arg2, arg3, arg4])
 
 func _on_completed_5(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant, arg5: Variant) -> void:
-	if is_instance_valid(_signal.get_object()) and not _signal.is_null():
-		_signal.disconnect(_on_completed_5)
 	if is_pending:
 		release_complete([arg1, arg2, arg3, arg4, arg5])
