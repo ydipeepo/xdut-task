@@ -57,5 +57,4 @@ func _init(
 	_on_completed.call_deferred()
 
 func _on_completed() -> void:
-	if is_pending:
-		release_complete()
+	release_complete()

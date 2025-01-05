@@ -47,10 +47,11 @@ static func create(
 		cancel,
 		name)
 
-func release_cancel_with_cleanup() -> void:
+func cleanup() -> void:
 	var canonical := get_canonical()
 	if canonical != null:
-		canonical.physics_frame.disconnect(_on_completed)
+		if canonical.physics_frame.is_connected(_on_completed):
+			canonical.physics_frame.disconnect(_on_completed)
 	super()
 
 #-------------------------------------------------------------------------------
@@ -67,8 +68,4 @@ func _init(
 		release_cancel()
 
 func _on_completed(delta: float) -> void:
-	var canonical := get_canonical()
-	if canonical != null:
-		canonical.physics_frame.disconnect(_on_completed)
-	if is_pending:
-		release_complete(delta)
+	release_complete(delta)

@@ -68,15 +68,27 @@ static func create(
 		cancel,
 		name)
 
-func release_cancel_with_cleanup() -> void:
+func cleanup() -> void:
 	if is_instance_valid(_object):
 		match _signal_argc:
-			0: _object.disconnect(_signal_name, _on_completed_0)
-			1: _object.disconnect(_signal_name, _on_completed_1)
-			2: _object.disconnect(_signal_name, _on_completed_2)
-			3: _object.disconnect(_signal_name, _on_completed_3)
-			4: _object.disconnect(_signal_name, _on_completed_4)
-			5: _object.disconnect(_signal_name, _on_completed_5)
+			0:
+				if _object.is_connected(_signal_name, _on_completed_0):
+					_object.disconnect(_signal_name, _on_completed_0)
+			1:
+				if _object.is_connected(_signal_name, _on_completed_1):
+					_object.disconnect(_signal_name, _on_completed_1)
+			2:
+				if _object.is_connected(_signal_name, _on_completed_2):
+					_object.disconnect(_signal_name, _on_completed_2)
+			3:
+				if _object.is_connected(_signal_name, _on_completed_3):
+					_object.disconnect(_signal_name, _on_completed_3)
+			4:
+				if _object.is_connected(_signal_name, _on_completed_4):
+					_object.disconnect(_signal_name, _on_completed_4)
+			5:
+				if _object.is_connected(_signal_name, _on_completed_5):
+					_object.disconnect(_signal_name, _on_completed_5)
 	super()
 
 #-------------------------------------------------------------------------------
@@ -105,37 +117,25 @@ func _init(
 		5: _object.connect(_signal_name, _on_completed_5)
 
 func _on_completed_0() -> void:
-	if is_instance_valid(_object):
-		_object.disconnect(_signal_name, _on_completed_0)
 	if is_pending:
 		release_complete([])
 
 func _on_completed_1(arg1: Variant) -> void:
-	if is_instance_valid(_object):
-		_object.disconnect(_signal_name, _on_completed_1)
 	if is_pending:
 		release_complete([arg1])
 
 func _on_completed_2(arg1: Variant, arg2: Variant) -> void:
-	if is_instance_valid(_object):
-		_object.disconnect(_signal_name, _on_completed_2)
 	if is_pending:
 		release_complete([arg1, arg2])
 
 func _on_completed_3(arg1: Variant, arg2: Variant, arg3: Variant) -> void:
-	if is_instance_valid(_object):
-		_object.disconnect(_signal_name, _on_completed_3)
 	if is_pending:
 		release_complete([arg1, arg2, arg3])
 
 func _on_completed_4(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant) -> void:
-	if is_instance_valid(_object):
-		_object.disconnect(_signal_name, _on_completed_4)
 	if is_pending:
 		release_complete([arg1, arg2, arg3, arg4])
 
 func _on_completed_5(arg1: Variant, arg2: Variant, arg3: Variant, arg4: Variant, arg5: Variant) -> void:
-	if is_instance_valid(_object):
-		_object.disconnect(_signal_name, _on_completed_5)
 	if is_pending:
 		release_complete([arg1, arg2, arg3, arg4, arg5])

@@ -58,9 +58,10 @@ static func create(
 		cancel,
 		name)
 
-func release_cancel_with_cleanup() -> void:
+func cleanup() -> void:
 	if _timer != null:
-		_timer.timeout.disconnect(_on_timeout)
+		if _timer.timeout.is_connected(_on_timeout):
+			_timer.timeout.disconnect(_on_timeout)
 		_timer = null
 	super()
 
@@ -89,8 +90,4 @@ func _init(
 		release_cancel()
 
 func _on_timeout() -> void:
-	if _timer != null:
-		_timer.timeout.disconnect(_on_timeout)
-		_timer = null
-	if is_pending:
-		release_complete()
+	release_complete()

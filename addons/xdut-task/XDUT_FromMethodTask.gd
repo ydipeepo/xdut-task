@@ -85,8 +85,7 @@ func _perform(
 	match method_argc:
 		0: result = await _method.call()
 		1: result = await _method.call(cancel)
-	if is_pending:
-		if _method.is_valid():
-			release_complete(result)
-		else:
-			release_cancel()
+	if _method.is_valid():
+		release_complete(result)
+	else:
+		release_cancel()

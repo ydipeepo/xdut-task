@@ -89,5 +89,4 @@ func _perform(
 	match method_argc:
 		0: result = await _object.call(method_name)
 		1: result = await _object.call(method_name, cancel)
-	if is_pending:
-		release_complete(result)
+	release_complete(result)

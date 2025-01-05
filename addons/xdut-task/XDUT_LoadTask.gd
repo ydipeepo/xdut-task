@@ -51,10 +51,11 @@ static func create(
 		cancel,
 		name)
 
-func release_cancel_with_cleanup() -> void:
+func cleanup() -> void:
 	var canonical := get_canonical()
 	if canonical != null:
-		canonical.process_frame.disconnect(_on_process)
+		if canonical.process_frame.is_connected(_on_process):
+			canonical.process_frame.disconnect(_on_process)
 	super()
 
 #-------------------------------------------------------------------------------
@@ -91,16 +92,12 @@ func _on_process(delta: float) -> void:
 	match ResourceLoader.load_threaded_get_status(_resource_path):
 		ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 			printerr("Failed to load due to reached invalid resource: ", _resource_path)
-			release_cancel_with_cleanup()
+			release_cancel()
 		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 			pass
 		ResourceLoader.THREAD_LOAD_FAILED:
 			printerr("Failed to load due to some error occurred: ", _resource_path)
-			release_cancel_with_cleanup()
+			release_cancel()
 		ResourceLoader.THREAD_LOAD_LOADED:
-			var canonical := get_canonical()
-			if canonical != null:
-				canonical.process_frame.disconnect(_on_process)
 			var resource := ResourceLoader.load_threaded_get(_resource_path)
-			if is_pending:
-				release_complete(resource)
+			release_complete(resource)

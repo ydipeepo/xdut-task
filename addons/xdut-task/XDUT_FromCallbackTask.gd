@@ -87,12 +87,10 @@ func _perform(
 		3: await _method.call(_set_core, _cancel_core, cancel)
 
 func _set_core(result: Variant = null) -> void:
-	if is_pending:
-		if _method.is_valid():
-			release_complete(result)
-		else:
-			release_cancel()
+	if _method.is_valid():
+		release_complete(result)
+	else:
+		release_cancel()
 
 func _cancel_core() -> void:
-	if is_pending:
-		release_cancel()
+	release_cancel()
