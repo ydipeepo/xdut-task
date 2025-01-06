@@ -25,63 +25,72 @@
 #
 #-------------------------------------------------------------------------------
 
-class_name XDUT_LoadTask extends XDUT_TaskBase
+class_name XDUT_LoadTaskWorker
+
+#-------------------------------------------------------------------------------
+#	SIGNALS
+#-------------------------------------------------------------------------------
+
+signal loaded(resource: Variant)
+
+signal failed
 
 #-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
 
 static func create(
+	canonical: Node,
 	resource_path: String,
-	resource_type: StringName,
-	cancel: Cancel,
-	skip_pre_validation: bool,
-	name := &"LoadTask") -> Task:
+	resource_type: StringName) -> XDUT_LoadTaskWorker:
 
-	if not skip_pre_validation:
-		if is_instance_valid(cancel):
-			if cancel.is_requested:
-				return XDUT_CanceledTask.new(name)
-		else:
-			cancel = null
+	assert(canonical != null)
 
-	return new(
+	var result := ResourceLoader.load_threaded_request(
 		resource_path,
 		resource_type,
-		cancel,
-		name)
+		true,
+		ResourceLoader.CACHE_MODE_IGNORE)
+	if result != OK:
+		return null
 
-func cleanup() -> void:
-	if _worker != null:
-		_worker.loaded.disconnect(release_complete)
-		_worker.failed.disconnect(release_cancel)
-		_worker = null
-	super()
+	return new(canonical, resource_path)
 
 #-------------------------------------------------------------------------------
 
-var _worker: XDUT_LoadTaskWorker
+var _canonical: Node
+var _resource_path: String
 
 func _init(
-	resource_path: String,
-	resource_type: StringName,
-	cancel: Cancel,
-	name: StringName) -> void:
+	canonical: Node,
+	resource_path: String) -> void:
 
-	super(cancel, false, name)
+	reference()
 
-	var canonical := get_canonical()
-	if canonical == null:
-		release_cancel()
-		return
+	_resource_path = resource_path
+	_canonical = canonical
+	_canonical.process_frame.connect(_on_process)
 
-	_worker = XDUT_LoadTaskWorker.create(
-		canonical,
-		resource_path,
-		resource_type)
-	if _worker == null:
-		release_cancel()
-		return
+func _on_process(delta: float) -> void:
+	match ResourceLoader.load_threaded_get_status(_resource_path):
 
-	_worker.loaded.connect(release_complete)
-	_worker.failed.connect(release_cancel)
+		ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+			_canonical.process_frame.disconnect(_on_process)
+			printerr("Failed to load due to reached invalid resource: ", _resource_path)
+			failed.emit()
+			unreference()
+
+		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			pass
+
+		ResourceLoader.THREAD_LOAD_FAILED:
+			_canonical.process_frame.disconnect(_on_process)
+			printerr("Failed to load due to some error occurred: ", _resource_path)
+			failed.emit()
+			unreference()
+
+		ResourceLoader.THREAD_LOAD_LOADED:
+			_canonical.process_frame.disconnect(_on_process)
+			var resource := ResourceLoader.load_threaded_get(_resource_path)
+			loaded.emit(resource)
+			unreference()
