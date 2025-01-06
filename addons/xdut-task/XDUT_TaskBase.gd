@@ -55,23 +55,23 @@ func wait(cancel: Cancel = null) -> Variant:
 func release_complete(result: Variant = null) -> void:
 	match _state:
 		STATE_PENDING:
-			cleanup()
 			_result = result
 			_state = STATE_COMPLETED
+			cleanup()
 		STATE_PENDING_WITH_WAITERS:
-			cleanup()
 			_result = result
 			_state = STATE_COMPLETED
+			cleanup()
 			_release.emit()
 
 func release_cancel() -> void:
 	match _state:
 		STATE_PENDING:
-			cleanup()
 			_state = STATE_CANCELED
+			cleanup()
 		STATE_PENDING_WITH_WAITERS:
-			cleanup()
 			_state = STATE_CANCELED
+			cleanup()
 			_release.emit()
 
 func cleanup() -> void:
