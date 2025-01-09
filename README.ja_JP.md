@@ -50,6 +50,6 @@
 
 ## ライセンス
 
-🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/addons/xdut-task/LICENSE.md) ライセンスです。
+🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE.md) ライセンスです。
 
 <br />
