@@ -1,0 +1,1 @@
+addons/xdut-task/LICENSE.md

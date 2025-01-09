@@ -38,7 +38,7 @@
 > このアドオンは Godot Engine 及び Redot Engine に対応しています。
 >
 > * Godot Engine 4.3 ~
-> * Redot Engine 4.3 Beta 2 ~
+> * Redot Engine 4.3 ~
 
 <br />
 
@@ -50,6 +50,6 @@
 
 ## ライセンス
 
-🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE) ライセンスです。
+🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/addons/xdut-task/LICENSE.md) ライセンスです。
 
 <br />
