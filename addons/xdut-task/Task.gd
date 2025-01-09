@@ -1,30 +1,3 @@
-#-------------------------------------------------------------------------------
-#
-#
-#	Copyright 2022-2024 Ydi (@ydipeepo.bsky.social)
-#
-#
-#	Permission is hereby granted, free of charge, to any person obtaining
-#	a copy of this software and associated documentation files (the "Software"),
-#	to deal in the Software without restriction, including without limitation
-#	the rights to use, copy, modify, merge, publish, distribute, sublicense,
-#	and/or sell copies of the Software, and to permit persons to whom
-#	the Software is furnished to do so, subject to the following conditions:
-#
-#	The above copyright notice and this permission notice shall be included in
-#	all copies or substantial portions of the Software.
-#
-#	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-#	THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-#	ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-#	OTHER DEALINGS IN THE SOFTWARE.
-#
-#
-#-------------------------------------------------------------------------------
-
 ## 将来決まる値を抽象化するためのクラスです。
 class_name Task extends Awaitable
 
@@ -34,7 +7,9 @@ class_name Task extends Awaitable
 
 ## 条件一致を省略するためのプレースホルダです。[br]
 ## [br]
-## この定数は [method from_conditional_signal]、[from_conditional_signal_name] で使用します。
+## この定数は、[br]
+## - [method from_conditional_signal]、[br]
+## - [from_conditional_signal_name] で使用します。
 static var SKIP := Object.new()
 
 #-------------------------------------------------------------------------------
@@ -51,13 +26,15 @@ static func canceled() -> Task:
 
 ## 完了もキャンセルされることもない [Task] を作成します。[br]
 ## [br]
-## この [Task] は [param cancel] 引数を指定するか、[method wait] に [Cancel] を渡さない限りキャンセルできません。
+## この [Task] は [param cancel] 引数を指定するか、[br]
+## [method wait] に [Cancel] を渡さない限りキャンセルできません。
 static func never(cancel: Cancel = null) -> Task:
 	return XDUT_NeverTask.create(cancel, false)
 
 ## [Task] に変換します。[br]
 ## [br]
-## [param from_init] はルールに沿って正規化されます。詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/task-クラス#正規化規則]正規化規則[/url]をご覧ください。
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。
 static func from(
 	from_init: Variant,
 	cancel: Cancel = null) -> Task:
@@ -134,7 +111,7 @@ static func from_method_name(
 		cancel,
 		false)
 
-## 引数を束縛したメソッドを [Task] に変換します。
+## メソッドに引数を束縛し [Task] に変換します。
 static func from_bound_method(
 	method: Callable,
 	method_args: Array,
@@ -146,7 +123,7 @@ static func from_bound_method(
 		cancel,
 		false)
 
-## オブジェクトに定義されている引数を束縛したメソッドを [Task] 変換します。
+## オブジェクトに定義されているメソッドに引数を束縛し [Task] に変換します。
 static func from_bound_method_name(
 	object: Object,
 	method_name: StringName,
@@ -226,7 +203,8 @@ static func from_conditional_signal_name(
 
 ## アイドル状態となるまで待機する [Task] を作成します。[br]
 ## [br]
-## ここでのアイドル状態とは、プロセス、物理プロセスを抜けた直後、すなわち [method Node.call_deferred] で遅延した処理が開始されるタイミングを指します。
+## ここでのアイドル状態とは、プロセス、物理プロセスを抜けた直後、[br]
+## すなわち [method Node.call_deferred] で遅延した処理が開始されるタイミングを指します。
 static func defer(cancel: Cancel = null) -> Task:
 	return XDUT_DeferTask.create(
 		cancel,
@@ -235,7 +213,8 @@ static func defer(cancel: Cancel = null) -> Task:
 ## 次のルートプロセスフレームまで待機する [Task] を作成します。[br]
 ## [br]
 ## ここでのルートプロセスフレームとは、エンジンに設定されている [signal MainLoop.process_frame] が発火するタイミングを指します。[br]
-## [method defer_process] より優先しますが、フレーム末尾 ([method Node._process] の末尾) まで待機することはできません。[br]
+## [method defer_process] より優先しますが、[br]
+## フレーム末尾 ([method Node._process] の末尾) まで待機することはできません。[br]
 ## [method Node.get_process_delta_time] の戻り値がこの [Task] の結果となります。
 static func defer_process_frame(cancel: Cancel = null) -> Task:
 	return XDUT_DeferProcessFrameTask.create(
@@ -245,7 +224,8 @@ static func defer_process_frame(cancel: Cancel = null) -> Task:
 ## 次のルート物理フレームまで待機する [Task] を作成します。[br]
 ## [br]
 ## ここでのルート物理フレームとは、エンジンに設定されている [signal MainLoop.physics_frame] が発火するタイミングを指します。[br]
-## [method defer_physics] より優先しますが、フレーム末尾 ([method Node._physics_process] の末尾) まで待機することはできません。[br]
+## [method defer_physics] より優先しますが、[br]
+## フレーム末尾 ([method Node._physics_process] の末尾) まで待機することはできません。[br]
 ## [method Node.get_physics_process_delta_time] の戻り値がこの [Task] の結果となります。
 static func defer_physics_frame(cancel: Cancel = null) -> Task:
 	return XDUT_DeferPhysicsFrameTask.create(
@@ -314,7 +294,8 @@ static func delay_usec(
 
 ## 全ての入力が完了するまで待機する [Task] を作成します。[br]
 ## [br]
-## [param from_inits] はルールに沿って正規化されます。詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/task-クラス#正規化規則]正規化規則[/url]をご覧ください。[br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] を配列に格納したものが結果となります。[Awaitable] はアンラップされます。
 static func all(
 	from_inits: Array,
@@ -337,7 +318,8 @@ static func all_count(
 
 ## 全ての入力が完了もしくはキャンセルされるまで待機する [Task] を作成します。[br]
 ## [br]
-## [param from_inits] はルールに沿って正規化されます。詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/task-クラス#正規化規則]正規化規則[/url]をご覧ください。[br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] を配列に格納したものが結果となります。リテラルは [Task] にラップされます。
 static func all_settled(
 	from_inits: Array,
@@ -350,7 +332,8 @@ static func all_settled(
 
 ## 入力の内どれかひとつが完了するまで待機する [Task] を作成します。[br]
 ## [br]
-## [param from_inits] はルールに沿って正規化されます。詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/task-クラス#正規化規則]正規化規則[/url]をご覧ください。[br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] の内最初に完了したものが結果となります。[Awaitable] はアンラップされます。
 static func any(
 	from_inits: Array,
@@ -373,7 +356,8 @@ static func any_index(
 
 ## 入力の内どれかひとつが完了もしくはキャンセルされるまで待機する [Task] を作成します。[br]
 ## [br]
-## [param from_inits] はルールに沿って正規化されます。詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/task-クラス#正規化規則]正規化規則[/url]をご覧ください。[br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] の内最初に完了もしくはキャンセルされたものが結果となります。リテラルは [Task] にラップされます。
 static func race(
 	from_inits: Array,
@@ -550,7 +534,7 @@ static func create_then_method_name(
 		cancel,
 		false)
 
-## 結果を引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+## メソッドに引数を束縛し結果を受け取り継続させる [Task] を作成します。
 static func create_then_bound_method(
 	source_awaitable: Awaitable,
 	method: Callable,
@@ -564,7 +548,7 @@ static func create_then_bound_method(
 		cancel,
 		false)
 
-## 結果をオブジェクトに定義されている引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+## オブジェクトに定義されているメソッドに引数を束縛し結果を受け取り継続させる [Task] を作成します。
 static func create_then_bound_method_name(
 	source_awaitable: Awaitable,
 	object: Object,
@@ -594,7 +578,8 @@ static func create_unwrap(
 
 ## この [Task] の完了後、結果を受け取り継続させる [Task] を作成します。[br]
 ## [br]
-## [param then_init] はルールに沿って正規化されます。詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/task-クラス#正規化規則]正規化規則[/url]をご覧ください。
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。
 func then(
 	then_init: Variant,
 	cancel: Cancel = null) -> Task:
@@ -669,7 +654,7 @@ func then_method_name(
 		method_name,
 		cancel)
 
-## この [Task] の完了後、結果を引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+## この [Task] の完了後、メソッドに引数を束縛し結果を受け取り継続させる [Task] を作成します。
 func then_bound_method(
 	method: Callable,
 	method_args: Array,
@@ -681,7 +666,7 @@ func then_bound_method(
 		method_args,
 		cancel)
 
-## この [Task] の完了後、結果をオブジェクトに定義されている引数を束縛したメソッドで受け取り継続させる [Task] を作成します。
+## この [Task] の完了後、オブジェクトに定義されているメソッドに引数を束縛し結果を受け取り継続させる [Task] を作成します。
 func then_bound_method_name(
 	object: Object,
 	method_name: StringName,
