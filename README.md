@@ -37,7 +37,7 @@ It was created for the following purposes:
 > This add-on is compat with Godot Engine and Redot Engine.
 >
 > * Godot Engine 4.3 ~
-> * Redot Engine 4.3 Beta 2 ~
+> * Redot Engine 4.3 ~
 
 <br />
 
@@ -49,6 +49,6 @@ It was created for the following purposes:
 
 ## License
 
-🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE)
+🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/addons/xdut-task/LICENSE.md)
 
 <br />
