@@ -24,8 +24,15 @@ static func create(
 		cancel,
 		name)
 
+func cleanup() -> void:
+	if _cancel_pendings != null:
+		_cancel_pendings.request()
+		_cancel_pendings = null
+	super()
+
 #-------------------------------------------------------------------------------
 
+var _cancel_pendings := Cancel.create()
 var _remaining: int
 
 func _init(
@@ -43,15 +50,13 @@ func _init(
 			true)
 		_perform(
 			task,
-			task_index,
-			cancel)
+			task_index)
 
 func _perform(
 	task: Variant,
-	task_index: int,
-	cancel: Cancel) -> void:
+	task_index: int) -> void:
 
-	var result: Variant = await task.wait(cancel)
+	var result: Variant = await task.wait(_cancel_pendings)
 	if is_pending:
 		match task.get_state():
 			STATE_COMPLETED:
