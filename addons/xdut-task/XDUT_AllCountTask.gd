@@ -1,4 +1,4 @@
-class_name XDUT_AllCountTask extends XDUT_TaskBase
+class_name XDUT_AllCountTask extends TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -34,7 +34,8 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, false, name)
+	super(cancel, name)
+
 	var from_inits_size := from_inits.size()
 	var result_set := []; result_set.resize(from_inits_size)
 	_remaining = from_inits_size

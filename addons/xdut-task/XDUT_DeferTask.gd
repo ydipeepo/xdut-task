@@ -1,4 +1,4 @@
-class_name XDUT_DeferTask extends XDUT_TaskBase
+class_name XDUT_DeferTask extends TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -26,7 +26,8 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, false, name)
+	super(cancel, name)
+
 	_on_completed.call_deferred()
 
 func _on_completed() -> void:

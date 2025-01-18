@@ -49,6 +49,6 @@ It was created for the following purposes:
 
 ## License
 
-🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE.md)
+🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE)
 
 <br />

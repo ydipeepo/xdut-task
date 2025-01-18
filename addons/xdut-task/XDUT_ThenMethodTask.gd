@@ -1,4 +1,4 @@
-class_name XDUT_ThenMethodTask extends XDUT_TaskBase
+class_name XDUT_ThenMethodTask extends MonitoredTaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -51,7 +51,8 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, true, name)
+	super(cancel, name)
+
 	_method = method
 	_perform(source_awaitable, method_argc, cancel)
 

@@ -1,4 +1,4 @@
-class_name XDUT_AnyTask extends XDUT_TaskBase
+class_name XDUT_AnyTask extends TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -24,8 +24,17 @@ static func create(
 		cancel,
 		name)
 
+func cleanup() -> void:
+	for task_index: int in _awaitable_set.size():
+		var task: Task = _awaitable_set[task_index]
+		_awaitable_set[task_index] = null
+		if task is TaskBase:
+			task.release(self)
+	super()
+
 #-------------------------------------------------------------------------------
 
+var _awaitable_set: Array[Awaitable]
 var _remaining: int
 
 func _init(
@@ -33,25 +42,34 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, false, name)
+	super(cancel, name)
+
 	var from_inits_size := from_inits.size()
 	_remaining = from_inits_size
+	_awaitable_set.resize(from_inits_size)
 	for task_index: int in from_inits_size:
-		var task := XDUT_FromTask.create(
+		_awaitable_set[task_index] = XDUT_FromTask.create(
 			from_inits[task_index],
 			cancel,
 			true)
+	for task_index: int in from_inits_size:
+		var task: Task = _awaitable_set[task_index]
 		_perform(
 			task,
 			task_index,
 			cancel)
 
 func _perform(
-	task: Variant,
+	task: Task,
 	task_index: int,
 	cancel: Cancel) -> void:
 
-	var result: Variant = await task.wait(cancel)
+	var result: Variant
+	if task is TaskBase:
+		result = await task.wait_temporary(self, cancel)
+	elif task is Awaitable:
+		result = await task.wait(cancel)
+
 	if is_pending:
 		match task.get_state():
 			STATE_COMPLETED:

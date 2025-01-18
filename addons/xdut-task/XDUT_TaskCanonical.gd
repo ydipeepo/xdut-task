@@ -24,7 +24,7 @@ func create_timer(
 		false,
 		ignore_time_scale)
 
-func monitor_deadlock(task: XDUT_TaskBase) -> void:
+func monitor_deadlock(task: MonitoredTaskBase) -> void:
 	if _deadlock_monitor_enabled:
 		if _deadlock_monitor_task_wrefs.is_empty():
 			_deadlock_monitor_idle_spin = 0
@@ -64,7 +64,7 @@ func _exit_tree() -> void:
 		if _deadlock_monitor_task_wrefs.is_empty():
 			for task_wref: WeakRef in _deadlock_monitor_task_wrefs:
 				if task_wref != null:
-					var task: XDUT_TaskBase = task_wref.get_ref()
+					var task: MonitoredTaskBase = task_wref.get_ref()
 					if task != null:
 						task.release_cancel_with_cleanup()
 			_deadlock_monitor_task_wrefs.clear()
@@ -87,7 +87,7 @@ func _on_monitor_deadlock() -> void:
 		if task_wref == null:
 			index += 1
 			continue
-		var task: XDUT_TaskBase = task_wref.get_ref()
+		var task: MonitoredTaskBase = task_wref.get_ref()
 		if task == null:
 			_deadlock_monitor_task_wrefs[index] = null
 			index += 1

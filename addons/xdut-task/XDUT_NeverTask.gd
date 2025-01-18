@@ -1,4 +1,4 @@
-class_name XDUT_NeverTask extends XDUT_TaskBase
+class_name XDUT_NeverTask extends TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -26,4 +26,4 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, false, name)
+	super(cancel, name)

@@ -46,6 +46,7 @@ func _init(
 		signal_args.size(),
 		cancel,
 		name)
+
 	_signal_args = signal_args
 
 func _on_completed_1(arg1: Variant) -> void:

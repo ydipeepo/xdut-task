@@ -443,6 +443,15 @@ static func wait_all(
 		from_inits,
 		cancel).wait(cancel)
 
+## 全ての入力が完了もしくはキャンセルされるまで待機し完了した入力数を返します。
+static func wait_all_count(
+	from_inits: Array,
+	cancel: Cancel = null) -> Task:
+
+	return await all_count(
+		from_inits,
+		cancel).wait(cancel)
+
 ## 全ての入力が完了もしくはキャンセルされるまで待機します。
 static func wait_all_settled(
 	from_inits: Array,
@@ -458,6 +467,15 @@ static func wait_any(
 	cancel: Cancel = null) -> Variant:
 
 	return await any(
+		from_inits,
+		cancel).wait(cancel)
+
+## 入力の内どれかひとつが完了するまで待機し完了した入力のインデックスを返します。
+static func wait_any_index(
+	from_inits: Array,
+	cancel: Cancel = null) -> Task:
+
+	return await any_index(
 		from_inits,
 		cancel).wait(cancel)
 
