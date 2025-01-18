@@ -446,7 +446,7 @@ static func wait_all(
 ## 全ての入力が完了もしくはキャンセルされるまで待機し完了した入力数を返します。
 static func wait_all_count(
 	from_inits: Array,
-	cancel: Cancel = null) -> Task:
+	cancel: Cancel = null) -> Variant:
 
 	return await all_count(
 		from_inits,
@@ -473,7 +473,7 @@ static func wait_any(
 ## 入力の内どれかひとつが完了するまで待機し完了した入力のインデックスを返します。
 static func wait_any_index(
 	from_inits: Array,
-	cancel: Cancel = null) -> Task:
+	cancel: Cancel = null) -> Variant:
 
 	return await any_index(
 		from_inits,
