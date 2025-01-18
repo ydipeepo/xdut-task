@@ -31,10 +31,10 @@ func _init(name: StringName) -> void:
 	_name = name
 
 func _to_string() -> String:
-	var str: String
+	var prefix: String
 	match get_requested():
 		false:
-			str = "(pending)"
+			prefix = "(pending)"
 		true:
-			str = "(requested)"
-	return "%s<%s#%d>" % [str, _name, get_instance_id()]
+			prefix = "(requested)"
+	return "%s<%s#%d>" % [prefix, _name, get_instance_id()]

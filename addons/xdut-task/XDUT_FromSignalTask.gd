@@ -1,4 +1,4 @@
-class_name XDUT_FromSignalTask extends XDUT_TaskBase
+class_name XDUT_FromSignalTask extends MonitoredTaskBase
 
 #-------------------------------------------------------------------------------
 #	CONSTANTS
@@ -73,7 +73,8 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, true, name)
+	super(cancel, name)
+
 	_signal = signal_
 	_signal_argc = signal_argc
 	match _signal_argc:

@@ -84,16 +84,16 @@ func wait(cancel: Cancel = null) -> Variant:
 #-------------------------------------------------------------------------------
 
 func _to_string() -> String:
-	var str: String
+	var prefix: String
 	match get_state():
 		STATE_PENDING:
-			str = "(pending)"
+			prefix = "(pending)"
 		STATE_PENDING_WITH_WAITERS:
-			str = "(pending_with_waiters)"
+			prefix = "(pending_with_waiters)"
 		STATE_CANCELED:
-			str = "(canceled)"
+			prefix = "(canceled)"
 		STATE_COMPLETED:
-			str = "(completed)"
+			prefix = "(completed)"
 		_:
 			assert(false)
-	return "%s<Awaitable#%d>" % [str, get_instance_id()]
+	return "%s<Awaitable#%d>" % [prefix, get_instance_id()]

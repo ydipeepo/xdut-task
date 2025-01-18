@@ -1,4 +1,4 @@
-class_name XDUT_FromBoundMethodNameTask extends XDUT_TaskBase
+class_name XDUT_FromBoundMethodNameTask extends TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -61,7 +61,8 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, false, name)
+	super(cancel, name)
+
 	_object = object
 	_perform(method_name, method_argc, method_args, cancel)
 

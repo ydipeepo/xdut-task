@@ -1,4 +1,4 @@
-class_name XDUT_DeferProcessFrameTask extends XDUT_TaskBase
+class_name XDUT_DeferProcessFrameTask extends TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -33,7 +33,8 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, false, name)
+	super(cancel, name)
+
 	var canonical := get_canonical()
 	if canonical != null:
 		canonical.process_frame.connect(_on_completed)

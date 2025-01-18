@@ -1,4 +1,4 @@
-class_name XDUT_DeferPhysicsFrameTask extends XDUT_TaskBase
+class_name XDUT_DeferPhysicsFrameTask extends TaskBase
 
 #-------------------------------------------------------------------------------
 #	METHODS
@@ -33,7 +33,7 @@ func _init(
 	cancel: Cancel,
 	name: StringName) -> void:
 
-	super(cancel, false, name)
+	super(cancel, name)
 	var canonical := get_canonical()
 	if canonical != null:
 		canonical.physics_frame.connect(_on_completed)
