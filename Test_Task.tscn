@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dfu1el70148bc"]
 
-[ext_resource type="Script" path="res://Test_Task.gd" id="1_6j14v"]
+[ext_resource type="Script" uid="uid://dwryhnupatmwl" path="res://Test_Task.gd" id="1_6j14v"]
 
 [node name="Test_Task" type="MarginContainer"]
 auto_translate_mode = 2
