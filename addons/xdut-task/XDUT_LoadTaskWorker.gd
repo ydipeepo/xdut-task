@@ -14,7 +14,8 @@ signal failed
 static func create(
 	canonical: Node,
 	resource_path: String,
-	resource_type: StringName) -> XDUT_LoadTaskWorker:
+	resource_type: StringName,
+	cache_mode: ResourceLoader.CacheMode) -> XDUT_LoadTaskWorker:
 
 	assert(canonical != null)
 
@@ -22,7 +23,7 @@ static func create(
 		resource_path,
 		resource_type,
 		true,
-		ResourceLoader.CACHE_MODE_IGNORE)
+		cache_mode)
 	if result != OK:
 		return null
 	return new(canonical, resource_path)

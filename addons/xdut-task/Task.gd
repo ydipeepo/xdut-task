@@ -375,11 +375,13 @@ static func race(
 static func load(
 	resource_path: String,
 	resource_type := &"",
+	cache_mode := ResourceLoader.CACHE_MODE_IGNORE,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_LoadTask.create(
 		resource_path,
 		resource_type,
+		cache_mode,
 		cancel,
 		false)
 

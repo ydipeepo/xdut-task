@@ -7,6 +7,7 @@ class_name XDUT_LoadTask extends TaskBase
 static func create(
 	resource_path: String,
 	resource_type: StringName,
+	cache_mode: ResourceLoader.CacheMode,
 	cancel: Cancel,
 	skip_pre_validation: bool,
 	name := &"LoadTask") -> Task:
@@ -21,6 +22,7 @@ static func create(
 	return new(
 		resource_path,
 		resource_type,
+		cache_mode,
 		cancel,
 		name)
 
@@ -38,6 +40,7 @@ var _worker: XDUT_LoadTaskWorker
 func _init(
 	resource_path: String,
 	resource_type: StringName,
+	cache_mode: ResourceLoader.CacheMode,
 	cancel: Cancel,
 	name: StringName) -> void:
 
@@ -51,7 +54,8 @@ func _init(
 	_worker = XDUT_LoadTaskWorker.create(
 		canonical,
 		resource_path,
-		resource_type)
+		resource_type,
+		cache_mode)
 	if _worker == null:
 		release_cancel()
 		return
