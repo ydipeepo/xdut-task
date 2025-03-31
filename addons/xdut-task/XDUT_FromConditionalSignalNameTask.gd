@@ -40,7 +40,21 @@ static func create_conditional(
 var _signal_args: Array
 
 static func _match(a: Variant, b: Variant) -> bool:
-	return a is Object and a == SKIP or typeof(a) == typeof(b) and a == b
+	match typeof(a):
+		TYPE_OBJECT:
+			if a == SKIP:
+				return true
+		TYPE_STRING, \
+		TYPE_STRING_NAME:
+			match typeof(b):
+				TYPE_STRING, \
+				TYPE_STRING_NAME:
+					if a == b:
+						return true
+		_:
+			if typeof(a) == typeof(b) and a == b:
+				return true
+	return false
 
 func _init(
 	object: Object,
