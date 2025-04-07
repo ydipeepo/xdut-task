@@ -51,9 +51,7 @@ It was created for the following purposes:
 
 All contents of this project are licensed under the attached 🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE) license.
 
-<br />
-
-### Attribution
+#### Attribution
 
 Attribution is not required, but appreciated. If you would like to credit, please attribute to "Ydi".
 
