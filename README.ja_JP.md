@@ -53,3 +53,9 @@
 🔗 [MIT](https://github.com/ydipeepo/xdut-task/blob/main/LICENSE) ライセンスです。
 
 <br />
+
+### 表記
+
+ライセンスの表記は必須ではありませんが、歓迎いたします。クレジットする場合は、"Ydi" に帰属させてください。
+
+<br />
