@@ -4,7 +4,7 @@ English | [日本語](README.ja_JP.md)
 
 <br />
 
-# XDUT Task
+# 🧩 XDUT Task
 
 This add-on helps pseudo-asynchronous scripting, including a set of classes to handle future-determined values through a shared interface.
 
