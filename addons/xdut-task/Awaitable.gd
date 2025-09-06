@@ -67,6 +67,8 @@ static func get_canonical() -> Node:
 			.get_main_loop() \
 			.root \
 			.get_node("/root/XDUT_TaskCanonical")
+	if not is_instance_valid(_canonical):
+		_canonical = null
 	return _canonical
 
 ## この [Awaitable] の状態を取得します。
