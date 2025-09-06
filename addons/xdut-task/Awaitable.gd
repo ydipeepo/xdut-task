@@ -27,6 +27,14 @@ enum {
 #	PROPERTIES
 #-------------------------------------------------------------------------------
 
+static func get_canonical() -> Node:
+	if not is_instance_valid(_canonical):
+		_canonical = Engine \
+			.get_main_loop() \
+			.root \
+			.get_node("/root/XDUT_TaskCanonical")
+	return _canonical
+
 ## この [Awaitable] が完了している場合は [code]true[/code]、[br]
 ## それ以外の場合は [code]false[/code] を返します。[br]
 ## [br]
@@ -83,17 +91,23 @@ func wait(cancel: Cancel = null) -> Variant:
 
 #-------------------------------------------------------------------------------
 
+static var _canonical: Node
+
 func _to_string() -> String:
 	var prefix: String
 	match get_state():
 		STATE_PENDING:
-			prefix = "(pending)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_PENDING")
 		STATE_PENDING_WITH_WAITERS:
-			prefix = "(pending_with_waiters)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_PENDING_WITH_WAITERS")
 		STATE_CANCELED:
-			prefix = "(canceled)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_CANCELED")
 		STATE_COMPLETED:
-			prefix = "(completed)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_COMPLETED")
 		_:
 			assert(false)
-	return "%s<Awaitable#%d>" % [prefix, get_instance_id()]
+	return &"%s<Awaitable#%d>" % [prefix, get_instance_id()]

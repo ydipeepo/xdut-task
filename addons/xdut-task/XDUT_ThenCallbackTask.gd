@@ -20,10 +20,13 @@ static func create(
 		else:
 			cancel = null
 	if not method.is_valid():
-		push_error("Invalid object associated with method.")
+		push_error(get_canonical()
+			.translate(&"ERROR_BAD_OBJECT_ASSOCIATED_WITH_METHOD"))
 		return XDUT_CanceledTask.new(name)
 	if not method.get_argument_count() in _VALID_METHOD_ARGC:
-		push_error("Invalid method argument count: ", method.get_argument_count())
+		push_error(get_canonical()
+			.translate(&"ERROR_BAD_METHOD_ARGC")
+			.format([method.get_method(), method.get_argument_count()]))
 		return XDUT_CanceledTask.new(name)
 
 	return new(

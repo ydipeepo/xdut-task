@@ -21,13 +21,18 @@ static func create(
 		else:
 			cancel = null
 	if not is_instance_valid(object):
-		push_error("Invalid object.")
+		push_error(get_canonical()
+			.translate(&"ERROR_BAD_OBJECT"))
 		return XDUT_CanceledTask.new(name)
 	if not object.has_method(method_name):
-		push_error("Invalid method name: ", method_name)
+		push_error(get_canonical()
+			.translate(&"ERROR_BAD_METHOD_NAME")
+			.format([method_name]))
 		return XDUT_CanceledTask.new(name)
 	if not object.get_method_argument_count(method_name) in _VALID_METHOD_ARGC:
-		push_error("Invalid method argument count: ", object.get_method_argument_count(method_name))
+		push_error(get_canonical()
+			.translate(&"ERROR_BAD_METHOD_ARGC")
+			.format([method_name, object.get_method_argument_count(method_name)]))
 		return XDUT_CanceledTask.new(name)
 
 	return new(

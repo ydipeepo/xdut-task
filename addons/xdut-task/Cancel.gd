@@ -28,6 +28,14 @@ var is_requested: bool:
 #	METHODS
 #-------------------------------------------------------------------------------
 
+static func get_canonical() -> Node:
+	if not is_instance_valid(_canonical):
+		_canonical = Engine \
+			.get_main_loop() \
+			.root \
+			.get_node("/root/XDUT_TaskCanonical")
+	return _canonical
+
 ## キャンセルされていない [Cancel] を作成します。
 static func create() -> Cancel:
 	return XDUT_CancelBase.new(&"Cancel")
@@ -68,3 +76,7 @@ func request() -> void:
 	#
 
 	assert(false)
+
+#-------------------------------------------------------------------------------
+
+static var _canonical: Node
