@@ -101,10 +101,6 @@ func _add_translation(
 
 	_translation_domain.add_translation(translation)
 
-func _ready() -> void:
-	_add_translation(&"en", _TRANSLATION_EN)
-	_add_translation(&"ja", _TRANSLATION_JA)
-
 func _process(delta: float) -> void:
 	process.emit(delta)
 
@@ -112,6 +108,9 @@ func _physics_process(delta: float) -> void:
 	physics.emit(delta)
 
 func _enter_tree() -> void:
+	_add_translation(&"en", _TRANSLATION_EN)
+	_add_translation(&"ja", _TRANSLATION_JA)
+
 	_deadlock_monitor_enabled = ProjectSettings.get_setting("xdut/task/deadlock_monitor/enabled", true)
 	_deadlock_monitor_max_idle_spin = ProjectSettings.get_setting("xdut/task/deadlock_monitor/max_idle_spin", 3)
 	_deadlock_monitor_force_cancel_when_addon_exit_tree = ProjectSettings.get_setting("xdut/task/deadlock_monitor/force_cancel_when_addon_exit_tree", false)
