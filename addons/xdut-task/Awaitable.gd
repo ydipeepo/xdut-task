@@ -27,14 +27,6 @@ enum {
 #	PROPERTIES
 #-------------------------------------------------------------------------------
 
-static func get_canonical() -> Node:
-	if not is_instance_valid(_canonical):
-		_canonical = Engine \
-			.get_main_loop() \
-			.root \
-			.get_node("/root/XDUT_TaskCanonical")
-	return _canonical
-
 ## この [Awaitable] が完了している場合は [code]true[/code]、[br]
 ## それ以外の場合は [code]false[/code] を返します。[br]
 ## [br]
@@ -68,6 +60,14 @@ var is_pending: bool:
 #-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
+
+static func get_canonical() -> Node:
+	if not is_instance_valid(_canonical):
+		_canonical = Engine \
+			.get_main_loop() \
+			.root \
+			.get_node("/root/XDUT_TaskCanonical")
+	return _canonical
 
 ## この [Awaitable] の状態を取得します。
 func get_state() -> int:
