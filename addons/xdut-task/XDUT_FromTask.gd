@@ -19,109 +19,106 @@ static func create(
 
 	if from_init is Array:
 		match from_init.size():
-			3:
-				if from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
-					if from_init[0].has_method(from_init[1]):
-						if from_init[2] is Array:
-							return XDUT_FromBoundMethodNameTask.create(
-								from_init[0],
-								from_init[1],
-								from_init[2],
-								cancel,
-								true,
-								name)
-					if from_init[0].has_signal(from_init[1]):
-						if from_init[2] is int:
-							return XDUT_FromSignalNameTask.create(
-								from_init[0],
-								from_init[1],
-								from_init[2],
-								cancel,
-								true,
-								name)
-						if from_init[2] is Array:
-							return XDUT_FromConditionalSignalNameTask.create_conditional(
-								from_init[0],
-								from_init[1],
-								from_init[2],
-								cancel,
-								true,
-								name)
-			2:
-				if from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
-					if from_init[0].has_method(from_init[1]):
-						return XDUT_FromMethodNameTask.create(
+			3 when from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
+				if from_init[0].has_method(from_init[1]):
+					if from_init[2] is Array:
+						return XDUT_FromBoundMethodNameTask.create(
 							from_init[0],
 							from_init[1],
+							from_init[2],
 							cancel,
 							true,
 							name)
-					if from_init[0].has_signal(from_init[1]):
+				if from_init[0].has_signal(from_init[1]):
+					if from_init[2] is int:
 						return XDUT_FromSignalNameTask.create(
 							from_init[0],
 							from_init[1],
-							0,
+							from_init[2],
 							cancel,
 							true,
 							name)
-				if from_init[0] is Callable:
-					if from_init[1] is Array:
-						return XDUT_FromBoundMethodTask.create(
+					if from_init[2] is Array:
+						return XDUT_FromConditionalSignalNameTask.create_conditional(
 							from_init[0],
 							from_init[1],
+							from_init[2],
 							cancel,
 							true,
 							name)
-				if from_init[0] is Signal:
-					if from_init[1] is int:
-						return XDUT_FromSignalTask.create(
-							from_init[0],
-							from_init[1],
-							cancel,
-							true,
-							name)
-					if from_init[1] is Array:
-						return XDUT_FromConditionalSignalTask.create_conditional(
-							from_init[0],
-							from_init[1],
-							cancel,
-							true,
-							name)
-			1:
-				if from_init[0] is Awaitable:
-					return new(
+			2 when from_init[0] is Object and (from_init[1] is String or from_init[1] is StringName):
+				if from_init[0].has_method(from_init[1]):
+					return XDUT_FromMethodNameTask.create(
 						from_init[0],
-						cancel,
-						name)
-				if from_init[0] is Object:
-					if from_init[0].has_method(&"wait"):
-						return XDUT_FromMethodNameTask.create(
-							from_init[0],
-							&"wait",
-							cancel,
-							true,
-							name)
-					if from_init[0].has_signal(&"completed"):
-						return XDUT_FromSignalNameTask.create(
-							from_init[0],
-							&"completed",
-							0,
-							cancel,
-							true,
-							name)
-				if from_init[0] is Callable:
-					return XDUT_FromMethodTask.create(
-						from_init[0],
+						from_init[1],
 						cancel,
 						true,
 						name)
-				if from_init[0] is Signal:
-					return XDUT_FromSignalTask.create(
+				if from_init[0].has_signal(from_init[1]):
+					return XDUT_FromSignalNameTask.create(
 						from_init[0],
+						from_init[1],
 						0,
 						cancel,
 						true,
 						name)
+			2 when from_init[0] is Callable:
+				if from_init[1] is Array:
+					return XDUT_FromBoundMethodTask.create(
+						from_init[0],
+						from_init[1],
+						cancel,
+						true,
+						name)
+			2 when from_init[0] is Signal:
+				if from_init[1] is int:
+					return XDUT_FromSignalTask.create(
+						from_init[0],
+						from_init[1],
+						cancel,
+						true,
+						name)
+				if from_init[1] is Array:
+					return XDUT_FromConditionalSignalTask.create_conditional(
+						from_init[0],
+						from_init[1],
+						cancel,
+						true,
+						name)
+			1 when from_init[0] is Awaitable:
+				return new(
+					from_init[0],
+					cancel,
+					name)
+			1 when from_init[0] is Object:
+				if from_init[0].has_method(&"wait"):
+					return XDUT_FromMethodNameTask.create(
+						from_init[0],
+						&"wait",
+						cancel,
+						true,
+						name)
+				if from_init[0].has_signal(&"completed"):
+					return XDUT_FromSignalNameTask.create(
+						from_init[0],
+						&"completed",
+						0,
+						cancel,
+						true,
+						name)
+			1 when from_init[0] is Callable:
+				return XDUT_FromMethodTask.create(
+					from_init[0],
+					cancel,
+					true,
+					name)
+			1 when from_init[0] is Signal:
+				return XDUT_FromSignalTask.create(
+					from_init[0],
+					0,
+					cancel,
+					true,
+					name)
 	if from_init is Awaitable:
 		return new(
 			from_init,
