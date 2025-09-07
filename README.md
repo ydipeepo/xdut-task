@@ -36,7 +36,7 @@ It was created for the following purposes:
 > [!TIP]
 > This add-on is compat with Godot Engine and Redot Engine.
 >
-> * Godot Engine 4.4 ~
+> * Godot Engine 4.5 ~
 > * Redot Engine 4.3 ~ (If you are using Redot Engine 4.3, please use 1.3.0 instead of the latest version.)
 
 <br />
