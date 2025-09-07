@@ -17,7 +17,8 @@ static func create(
 		else:
 			cancel = null
 	if from_inits.is_empty():
-		push_warning("Invalid inputs.")
+		push_warning(get_canonical()
+			.translate(&"WARNING_BAD_INPUTS"))
 		return XDUT_NeverTask.create(
 			cancel,
 			true,

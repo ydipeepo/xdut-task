@@ -20,7 +20,8 @@ static func create(
 			cancel = null
 
 	if timeout < _MIN_TIMEOUT:
-		push_warning("Invalid timeout.")
+		push_error(get_canonical()
+			.translate(&"ERROR_BAD_TIMEOUT"))
 		return XDUT_CompletedTask.new(null, name)
 	if timeout == _MIN_TIMEOUT:
 		return XDUT_CompletedTask.new(null, name)

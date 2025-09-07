@@ -37,7 +37,7 @@
 > [!TIP]
 > このアドオンは Godot Engine 及び Redot Engine に対応しています。
 >
-> * Godot Engine 4.4 ~
+> * Godot Engine 4.5 ~
 > * Redot Engine 4.3 ~ (Redot Engine 4.3 を使っている場合は最新版ではなく代わりに 1.3.0 を使用してください)
 
 <br />

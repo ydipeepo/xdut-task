@@ -20,7 +20,8 @@ static func create(
 		else:
 			cancel = null
 	if depth < 0:
-		push_error("Invalid depth.")
+		push_error(get_canonical()
+			.translate(&"ERROR_BAD_UNWRAP_DEPTH"))
 		return XDUT_CanceledTask.new(name)
 	if depth == 0:
 		return source_awaitable

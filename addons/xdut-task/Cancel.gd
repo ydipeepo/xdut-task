@@ -1,4 +1,5 @@
 ## 外部から [Awaitable] をキャンセルするためのクラスです。
+@abstract
 class_name Cancel
 
 #-------------------------------------------------------------------------------
@@ -28,6 +29,16 @@ var is_requested: bool:
 #	METHODS
 #-------------------------------------------------------------------------------
 
+static func get_canonical() -> Node:
+	if not is_instance_valid(_canonical):
+		_canonical = Engine \
+			.get_main_loop() \
+			.root \
+			.get_node("/root/XDUT_TaskCanonical")
+	if not is_instance_valid(_canonical):
+		_canonical = null
+	return _canonical
+
 ## キャンセルされていない [Cancel] を作成します。
 static func create() -> Cancel:
 	return XDUT_CancelBase.new(&"Cancel")
@@ -53,18 +64,13 @@ static func timeout(
 
 ## キャンセルが要求されていれば [code]true[/code]、[br]
 ## それ以外の場合は [code]false[/code] を返します。
-func get_requested() -> bool:
-	#
-	# 継承先で実装する必要があります。
-	#
-	
-	assert(false)
-	return false
+@abstract
+func get_requested() -> bool
 
 ## キャンセルを要求します。
-func request() -> void:
-	#
-	# 継承先で実装する必要があります。
-	#
+@abstract
+func request() -> void
 
-	assert(false)
+#-------------------------------------------------------------------------------
+
+static var _canonical: Node

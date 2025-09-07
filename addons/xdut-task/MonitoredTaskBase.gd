@@ -1,4 +1,5 @@
 ## 外部から状態遷移に必要な追加のタイミングを与える必要のある [Task] の半実装。
+@abstract
 class_name MonitoredTaskBase extends TaskBase
 
 #-------------------------------------------------------------------------------
@@ -6,13 +7,8 @@ class_name MonitoredTaskBase extends TaskBase
 #-------------------------------------------------------------------------------
 
 ## 完了できない条件を満たしている場合は真を返すよう実装する必要があります。
-func is_indefinitely_pending() -> bool:
-	#
-	# 継承先で実装する必要があります。
-	#
-
-	assert(false)
-	return false
+@abstract
+func is_indefinitely_pending() -> bool
 
 #-------------------------------------------------------------------------------
 

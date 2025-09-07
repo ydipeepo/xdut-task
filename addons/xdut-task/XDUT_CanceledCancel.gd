@@ -13,4 +13,6 @@ func request() -> void:
 #-------------------------------------------------------------------------------
 
 func _to_string() -> String:
-	return "(requested)<CanceledCancel#%d>" % get_instance_id()
+	var prefix: StringName = get_canonical() \
+		.translate(&"CANCEL_STATE_REQUESTED")
+	return &"%s<CanceledCancel#%d>" % [prefix, get_instance_id()]

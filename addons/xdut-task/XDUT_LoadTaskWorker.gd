@@ -48,7 +48,9 @@ func _on_process(delta: float) -> void:
 		ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 			if is_instance_valid(_canonical):
 				_canonical.process_frame.disconnect(_on_process)
-			printerr("Failed to load due to reached invalid resource: ", _resource_path)
+			printerr(_canonical
+				.translate(&"ERROR_BAD_RESOURCE")
+				.format([_resource_path]))
 			failed.emit()
 			unreference()
 		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
@@ -56,7 +58,9 @@ func _on_process(delta: float) -> void:
 		ResourceLoader.THREAD_LOAD_FAILED:
 			if is_instance_valid(_canonical):
 				_canonical.process_frame.disconnect(_on_process)
-			printerr("Failed to load due to some error occurred: ", _resource_path)
+			printerr(_canonical
+				.translate(&"ERROR_BAD_RESOURCE_INTERNAL")
+				.format([_resource_path]))
 			failed.emit()
 			unreference()
 		ResourceLoader.THREAD_LOAD_LOADED:

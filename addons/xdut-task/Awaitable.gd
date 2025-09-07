@@ -1,4 +1,5 @@
 ## 将来決まる値を抽象化するための共通のインターフェイスクラスです。
+@abstract
 class_name Awaitable
 
 #-------------------------------------------------------------------------------
@@ -61,39 +62,45 @@ var is_pending: bool:
 #	METHODS
 #-------------------------------------------------------------------------------
 
-## この [Awaitable] の状態を取得します。
-func get_state() -> int:
-	#
-	# 継承先で実装する必要があります。
-	#
+static func get_canonical() -> Node:
+	if not is_instance_valid(_canonical):
+		_canonical = Engine \
+			.get_main_loop() \
+			.root \
+			.get_node("/root/XDUT_TaskCanonical")
+	if not is_instance_valid(_canonical):
+		_canonical = null
+	return _canonical
 
-	assert(false)
-	return STATE_PENDING
+## この [Awaitable] の状態を取得します。
+@abstract
+func get_state() -> int
 
 ## この [Awaitable] の結果が決まるまで待機します。[br]
 ## [br]
 ## キャンセルされている場合は [code]null[/code] を返します。
-func wait(cancel: Cancel = null) -> Variant:
-	#
-	# 継承先で実装する必要があります。
-	#
-
-	assert(false)
-	return await null
+@abstract
+func wait(cancel: Cancel = null) -> Variant
 
 #-------------------------------------------------------------------------------
+
+static var _canonical: Node
 
 func _to_string() -> String:
 	var prefix: String
 	match get_state():
 		STATE_PENDING:
-			prefix = "(pending)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_PENDING")
 		STATE_PENDING_WITH_WAITERS:
-			prefix = "(pending_with_waiters)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_PENDING_WITH_WAITERS")
 		STATE_CANCELED:
-			prefix = "(canceled)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_CANCELED")
 		STATE_COMPLETED:
-			prefix = "(completed)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_COMPLETED")
 		_:
 			assert(false)
-	return "%s<Awaitable#%d>" % [prefix, get_instance_id()]
+	return &"%s<Awaitable#%d>" % [prefix, get_instance_id()]

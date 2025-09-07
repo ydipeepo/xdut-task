@@ -18,4 +18,6 @@ func _init(name := &"CanceledTask") -> void:
 	_name = name
 
 func _to_string() -> String:
-	return "(canceled)<%s#%d>" % [_name, get_instance_id()]
+	var prefix: StringName = get_canonical() \
+		.translate(&"TASK_STATE_CANCELED")
+	return &"%s<%s#%d>" % [prefix, _name, get_instance_id()]

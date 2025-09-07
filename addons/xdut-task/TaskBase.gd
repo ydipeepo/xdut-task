@@ -1,30 +1,24 @@
 ## 入力のみで完結する [Task] の半実装。
+@abstract
 class_name TaskBase extends Task
 
 #-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
 
-static func get_canonical() -> Node:
-	if not is_instance_valid(_canonical):
-		_canonical = Engine \
-			.get_main_loop() \
-			.root \
-			.get_node("/root/XDUT_TaskCanonical")
-	return _canonical
-
 static func error_bad_state_at(
 	input: Variant,
 	input_index: int) -> void:
 
-	push_error("Bad state: inputs[%d] (%s)" % [
-		input_index,
-		input.to_string(),
-	])
+	push_error(get_canonical()
+		.translate(&"ERROR_BAD_STATE_WITH_ORDINAL")
+		.format([input, input_index]))
 	breakpoint # BUG
 
 static func error_bad_state(input: Variant) -> void:
-	push_error("Bad state: input (%s)" % input.to_string())
+	push_error(get_canonical()
+		.translate(&"ERROR_BAD_STATE")
+		.format([input]))
 	breakpoint # BUG
 
 func get_state() -> int:
@@ -119,8 +113,6 @@ func cleanup() -> void:
 
 signal _release(object: Object)
 
-static var _canonical: Node
-
 var _name: StringName
 var _state: int = STATE_PENDING
 var _result: Variant
@@ -142,13 +134,17 @@ func _to_string() -> String:
 	var prefix: String
 	match get_state():
 		STATE_PENDING:
-			prefix = "(pending)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_PENDING")
 		STATE_PENDING_WITH_WAITERS:
-			prefix = "(pending_with_waiters)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_PENDING_WITH_WAITERS")
 		STATE_CANCELED:
-			prefix = "(canceled)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_CANCELED")
 		STATE_COMPLETED:
-			prefix = "(completed)"
+			prefix = get_canonical() \
+				.translate(&"TASK_STATE_COMPLETED")
 		_:
 			assert(false)
-	return "%s<%s#%d>" % [prefix, _name, get_instance_id()]
+	return &"%s<%s#%d>" % [prefix, _name, get_instance_id()]

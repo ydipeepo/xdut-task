@@ -1,4 +1,5 @@
 ## 将来決まる値を抽象化するためのクラスです。
+@abstract
 class_name Task extends Awaitable
 
 #-------------------------------------------------------------------------------
@@ -35,7 +36,7 @@ static func never(cancel: Cancel = null) -> Task:
 ## [br]
 ## [param from_init] はルールに沿って正規化されます。[br]
 ## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。
-static func from(
+static func from_v(
 	from_init: Variant,
 	cancel: Cancel = null) -> Task:
 
@@ -43,6 +44,16 @@ static func from(
 		from_init,
 		cancel,
 		false)
+
+## [Task] に変換します。[br]
+## [br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。
+static func from(...from_init: Array) -> Task:
+	var cancel: Cancel = null
+	if not from_init.is_empty() and from_init.back() is Cancel:
+		cancel = from_init.pop_back()
+	return from_v(from_init, cancel)
 
 ## コールバックを [Task] に変換します。[br]
 ## [br]
@@ -297,7 +308,7 @@ static func delay_usec(
 ## [param from_init] はルールに沿って正規化されます。[br]
 ## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] を配列に格納したものが結果となります。[Awaitable] はアンラップされます。
-static func all(
+static func all_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
@@ -306,12 +317,44 @@ static func all(
 		cancel,
 		false)
 
+## 全ての入力が完了するまで待機する [Task] を作成します。[br]
+## [br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
+## [param from_inits] を配列に格納したものが結果となります。[Awaitable] はアンラップされます。
+static func all(...from_inits: Array) -> Task:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return all_v(from_inits, cancel)
+
 ## 全ての入力が完了もしくはキャンセルされるまで待機し完了した入力数を返す [Task] を作成します。
-static func all_count(
+static func all_count_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_AllCountTask.create(
+		from_inits,
+		cancel,
+		false)
+
+## 全ての入力が完了もしくはキャンセルされるまで待機し完了した入力数を返す [Task] を作成します。
+static func all_count(...from_inits: Array) -> Task:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return all_count_v(from_inits, cancel)
+
+## 全ての入力が完了もしくはキャンセルされるまで待機する [Task] を作成します。[br]
+## [br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
+## [param from_inits] を配列に格納したものが結果となります。リテラルは [Task] にラップされます。
+static func all_settled_v(
+	from_inits: Array,
+	cancel: Cancel = null) -> Task:
+
+	return XDUT_AllSettledTask.create(
 		from_inits,
 		cancel,
 		false)
@@ -321,11 +364,22 @@ static func all_count(
 ## [param from_init] はルールに沿って正規化されます。[br]
 ## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] を配列に格納したものが結果となります。リテラルは [Task] にラップされます。
-static func all_settled(
+static func all_settled(...from_inits: Array) -> Task:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return all_settled_v(from_inits, cancel)
+
+## 入力の内どれかひとつが完了するまで待機する [Task] を作成します。[br]
+## [br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
+## [param from_inits] の内最初に完了したものが結果となります。[Awaitable] はアンラップされます。
+static func any_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
-	return XDUT_AllSettledTask.create(
+	return XDUT_AnyTask.create(
 		from_inits,
 		cancel,
 		false)
@@ -335,21 +389,39 @@ static func all_settled(
 ## [param from_init] はルールに沿って正規化されます。[br]
 ## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] の内最初に完了したものが結果となります。[Awaitable] はアンラップされます。
-static func any(
+static func any(...from_inits: Array) -> Task:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return any_v(from_inits, cancel)
+
+## 入力の内どれかひとつが完了するまで待機し完了した入力のインデックスを返す [Task] を作成します。
+static func any_index_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
-	return XDUT_AnyTask.create(
+	return XDUT_AnyIndexTask.create(
 		from_inits,
 		cancel,
 		false)
 
 ## 入力の内どれかひとつが完了するまで待機し完了した入力のインデックスを返す [Task] を作成します。
-static func any_index(
+static func any_index(...from_inits: Array) -> Task:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return any_index_v(from_inits, cancel)
+
+## 入力の内どれかひとつが完了もしくはキャンセルされるまで待機する [Task] を作成します。[br]
+## [br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
+## [param from_inits] の内最初に完了もしくはキャンセルされたものが結果となります。リテラルは [Task] にラップされます。
+static func race_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Task:
 
-	return XDUT_AnyIndexTask.create(
+	return XDUT_RaceTask.create(
 		from_inits,
 		cancel,
 		false)
@@ -359,14 +431,11 @@ static func any_index(
 ## [param from_init] はルールに沿って正規化されます。[br]
 ## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。[br]
 ## [param from_inits] の内最初に完了もしくはキャンセルされたものが結果となります。リテラルは [Task] にラップされます。
-static func race(
-	from_inits: Array,
-	cancel: Cancel = null) -> Task:
-
-	return XDUT_RaceTask.create(
-		from_inits,
-		cancel,
-		false)
+static func race(...from_inits: Array) -> Task:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return race_v(from_inits, cancel)
 
 ## リソースを読み込むタスクを作成します。[br]
 ## [br]
@@ -387,23 +456,28 @@ static func load(
 
 ## アイドル状態となるまで待機します。
 static func wait_defer(cancel: Cancel = null) -> Variant:
-	return await defer(cancel).wait(cancel)
+	return await defer(cancel) \
+		.wait(cancel)
 
 ## 次のルートプロセスフレームまで待機します。
 static func wait_defer_process_frame(cancel: Cancel = null) -> Variant:
-	return await defer_process_frame(cancel).wait(cancel)
+	return await defer_process_frame(cancel) \
+		.wait(cancel)
 
 ## 次のルート物理フレームまで待機します。
 static func wait_defer_physics_frame(cancel: Cancel = null) -> Variant:
-	return await defer_physics_frame(cancel).wait(cancel)
+	return await defer_physics_frame(cancel) \
+		.wait(cancel)
 
 ## 次のプロセスフレームまで待機します。
 static func wait_defer_process(cancel: Cancel = null) -> Variant:
-	return await defer_process(cancel).wait(cancel)
+	return await defer_process(cancel) \
+		.wait(cancel)
 
 ## 次の物理フレームまで待機します。
 static func wait_defer_physics(cancel: Cancel = null) -> Variant:
-	return await defer_physics(cancel).wait(cancel)
+	return await defer_physics(cancel) \
+		.wait(cancel)
 
 ## タイムアウトするまで待機します。
 static func wait_delay(
@@ -412,86 +486,123 @@ static func wait_delay(
 	ignore_time_scale := false,
 	cancel: Cancel = null) -> Variant:
 
-	return await delay(
-		timeout,
-		ignore_pause,
-		ignore_time_scale,
-		cancel).wait(cancel)
+	return await delay(timeout, ignore_pause, ignore_time_scale, cancel) \
+		.wait(cancel)
 
 ## タイムアウト (ミリ秒で指定) するまで待機します。
 static func wait_delay_msec(
 	timeout: int,
 	cancel: Cancel = null) -> Variant:
 
-	return await delay_msec(
-		timeout,
-		cancel).wait(cancel)
+	return await delay_msec(timeout, cancel) \
+		.wait(cancel)
 
 ## タイムアウト (マイクロ秒で指定) するまで待機します。
 static func wait_delay_usec(
 	timeout: int,
 	cancel: Cancel = null) -> Variant:
 
-	return await delay_usec(
-		timeout,
-		cancel).wait(cancel)
+	return await delay_usec(timeout, cancel) \
+		.wait(cancel)
 
 ## 全ての入力が完了するまで待機します。
-static func wait_all(
+static func wait_all_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Variant:
 
-	return await all(
-		from_inits,
-		cancel).wait(cancel)
+	return await all_v(from_inits, cancel) \
+		.wait(cancel)
+
+## 全ての入力が完了するまで待機します。
+static func wait_all(...from_inits: Array) -> Variant:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return await all_v(from_inits, cancel) \
+		.wait(cancel)
 
 ## 全ての入力が完了もしくはキャンセルされるまで待機し完了した入力数を返します。
-static func wait_all_count(
+static func wait_all_count_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Variant:
 
-	return await all_count(
-		from_inits,
-		cancel).wait(cancel)
+	return await all_count_v(from_inits, cancel) \
+		.wait(cancel)
+
+## 全ての入力が完了もしくはキャンセルされるまで待機し完了した入力数を返します。
+static func wait_all_count(...from_inits: Array) -> Variant:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return await all_count_v(from_inits, cancel) \
+		.wait(cancel)
 
 ## 全ての入力が完了もしくはキャンセルされるまで待機します。
-static func wait_all_settled(
+static func wait_all_settled_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Variant:
 
-	return await all_settled(
-		from_inits,
-		cancel).wait(cancel)
+	return await all_settled_v(from_inits, cancel) \
+		.wait(cancel)
+
+## 全ての入力が完了もしくはキャンセルされるまで待機します。
+static func wait_all_settled(...from_inits: Array) -> Variant:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return await all_settled_v(from_inits, cancel) \
+		.wait(cancel)
 
 ## 入力の内どれかひとつが完了するまで待機します。
-static func wait_any(
+static func wait_any_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Variant:
 
-	return await any(
-		from_inits,
-		cancel).wait(cancel)
+	return await any_v(from_inits, cancel) \
+		.wait(cancel)
+
+## 入力の内どれかひとつが完了するまで待機します。
+static func wait_any(...from_inits: Array) -> Variant:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return await any_v(from_inits, cancel) \
+		.wait(cancel)
 
 ## 入力の内どれかひとつが完了するまで待機し完了した入力のインデックスを返します。
-static func wait_any_index(
+static func wait_any_index_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Variant:
 
-	return await any_index(
-		from_inits,
-		cancel).wait(cancel)
+	return await any_index_v(from_inits, cancel) \
+		.wait(cancel)
+
+## 入力の内どれかひとつが完了するまで待機し完了した入力のインデックスを返します。
+static func wait_any_index(...from_inits: Array) -> Variant:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return await any_index_v(from_inits, cancel) \
+		.wait(cancel)
 
 ## 入力の内どれかひとつが完了もしくはキャンセルされるまで待機します。
-static func wait_race(
+static func wait_race_v(
 	from_inits: Array,
 	cancel: Cancel = null) -> Variant:
 
-	return await race(
-		from_inits,
-		cancel).wait(cancel)
+	return await race_v(from_inits, cancel) \
+		.wait(cancel)
+
+## 入力の内どれかひとつが完了もしくはキャンセルされるまで待機します。
+static func wait_race(...from_inits: Array) -> Variant:
+	var cancel: Cancel = null
+	if not from_inits.is_empty() and from_inits.back() is Cancel:
+		cancel = from_inits.pop_back()
+	return await race_v(from_inits, cancel) \
+		.wait(cancel)
 
 ## 結果を受け取り継続させる [Task] を作成します。
-static func create_then(
+static func create_then_v(
 	source_awaitable: Awaitable,
 	then_init: Variant,
 	cancel: Cancel = null) -> Task:
@@ -501,6 +612,16 @@ static func create_then(
 		then_init,
 		cancel,
 		false)
+
+## 結果を受け取り継続させる [Task] を作成します。
+static func create_then(
+	source_awaitable: Awaitable,
+	...then_init: Array) -> Task:
+
+	var cancel: Cancel = null
+	if not then_init.is_empty() and then_init.back() is Cancel:
+		cancel = then_init.pop_back()
+	return create_then_v(source_awaitable, then_init, cancel)
 
 ## 結果をコールバックで受け取り継続させる [Task] を作成します。
 static func create_then_callback(
@@ -600,11 +721,21 @@ static func create_unwrap(
 ## [br]
 ## [param from_init] はルールに沿って正規化されます。[br]
 ## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。
-func then(
+func then_v(
 	then_init: Variant,
 	cancel: Cancel = null) -> Task:
 
-	return create_then(self, then_init, cancel)
+	return create_then_v(self, then_init, cancel)
+
+## この [Task] の完了後、結果を受け取り継続させる [Task] を作成します。[br]
+## [br]
+## [param from_init] はルールに沿って正規化されます。[br]
+## 詳しくは[url=https://github.com/ydipeepo/xdut-task/wiki/%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%A6%8F%E5%89%87]正規化規則[/url]をご覧ください。
+func then(...then_init: Array) -> Task:
+	var cancel: Cancel = null
+	if not then_init.is_empty() and then_init.back() is Cancel:
+		cancel = then_init.pop_back()
+	return then_v(then_init, cancel)
 
 ## この [Task] の完了後、結果をコールバックで受け取り継続させる [Task] を作成します。[br]
 ## [br]

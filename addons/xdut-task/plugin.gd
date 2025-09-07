@@ -25,7 +25,16 @@ static func _add_setting(
 static func _remove_setting(key: String) -> void:
 	ProjectSettings.clear(key)
 
-func _print(message: String, plugin_name: Variant = null) -> void:
+func _add_canonical() -> void:
+	add_autoload_singleton("XDUT_TaskCanonical", "XDUT_TaskCanonical.gd")
+
+func _remove_canonical() -> void:
+	remove_autoload_singleton("XDUT_TaskCanonical")
+
+func _print(
+	message: String,
+	plugin_name: Variant = null) -> void:
+
 	if OS.has_feature("editor"):
 		if plugin_name == null:
 			plugin_name = _get_plugin_name()
@@ -38,14 +47,11 @@ func _enter_tree() -> void:
 	_add_setting("xdut/task/deadlock_monitor/enabled", true, 0, "")
 	_add_setting("xdut/task/deadlock_monitor/max_idle_spin", 3, PROPERTY_HINT_RANGE, "1,100")
 	_add_setting("xdut/task/deadlock_monitor/force_cancel_when_addon_exit_tree", false, 0, "")
-
-	add_autoload_singleton("XDUT_TaskCanonical", "XDUT_TaskCanonical.gd")
-
+	_add_canonical()
 	_print("Activated.")
 
 func _exit_tree() -> void:
-	remove_autoload_singleton("XDUT_TaskCanonical")
-
+	_remove_canonical()
 	_remove_setting("xdut/task/deadlock_monitor/enabled")
 	_remove_setting("xdut/task/deadlock_monitor/max_idle_spin")
 	_remove_setting("xdut/task/deadlock_monitor/force_cancel_when_addon_exit_tree")
