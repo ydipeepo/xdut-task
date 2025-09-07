@@ -73,24 +73,14 @@ static func get_canonical() -> Node:
 	return _canonical
 
 ## この [Awaitable] の状態を取得します。
-func get_state() -> int:
-	#
-	# 継承先で実装する必要があります。
-	#
-
-	assert(false)
-	return STATE_PENDING
+@abstract
+func get_state() -> int
 
 ## この [Awaitable] の結果が決まるまで待機します。[br]
 ## [br]
 ## キャンセルされている場合は [code]null[/code] を返します。
-func wait(cancel: Cancel = null) -> Variant:
-	#
-	# 継承先で実装する必要があります。
-	#
-
-	assert(false)
-	return await null
+@abstract
+func wait(cancel: Cancel = null) -> Variant
 
 #-------------------------------------------------------------------------------
 

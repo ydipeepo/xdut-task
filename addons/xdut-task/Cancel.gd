@@ -64,21 +64,12 @@ static func timeout(
 
 ## キャンセルが要求されていれば [code]true[/code]、[br]
 ## それ以外の場合は [code]false[/code] を返します。
-func get_requested() -> bool:
-	#
-	# 継承先で実装する必要があります。
-	#
-	
-	assert(false)
-	return false
+@abstract
+func get_requested() -> bool
 
 ## キャンセルを要求します。
-func request() -> void:
-	#
-	# 継承先で実装する必要があります。
-	#
-
-	assert(false)
+@abstract
+func request() -> void
 
 #-------------------------------------------------------------------------------
 
