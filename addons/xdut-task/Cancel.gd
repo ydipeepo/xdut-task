@@ -29,14 +29,13 @@ var is_requested: bool:
 #	METHODS
 #-------------------------------------------------------------------------------
 
-static func get_canonical() -> Node:
+static func internal_task_get_canonical() -> Node:
 	if not is_instance_valid(_canonical):
 		_canonical = Engine \
 			.get_main_loop() \
 			.root \
 			.get_node("/root/XDUT_TaskCanonical")
-	if not is_instance_valid(_canonical):
-		_canonical = null
+	assert(is_instance_valid(_canonical), "XDUT Task is not activated.")
 	return _canonical
 
 ## キャンセルされていない [Cancel] を作成します。
@@ -61,6 +60,25 @@ static func timeout(
 		timeout_,
 		ignore_pause,
 		ignore_time_scale)
+
+## シグナルが発火すると要求される [Cancel] を作成します。[br]
+## [br]
+## 引数を受け取らないシグナルのみ使用できます。[br]
+## シグナルオブジェクトが無効になってもキャンセルは要求されません。
+static func from_signal(signal_: Signal) -> Cancel:
+	return XDUT_FromSignalCancel.new(signal_)
+
+## オブジェクトに定義されているシグナルが発火すると要求される [Cancel] を作成します。[br]
+## [br]
+## 引数を受け取らないシグナルのみ使用できます。[br]
+## シグナルオブジェクトが無効になってもキャンセルは要求されません。
+static func from_signal_name(
+	object: Object,
+	signal_name: StringName) -> Cancel:
+
+	return XDUT_FromSignalNameCancel.new(
+		object,
+		signal_name)
 
 ## キャンセルが要求されていれば [code]true[/code]、[br]
 ## それ以外の場合は [code]false[/code] を返します。

@@ -6,8 +6,46 @@
 
 # 🧩 XDUT Task
 
-将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、<br />
-非同期的スクリプティングを補助するためのアドオンです。
+[![1.5.0-pre](https://badgen.net/github/release/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/releases/tag/1.5.0-pre1) [![MIT](https://badgen.net/github/license/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/LICENSE)
+
+将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、非同期的スクリプティングを補助するためのアドオンです。
+
+```gdscript
+func meow() -> void:
+	await $MeowButton.pressed
+	$MeowButton.disabled = true
+	var meow_task := Task.from_conditional_signal(
+		$AnimationPlayer.animation_finished,
+		["MEOW"])
+	$AnimationPlayer.play("MEOW")
+	await meow_task.wait()
+
+func woof() -> void:
+	await $WoofButton.pressed
+	$WoofButton.disabled = true
+	var woof_task := Task.from_conditional_signal(
+		$AnimationPlayer.animation_finished,
+		["WOOF"])
+	$AnimationPlayer.play("WOOF")
+	await woof_task.wait()
+
+func play_around() -> void:
+	var play_around_task := Task.from_conditional_signal(
+		$AnimationPlayer.animation_finished,
+		["PLAY_AROUND"])
+	$AnimationPlayer.play("PLAY_AROUND")
+	await play_around_task.wait()
+	$MeowButton.disabled = false
+	$WoofButton.disabled = false
+
+func _ready() -> void:
+	var cancel := Cancel.from_signal($QuitButton.pressed)
+	while not cancel.is_requested:
+		await Task \
+			.all(meow, woof) \
+			.then(play_around) \
+			.wait(cancel)
+```
 
 <br />
 
@@ -37,8 +75,8 @@
 > [!TIP]
 > このアドオンは Godot Engine 及び Redot Engine に対応しています。
 >
-> * Godot Engine 4.5 ~
-> * Redot Engine 4.3 ~ (Redot Engine 4.3 を使っている場合は最新版ではなく代わりに 1.3.0 を使用してください)
+> * Godot Engine 4.5 ~ (1.5.0 ~)
+> * Redot Engine 4.3 ~ (1.3.0)
 
 <br />
 

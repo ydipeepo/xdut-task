@@ -19,16 +19,16 @@ static func create_conditional(
 		else:
 			cancel = null
 	if not is_instance_valid(object):
-		push_error(get_canonical()
+		push_error(internal_task_get_canonical()
 			.translate(&"ERROR_BAD_OBJECT"))
 		return XDUT_CanceledTask.new(name)
 	if not object.has_signal(signal_name):
-		push_error(get_canonical()
+		push_error(internal_task_get_canonical()
 			.translate(&"ERROR_BAD_SIGNAL_NAME")
 			.format([signal_name]))
 		return XDUT_CanceledTask.new(name)
 	if MAX_SIGNAL_ARGC < signal_args.size():
-		push_error(get_canonical()
+		push_error(internal_task_get_canonical()
 			.translate(&"ERROR_BAD_SIGNAL_ARGC")
 			.format([signal_name, signal_args.size()]))
 		return XDUT_CanceledTask.new(name)

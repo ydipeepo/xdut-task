@@ -20,6 +20,6 @@ func _init(result: Variant, name := &"CompletedTask") -> void:
 	_result = result
 
 func _to_string() -> String:
-	var prefix: StringName = get_canonical() \
+	var prefix: StringName = internal_task_get_canonical() \
 		.translate(&"TASK_STATE_COMPLETED")
 	return &"%s<%s#%d>" % [prefix, _name, get_instance_id()]

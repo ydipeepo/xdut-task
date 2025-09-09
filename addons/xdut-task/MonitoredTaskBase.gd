@@ -12,14 +12,7 @@ func is_indefinitely_pending() -> bool
 
 #-------------------------------------------------------------------------------
 
-func _init(
-	cancel: Cancel,
-	name: StringName) -> void:
-
+func _init(cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
-
-	var canonical := get_canonical()
-	if canonical == null:
-		release_cancel()
-		return
-	canonical.monitor_deadlock(self)
+	internal_task_get_canonical() \
+		.monitor_deadlock(self)

@@ -12,19 +12,18 @@ static func create(
 	skip_pre_validation: bool,
 	name := &"DelayTask") -> Task:
 
+	if not is_instance_valid(cancel):
+		cancel = null
 	if not skip_pre_validation:
-		if is_instance_valid(cancel):
-			if cancel.is_requested:
-				return XDUT_CanceledTask.new(name)
-		else:
-			cancel = null
-
+		if cancel != null and cancel.is_requested:
+			return XDUT_CanceledTask.new(name)
 	if timeout < _MIN_TIMEOUT:
-		push_error(get_canonical()
+		push_error(internal_task_get_canonical()
 			.translate(&"ERROR_BAD_TIMEOUT"))
 		return XDUT_CompletedTask.new(null, name)
 	if timeout == _MIN_TIMEOUT:
 		return XDUT_CompletedTask.new(null, name)
+
 	return new(
 		timeout,
 		ignore_pause,
@@ -53,16 +52,12 @@ func _init(
 	name: StringName) -> void:
 
 	super(cancel, name)
-
-	var canonical := get_canonical()
-	if canonical != null:
-		_timer = canonical.create_timer(
+	_timer = internal_task_get_canonical() \
+		.create_timer(
 			timeout,
 			ignore_pause,
 			ignore_time_scale)
-		_timer.timeout.connect(_on_timeout)
-	else:
-		release_cancel()
+	_timer.timeout.connect(_on_timeout)
 
 func _on_timeout() -> void:
 	release_complete()

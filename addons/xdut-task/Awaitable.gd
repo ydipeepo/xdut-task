@@ -62,14 +62,13 @@ var is_pending: bool:
 #	METHODS
 #-------------------------------------------------------------------------------
 
-static func get_canonical() -> Node:
+static func internal_task_get_canonical() -> Node:
 	if not is_instance_valid(_canonical):
 		_canonical = Engine \
 			.get_main_loop() \
 			.root \
 			.get_node("/root/XDUT_TaskCanonical")
-	if not is_instance_valid(_canonical):
-		_canonical = null
+	assert(is_instance_valid(_canonical), "XDUT Task is not activated.")
 	return _canonical
 
 ## この [Awaitable] の状態を取得します。
@@ -90,16 +89,16 @@ func _to_string() -> String:
 	var prefix: String
 	match get_state():
 		STATE_PENDING:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_PENDING")
 		STATE_PENDING_WITH_WAITERS:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_PENDING_WITH_WAITERS")
 		STATE_CANCELED:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_CANCELED")
 		STATE_COMPLETED:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_COMPLETED")
 		_:
 			assert(false)

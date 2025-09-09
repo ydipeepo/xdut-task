@@ -1,25 +1,9 @@
 ## 入力のみで完結する [Task] の半実装。
-@abstract
 class_name TaskBase extends Task
 
 #-------------------------------------------------------------------------------
 #	METHODS
 #-------------------------------------------------------------------------------
-
-static func error_bad_state_at(
-	input: Variant,
-	input_index: int) -> void:
-
-	push_error(get_canonical()
-		.translate(&"ERROR_BAD_STATE_WITH_ORDINAL")
-		.format([input, input_index]))
-	breakpoint # BUG
-
-static func error_bad_state(input: Variant) -> void:
-	push_error(get_canonical()
-		.translate(&"ERROR_BAD_STATE")
-		.format([input]))
-	breakpoint # BUG
 
 func get_state() -> int:
 	return _state
@@ -40,24 +24,19 @@ func wait(cancel: Cancel = null) -> Variant:
 
 ## [method wait_temporary] により解放されるか、[br]
 ## この [Task] の結果が決まるまで一時的に待機します。
-func wait_temporary(
-	object: Object,
-	cancel: Cancel = null) -> Variant:
-
+func wait_temporary(object: Object, cancel: Cancel = null) -> Variant:
 	if _state == STATE_PENDING:
 		_state = STATE_PENDING_WITH_WAITERS
 	if _state == STATE_PENDING_WITH_WAITERS:
 		if not is_instance_valid(cancel) or cancel.requested.is_connected(release_cancel):
 			while true:
 				var sender: Object = await _release
-				if sender == null or sender == object:
-					break
+				if sender == null or sender == object: break
 		elif not cancel.is_requested:
 			cancel.requested.connect(release_cancel)
 			while true:
 				var sender: Object = await _release
-				if sender == null or sender == object:
-					break
+				if sender == null or sender == object: break
 			cancel.requested.disconnect(release_cancel)
 		else:
 			release_cancel()
@@ -118,10 +97,7 @@ var _state: int = STATE_PENDING
 var _result: Variant
 var _indigenous_cancel: Cancel
 
-func _init(
-	cancel: Cancel,
-	name: StringName) -> void:
-
+func _init(cancel: Cancel, name := &"TaskBase") -> void:
 	assert(not name.is_empty())
 	_name = name
 
@@ -134,16 +110,16 @@ func _to_string() -> String:
 	var prefix: String
 	match get_state():
 		STATE_PENDING:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_PENDING")
 		STATE_PENDING_WITH_WAITERS:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_PENDING_WITH_WAITERS")
 		STATE_CANCELED:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_CANCELED")
 		STATE_COMPLETED:
-			prefix = get_canonical() \
+			prefix = internal_task_get_canonical() \
 				.translate(&"TASK_STATE_COMPLETED")
 		_:
 			assert(false)

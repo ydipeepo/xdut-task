@@ -16,15 +16,12 @@ static func create(
 		else:
 			cancel = null
 
-	return new(
-		cancel,
-		name)
+	return new(cancel, name)
 
 func cleanup() -> void:
-	var canonical := get_canonical()
-	if canonical != null:
-		if canonical.physics.is_connected(_on_completed):
-			canonical.physics.disconnect(_on_completed)
+	var canonical := internal_task_get_canonical()
+	if canonical.physics.is_connected(_on_completed):
+		canonical.physics.disconnect(_on_completed)
 	super()
 
 #-------------------------------------------------------------------------------
@@ -34,12 +31,9 @@ func _init(
 	name: StringName) -> void:
 
 	super(cancel, name)
-
-	var canonical := get_canonical()
-	if canonical != null:
-		canonical.physics.connect(_on_completed)
-	else:
-		release_cancel()
+	internal_task_get_canonical() \
+		.physics \
+		.connect(_on_completed)
 
 func _on_completed(delta: float) -> void:
 	release_complete(delta)

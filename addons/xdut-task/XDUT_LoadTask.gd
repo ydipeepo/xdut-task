@@ -46,13 +46,8 @@ func _init(
 
 	super(cancel, name)
 
-	var canonical := get_canonical()
-	if canonical == null:
-		release_cancel()
-		return
-
 	_worker = XDUT_LoadTaskWorker.create(
-		canonical,
+		internal_task_get_canonical(),
 		resource_path,
 		resource_type,
 		cache_mode)
