@@ -15,12 +15,12 @@ enum {
 
 	## 完了しました。[br]
 	## [br]
-	## これ以上状態は変化しません。
+	## 💡 これ以上状態は変化しません。
 	STATE_COMPLETED,
 
 	## キャンセルされました。[br]
 	## [br]
-	## これ以上状態は変化しません。
+	## 💡 これ以上状態は変化しません。
 	STATE_CANCELED,
 }
 
@@ -31,8 +31,7 @@ enum {
 ## この [Awaitable] が完了している場合は [code]true[/code]、[br]
 ## それ以外の場合は [code]false[/code] を返します。[br]
 ## [br]
-## このプロパティの返す値は、[br]
-## [code]get_state() == STATE_COMPLETED[/code] と等価です。
+## 💡 このプロパティの返す値は、[method get_state][code] == [/code][constant STATE_COMPLETED] と等価です。
 var is_completed: bool:
 	get:
 		return get_state() == STATE_COMPLETED
@@ -40,8 +39,7 @@ var is_completed: bool:
 ## この [Awaitable] がキャンセルされている場合は [code]true[/code]、[br]
 ## それ以外の場合は [code]false[/code] を返します。[br]
 ## [br]
-## このプロパティの返す値は、[br]
-## [code]get_state() == STATE_CANCELED[/code] と等価です。
+## 💡 このプロパティの返す値は、[method get_state][code] == [/code][constant STATE_CANCELED] と等価です。
 var is_canceled: bool:
 	get:
 		return get_state() == STATE_CANCELED
@@ -49,8 +47,7 @@ var is_canceled: bool:
 ## この [Awaitable] が完了もキャンセルもされておらず結果を待機している場合は [code]true[/code]、
 ## それ以外の場合は [code]false[/code] を返します。[br]
 ## [br]
-## このプロパティの返す値は、[br]
-## [code]get_state() in [STATE_PENDING, STATE_PENDING_WITH_WAITERS] と等価です。
+## 💡 このプロパティの返す値は、[method get_state][code] in [[/code][constant STATE_PENDING][code], [/code][constant STATE_PENDING_WITH_WAITERS][code]][/code] と等価です。
 var is_pending: bool:
 	get:
 		var state := get_state()
@@ -77,7 +74,7 @@ func get_state() -> int
 
 ## この [Awaitable] の結果が決まるまで待機します。[br]
 ## [br]
-## キャンセルされている場合は [code]null[/code] を返します。
+## 💡 キャンセルされている場合は [code]null[/code] を返します。
 @abstract
 func wait(cancel: Cancel = null) -> Variant
 

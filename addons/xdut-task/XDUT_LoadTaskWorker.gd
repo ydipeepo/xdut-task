@@ -18,7 +18,6 @@ static func create(
 	cache_mode: ResourceLoader.CacheMode) -> XDUT_LoadTaskWorker:
 
 	assert(canonical != null)
-
 	var result := ResourceLoader.load_threaded_request(
 		resource_path,
 		resource_type,
@@ -33,12 +32,8 @@ static func create(
 var _canonical: Node
 var _resource_path: String
 
-func _init(
-	canonical: Node,
-	resource_path: String) -> void:
-
+func _init(canonical: Node, resource_path: String) -> void:
 	reference()
-
 	_resource_path = resource_path
 	_canonical = canonical
 	_canonical.process_frame.connect(_on_process)

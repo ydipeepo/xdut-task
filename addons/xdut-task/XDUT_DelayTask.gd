@@ -23,7 +23,6 @@ static func create(
 		return XDUT_CompletedTask.new(null, name)
 	if timeout == _MIN_TIMEOUT:
 		return XDUT_CompletedTask.new(null, name)
-
 	return new(
 		timeout,
 		ignore_pause,

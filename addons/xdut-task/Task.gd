@@ -8,7 +8,7 @@ class_name Task extends Awaitable
 
 ## 条件一致を省略するためのプレースホルダです。[br]
 ## [br]
-## この定数は、[method from_conditional_signal]、[method from_conditional_signal_name] で使用します。
+## 💡 この定数は、[method from_conditional_signal]、[method from_conditional_signal_name] で使用します。
 static var SKIP := Object.new()
 
 #-------------------------------------------------------------------------------

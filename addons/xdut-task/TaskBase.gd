@@ -22,8 +22,7 @@ func wait(cancel: Cancel = null) -> Variant:
 			release_cancel()
 	return _result
 
-## [method wait_temporary] により解放されるか、[br]
-## この [Task] の結果が決まるまで一時的に待機します。
+## [method wait_temporary] により解放されるか、この [Task] の結果が決まるまで一時的に待機します。
 func wait_temporary(object: Object, cancel: Cancel = null) -> Variant:
 	if _state == STATE_PENDING:
 		_state = STATE_PENDING_WITH_WAITERS
@@ -81,7 +80,8 @@ func release_cancel() -> void:
 ## 追加のクリーンアップ処理を実装します。[br]
 ## [br]
 ## 解放前に一度だけ XDUT Task から呼び出されます。[br]
-## 直接呼び出してはいけません。
+## [br]
+## ❗ 直接呼び出してはいけません。
 func cleanup() -> void:
 	if _indigenous_cancel != null:
 		if _indigenous_cancel.requested.is_connected(release_cancel):

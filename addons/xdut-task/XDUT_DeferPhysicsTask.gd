@@ -9,13 +9,11 @@ static func create(
 	skip_pre_validation: bool,
 	name := &"DeferPhysicsTask") -> Task:
 
+	if not is_instance_valid(cancel):
+		cancel = null
 	if not skip_pre_validation:
-		if is_instance_valid(cancel):
-			if cancel.is_requested:
-				return XDUT_CanceledTask.new(name)
-		else:
-			cancel = null
-
+		if cancel != null and cancel.is_requested:
+			return XDUT_CanceledTask.new(name)
 	return new(cancel, name)
 
 func cleanup() -> void:
@@ -26,10 +24,7 @@ func cleanup() -> void:
 
 #-------------------------------------------------------------------------------
 
-func _init(
-	cancel: Cancel,
-	name: StringName) -> void:
-
+func _init(cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
 	internal_task_get_canonical() \
 		.physics \

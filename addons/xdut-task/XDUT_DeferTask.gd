@@ -14,15 +14,11 @@ static func create(
 	if not skip_pre_validation:
 		if cancel != null and cancel.is_requested:
 			return XDUT_CanceledTask.new(name)
-
 	return new(cancel, name)
 
 #-------------------------------------------------------------------------------
 
-func _init(
-	cancel: Cancel,
-	name: StringName) -> void:
-
+func _init(cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
 	_on_completed.call_deferred()
 
