@@ -6,7 +6,7 @@ var _timer: SceneTreeTimer
 
 func _init(timeout: float, ignore_pause: bool, ignore_time_scale: bool) -> void:
 	super(&"TimeoutCancel")
-	_timer = internal_task_get_canonical() \
+	_timer = internal_get_task_canonical() \
 		.create_timer(
 			timeout,
 			ignore_pause,

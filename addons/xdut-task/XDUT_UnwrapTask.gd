@@ -19,7 +19,7 @@ static func create(
 		if cancel != null and cancel.is_requested:
 			return XDUT_CanceledTask.new(name)
 	if depth < 0:
-		push_error(internal_task_get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_UNWRAP_DEPTH"))
 		return XDUT_CanceledTask.new(name)
 	if depth == 0:
@@ -53,6 +53,6 @@ func _perform(source: Variant, depth: int, cancel: Cancel) -> void:
 				STATE_CANCELED:
 					release_cancel()
 				_:
-					assert(false, internal_task_get_canonical()
+					assert(false, internal_get_task_canonical()
 						.translate(&"ERROR_BAD_STATE")
 						.format([source]))

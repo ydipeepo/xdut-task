@@ -44,7 +44,7 @@ func _init(
 
 	super(cancel, name)
 	_worker = XDUT_LoadTaskWorker.create(
-		internal_task_get_canonical(),
+		internal_get_task_canonical(),
 		resource_path,
 		resource_type,
 		cache_mode)

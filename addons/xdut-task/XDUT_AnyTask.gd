@@ -73,6 +73,6 @@ func _perform(init: Awaitable, init_index: int, cancel: Cancel) -> void:
 					if _remaining == 0:
 						release_cancel()
 				_:
-					assert(false, internal_task_get_canonical()
+					assert(false, internal_get_task_canonical()
 						.translate(&"ERROR_BAD_STATE_WITH_ORDINAL")
 						.format([init, init_index]))

@@ -27,7 +27,7 @@ var is_requested: bool:
 #	METHODS
 #-------------------------------------------------------------------------------
 
-static func internal_task_get_canonical() -> Node:
+static func internal_get_task_canonical() -> Node:
 	if not is_instance_valid(_task_canonical):
 		_task_canonical = Engine \
 			.get_main_loop() \

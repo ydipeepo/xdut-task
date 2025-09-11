@@ -8,11 +8,11 @@ func _init(
 
 	super(&"FromSignalNameCancel")
 	if not is_instance_valid(object):
-		push_error(internal_task_get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_OBJECT"))
 		return
 	if not object.has_signal(signal_name):
-		push_error(internal_task_get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_SIGNAL_NAME")
 			.format([signal_name]))
 		return

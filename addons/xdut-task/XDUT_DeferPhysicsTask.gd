@@ -17,7 +17,7 @@ static func create(
 	return new(cancel, name)
 
 func cleanup() -> void:
-	var canonical := internal_task_get_canonical()
+	var canonical := internal_get_task_canonical()
 	if canonical.physics.is_connected(_on_completed):
 		canonical.physics.disconnect(_on_completed)
 	super()
@@ -26,7 +26,7 @@ func cleanup() -> void:
 
 func _init(cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
-	internal_task_get_canonical() \
+	internal_get_task_canonical() \
 		.physics \
 		.connect(_on_completed)
 

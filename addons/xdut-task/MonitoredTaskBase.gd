@@ -14,5 +14,5 @@ func is_indefinitely_pending() -> bool
 
 func _init(cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
-	internal_task_get_canonical() \
+	internal_get_task_canonical() \
 		.monitor_deadlock(self)

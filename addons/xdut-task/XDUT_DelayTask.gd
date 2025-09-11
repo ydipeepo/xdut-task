@@ -18,7 +18,7 @@ static func create(
 		if cancel != null and cancel.is_requested:
 			return XDUT_CanceledTask.new(name)
 	if timeout < _MIN_TIMEOUT:
-		push_error(internal_task_get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_TIMEOUT"))
 		return XDUT_CompletedTask.new(null, name)
 	if timeout == _MIN_TIMEOUT:
@@ -51,7 +51,7 @@ func _init(
 	name: StringName) -> void:
 
 	super(cancel, name)
-	_timer = internal_task_get_canonical() \
+	_timer = internal_get_task_canonical() \
 		.create_timer(
 			timeout,
 			ignore_pause,

@@ -110,16 +110,16 @@ func _to_string() -> String:
 	var prefix: String
 	match get_state():
 		STATE_PENDING:
-			prefix = internal_task_get_canonical() \
+			prefix = internal_get_task_canonical() \
 				.translate(&"TASK_STATE_PENDING")
 		STATE_PENDING_WITH_WAITERS:
-			prefix = internal_task_get_canonical() \
+			prefix = internal_get_task_canonical() \
 				.translate(&"TASK_STATE_PENDING_WITH_WAITERS")
 		STATE_CANCELED:
-			prefix = internal_task_get_canonical() \
+			prefix = internal_get_task_canonical() \
 				.translate(&"TASK_STATE_CANCELED")
 		STATE_COMPLETED:
-			prefix = internal_task_get_canonical() \
+			prefix = internal_get_task_canonical() \
 				.translate(&"TASK_STATE_COMPLETED")
 		_:
 			assert(false)

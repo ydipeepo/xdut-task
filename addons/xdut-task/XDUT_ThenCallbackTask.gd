@@ -19,11 +19,11 @@ static func create(
 		if cancel != null and cancel.is_requested:
 			return XDUT_CanceledTask.new(name)
 	if not method.is_valid():
-		push_error(internal_task_get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_OBJECT_ASSOCIATED_WITH_METHOD"))
 		return XDUT_CanceledTask.new(name)
 	if not method.get_argument_count() in _VALID_METHOD_ARGC:
-		push_error(internal_task_get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_METHOD_ARGC")
 			.format([method.get_method(), method.get_argument_count()]))
 		return XDUT_CanceledTask.new(name)
@@ -66,7 +66,7 @@ func _perform(source: Awaitable, cancel: Cancel) -> void:
 				STATE_CANCELED:
 					release_cancel()
 				_:
-					assert(false, internal_task_get_canonical()
+					assert(false, internal_get_task_canonical()
 						.translate(&"ERROR_BAD_STATE")
 						.format([source]))
 

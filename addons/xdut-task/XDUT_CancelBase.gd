@@ -21,7 +21,7 @@ func _init(name: StringName) -> void:
 	_name = name
 
 func _to_string() -> String:
-	var prefix: StringName = internal_task_get_canonical() \
+	var prefix: StringName = internal_get_task_canonical() \
 		.translate(
 			&"CANCEL_STATE_REQUESTED"
 			if get_requested() else
