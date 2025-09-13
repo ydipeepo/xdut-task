@@ -24,11 +24,11 @@ static func create(
 		else:
 			cancel = null
 	if not is_instance_valid(signal_.get_object()) or signal_.is_null():
-		push_error(get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_OBJECT_ASSOCIATED_WITH_SIGNAL"))
 		return XDUT_CanceledTask.new(name)
 	if signal_argc < 0 and MAX_SIGNAL_ARGC < signal_argc:
-		push_error(get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_SIGNAL_ARGC")
 			.format([signal_.get_name(), signal_argc]))
 		return XDUT_CanceledTask.new(name)

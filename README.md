@@ -4,9 +4,20 @@ English | [日本語](README.ja_JP.md)
 
 <br />
 
-# 🧩 XDUT Task
+# ![XDUT Task](assets/texture/icon.png) XDUT Task
 
-This add-on helps pseudo-asynchronous scripting, including a set of classes to handle future-determined values through a shared interface.
+[![1.5.0-pre](https://badgen.net/github/release/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/releases) [![MIT](https://badgen.net/github/license/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/LICENSE)
+
+This add-on helps GDScript pseudo-asynchronous scripting, including a set of classes to handle future-determined values through a shared interface.
+
+```gdscript
+var result = await Task.wait_all(
+	my_method,
+	my_signal,
+	Task.any(
+		my_another_method,
+		my_another_signal))
+```
 
 <br />
 
@@ -16,16 +27,11 @@ It was created for the following purposes:
 
 * Transform scripts in callback hell into intuitive flows.
 * Make script (with scene) dependencies unidirectional toward the scene.
-* Perform safe and unified **await**-ing through a shared interface.
+* Perform safe and unified **await**-ing through a shared `Task` interface.
 
 <br />
 
 ## Quick start
-
-#### Checking the demo
-
-1. `git clone https://github.com/ydipeepo/xdut-task.git` or [download release](https://github.com/ydipeepo/xdut-task/releases).
-2. Then open XDUT Task project and run it.
 
 #### Installation
 
@@ -33,15 +39,7 @@ It was created for the following purposes:
 2. Then copy `addons/xdut-task` directory into your project.
 3. And enable XDUT Task from your project settings.
 
-> [!TIP]
-> This add-on is compat with Godot Engine and Redot Engine.
->
-> * Godot Engine 4.5 ~
-> * Redot Engine 4.3 ~ (If you are using Redot Engine 4.3, please use 1.3.0 instead of the latest version.)
-
-<br />
-
-## Reference
+#### Reference
 
 📖 [Wiki](https://github-com.translate.goog/ydipeepo/xdut-task/wiki?_x_tr_sl=ja&_x_tr_tl=en) (Google Translated)
 

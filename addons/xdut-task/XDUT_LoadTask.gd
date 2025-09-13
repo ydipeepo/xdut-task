@@ -12,13 +12,11 @@ static func create(
 	skip_pre_validation: bool,
 	name := &"LoadTask") -> Task:
 
+	if not is_instance_valid(cancel):
+		cancel = null
 	if not skip_pre_validation:
-		if is_instance_valid(cancel):
-			if cancel.is_requested:
-				return XDUT_CanceledTask.new(name)
-		else:
-			cancel = null
-
+		if cancel != null and cancel.is_requested:
+			return XDUT_CanceledTask.new(name)
 	return new(
 		resource_path,
 		resource_type,
@@ -45,20 +43,13 @@ func _init(
 	name: StringName) -> void:
 
 	super(cancel, name)
-
-	var canonical := get_canonical()
-	if canonical == null:
-		release_cancel()
-		return
-
 	_worker = XDUT_LoadTaskWorker.create(
-		canonical,
+		internal_get_task_canonical(),
 		resource_path,
 		resource_type,
 		cache_mode)
 	if _worker == null:
 		release_cancel()
 		return
-
 	_worker.loaded.connect(release_complete)
 	_worker.failed.connect(release_cancel)

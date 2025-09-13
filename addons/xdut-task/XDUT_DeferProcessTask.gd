@@ -9,37 +9,26 @@ static func create(
 	skip_pre_validation: bool,
 	name := &"DeferProcessTask") -> Task:
 
+	if not is_instance_valid(cancel):
+		cancel = null
 	if not skip_pre_validation:
-		if is_instance_valid(cancel):
-			if cancel.is_requested:
-				return XDUT_CanceledTask.new(name)
-		else:
-			cancel = null
-
-	return new(
-		cancel,
-		name)
+		if cancel != null and cancel.is_requested:
+			return XDUT_CanceledTask.new(name)
+	return new(cancel, name)
 
 func cleanup() -> void:
-	var canonical := get_canonical()
-	if canonical != null:
-		if canonical.process.is_connected(_on_completed):
-			canonical.process.disconnect(_on_completed)
+	var canonical := internal_get_task_canonical()
+	if canonical.process.is_connected(_on_completed):
+		canonical.process.disconnect(_on_completed)
 	super()
 
 #-------------------------------------------------------------------------------
 
-func _init(
-	cancel: Cancel,
-	name: StringName) -> void:
-
+func _init(cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
-
-	var canonical := get_canonical()
-	if canonical != null:
-		canonical.process.connect(_on_completed)
-	else:
-		release_cancel()
+	internal_get_task_canonical() \
+		.process \
+		.connect(_on_completed)
 
 func _on_completed(delta: float) -> void:
 	release_complete(delta)

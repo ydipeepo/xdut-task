@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="XDUT Task"
-config/description="将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、非同期的スクリプティングを補助するためのアドオンです。"
+config/description="将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、GDScript 非同期的スクリプティングを補助するためのアドオンです。"
 config/tags=PackedStringArray("xdut")
 run/main_scene="res://Test_Task.tscn"
 config/features=PackedStringArray("4.5", "GL Compatibility")
@@ -19,6 +19,7 @@ boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/show_image=false
 boot_splash/fullsize=false
 boot_splash/use_filter=false
+config/icon="uid://djgik0v4bj5dt"
 
 [autoload]
 

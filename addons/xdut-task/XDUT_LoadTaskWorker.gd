@@ -18,7 +18,6 @@ static func create(
 	cache_mode: ResourceLoader.CacheMode) -> XDUT_LoadTaskWorker:
 
 	assert(canonical != null)
-
 	var result := ResourceLoader.load_threaded_request(
 		resource_path,
 		resource_type,
@@ -26,20 +25,22 @@ static func create(
 		cache_mode)
 	if result != OK:
 		return null
-	return new(canonical, resource_path)
+	return new(canonical, resource_path, resource_type)
 
 #-------------------------------------------------------------------------------
 
 var _canonical: Node
 var _resource_path: String
+var _resource_type: StringName
 
 func _init(
 	canonical: Node,
-	resource_path: String) -> void:
+	resource_path: String,
+	resource_type: StringName) -> void:
 
 	reference()
-
 	_resource_path = resource_path
+	_resource_type = resource_type
 	_canonical = canonical
 	_canonical.process_frame.connect(_on_process)
 
@@ -49,8 +50,8 @@ func _on_process(delta: float) -> void:
 			if is_instance_valid(_canonical):
 				_canonical.process_frame.disconnect(_on_process)
 			printerr(_canonical
-				.translate(&"ERROR_BAD_RESOURCE")
-				.format([_resource_path]))
+				.translate(&"ERROR_BAD_RESOURCE_FILE")
+				.format([_resource_path, _resource_type]))
 			failed.emit()
 			unreference()
 		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
@@ -59,8 +60,8 @@ func _on_process(delta: float) -> void:
 			if is_instance_valid(_canonical):
 				_canonical.process_frame.disconnect(_on_process)
 			printerr(_canonical
-				.translate(&"ERROR_BAD_RESOURCE_INTERNAL")
-				.format([_resource_path]))
+				.translate(&"ERROR_BAD_RESOURCE_LOAD")
+				.format([_resource_path, _resource_type]))
 			failed.emit()
 			unreference()
 		ResourceLoader.THREAD_LOAD_LOADED:

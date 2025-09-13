@@ -4,10 +4,20 @@
 
 <br />
 
-# 🧩 XDUT Task
+# ![XDUT Task](assets/texture/icon.png) XDUT Task
 
-将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、<br />
-非同期的スクリプティングを補助するためのアドオンです。
+[![1.5.0-pre](https://badgen.net/github/release/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/releases) [![MIT](https://badgen.net/github/license/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/LICENSE)
+
+将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、GDScript 非同期的スクリプティングを補助するためのアドオンです。
+
+```gdscript
+var result = await Task.wait_all(
+	my_method,
+	my_signal,
+	Task.any(
+		my_another_method,
+		my_another_signal))
+```
 
 <br />
 
@@ -17,32 +27,19 @@
 
 * コールバック地獄のスクリプトを直感的なフローで表現できるよう変形する。
 * スクリプト (とシーン) の依存関係をシーンに対する一方向にまとめる。
-* 共通のインターフェイスを通して安全で統一された待機を行う。
+* 共通の `Task` インターフェイスを通して安全で統一された待機を行う。
 
 <br />
 
-## インストール
+## 使い方
 
-#### デモを確認する
-
-1. `git clone https://github.com/ydipeepo/xdut-task.git` もしくは、[ダウンロード](https://github.com/ydipeepo/xdut-task/releases)し、
-2. プロジェクトを開いて実行します。
-
-#### アドオンを追加する
+#### アドオンの追加
 
 1. `git clone https://github.com/ydipeepo/xdut-task.git` もしくは、[ダウンロード](https://github.com/ydipeepo/xdut-task/releases)し、
 2. `addons/xdut-task` をプロジェクトにコピーし、
 3. プロジェクト設定から XDUT Task を有効にします。
 
-> [!TIP]
-> このアドオンは Godot Engine 及び Redot Engine に対応しています。
->
-> * Godot Engine 4.5 ~
-> * Redot Engine 4.3 ~ (Redot Engine 4.3 を使っている場合は最新版ではなく代わりに 1.3.0 を使用してください)
-
-<br />
-
-## リファレンス
+#### リファレンス
 
 📖 [Wiki](https://github.com/ydipeepo/xdut-task/wiki) にまとめてあります。
 

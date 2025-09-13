@@ -12,13 +12,11 @@ static func create(
 	skip_pre_validation: bool,
 	name := &"FromBoundMethodNameTask") -> Task:
 
+	if not is_instance_valid(cancel):
+		cancel = null
 	if not skip_pre_validation:
-		if is_instance_valid(cancel):
-			if cancel.is_requested:
-				return XDUT_CanceledTask.new(name)
-		else:
-			cancel = null
-
+		if cancel != null and cancel.is_requested:
+			return XDUT_CanceledTask.new(name)
 	if method_args.is_empty():
 		return XDUT_FromMethodNameTask.create(
 			object,
@@ -26,13 +24,12 @@ static func create(
 			cancel,
 			true,
 			name)
-
 	if not is_instance_valid(object):
-		push_error(get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_OBJECT"))
 		return XDUT_CanceledTask.new(name)
 	if not object.has_method(method_name):
-		push_error(get_canonical()
+		push_error(internal_get_task_canonical()
 			.translate(&"ERROR_BAD_METHOD_NAME")
 			.format([method_name]))
 		return XDUT_CanceledTask.new(name)
@@ -41,7 +38,7 @@ static func create(
 		0, 1:
 			pass
 		_:
-			push_error(get_canonical()
+			push_error(internal_get_task_canonical()
 				.translate(&"ERROR_BAD_METHOD_ARGC")
 				.format([method_name, method_argc]))
 			return XDUT_CanceledTask.new(name)
@@ -67,7 +64,6 @@ func _init(
 	name: StringName) -> void:
 
 	super(cancel, name)
-
 	_object = object
 	_perform(method_name, method_argc, method_args, cancel)
 
@@ -81,5 +77,4 @@ func _perform(
 	match method_argc - method_args.size():
 		0: result = await _object.callv(method_name, method_args)
 		1: result = await _object.callv(method_name, method_args + [cancel])
-	if is_pending:
-		release_complete(result)
+	release_complete(result)

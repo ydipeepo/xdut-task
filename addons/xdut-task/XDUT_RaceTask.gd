@@ -5,79 +5,73 @@ class_name XDUT_RaceTask extends TaskBase
 #-------------------------------------------------------------------------------
 
 static func create(
-	from_inits: Array,
+	init_array: Array,
 	cancel: Cancel,
 	skip_pre_validation: bool,
 	name := &"RaceTask") -> Task:
 
+	if not is_instance_valid(cancel):
+		cancel = null
 	if not skip_pre_validation:
-		if is_instance_valid(cancel):
-			if cancel.is_requested:
-				return XDUT_CanceledTask.new(name)
-		else:
-			cancel = null
-	if from_inits.is_empty():
-		push_warning(get_canonical()
-			.translate(&"WARNING_BAD_INPUTS"))
-		return XDUT_NeverTask.create(
-			cancel,
-			true,
-			name)
+		if cancel != null and cancel.is_requested:
+			return XDUT_CanceledTask.new(name)
+	if init_array.is_empty():
+		push_error(internal_get_task_canonical()
+			.translate(&"ERROR_EMPTY_INIT_ARRAY"))
+		return XDUT_NeverTask.create(cancel, true, name)
+	return new(init_array, cancel, name)
 
-	return new(
-		from_inits,
-		cancel,
-		name)
+static func create_with_extract_cancel(
+	init_array_with_cancel: Array,
+	skip_pre_validation: bool,
+	name := &"RaceTask") -> Task:
+
+	var cancel: Cancel = null
+	if not init_array_with_cancel.is_empty() and init_array_with_cancel.back() is Cancel:
+		cancel = init_array_with_cancel.pop_back()
+	return create(init_array_with_cancel, cancel, skip_pre_validation, name)
 
 func cleanup() -> void:
-	for task_index: int in _awaitable_set.size():
-		var task: Task = _awaitable_set[task_index]
-		_awaitable_set[task_index] = null
-		if task is TaskBase:
-			task.release(self)
+	for init_index: int in _init_array.size():
+		var init: Awaitable = _init_array[init_index]
+		_init_array[init_index] = null
+		if init is TaskBase:
+			init.release(self)
 	super()
 
 #-------------------------------------------------------------------------------
 
-var _awaitable_set: Array[Awaitable]
+var _init_array: Array[Awaitable]
 
-func _init(
-	from_inits: Array,
-	cancel: Cancel,
-	name: StringName) -> void:
-
+func _init(init_array: Array, cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
-
-	var from_inits_size := from_inits.size()
-	_awaitable_set.resize(from_inits_size)
-	for task_index: int in from_inits_size:
-		_awaitable_set[task_index] = XDUT_FromTask.create(
-			from_inits[task_index],
+	_init_array.resize(init_array.size())
+	for init_index: int in init_array.size():
+		_init_array[init_index] = XDUT_FromTask.create(
+			init_array[init_index],
 			cancel,
 			true)
-	for task_index: int in from_inits_size:
-		var task := _awaitable_set[task_index]
-		_perform(
-			task,
-			task_index,
-			cancel)
+	for init_index: int in init_array.size():
+		var init := _init_array[init_index]
+		_perform(init, init_index, cancel)
 
-func _perform(
-	task: Awaitable,
-	task_index: int,
-	cancel: Cancel) -> void:
-
+func _perform(init: Awaitable, init_index: int, cancel: Cancel) -> void:
 	var result: Variant
-	if task is TaskBase:
-		result = await task.wait_temporary(self, cancel)
-	elif task is Awaitable:
-		result = await task.wait(cancel)
+	if init is TaskBase:
+		result = await init.wait_temporary(self, cancel)
+	elif init is Awaitable: # 必要
+		result = await init.wait(cancel)
 
-	if is_pending:
-		match task.get_state():
-			STATE_COMPLETED:
-				release_complete(XDUT_CompletedTask.new(result))
-			STATE_CANCELED:
-				release_complete(XDUT_CanceledTask.new())
-			_:
-				error_bad_state_at(task, task_index)
+	match get_state():
+		STATE_PENDING, \
+		STATE_PENDING_WITH_WAITERS:
+			match init.get_state():
+				STATE_COMPLETED:
+					release_complete(XDUT_CompletedTask.new(result))
+				STATE_CANCELED:
+					release_complete(XDUT_CanceledTask.new())
+				_:
+					print_debug(internal_get_task_canonical()
+						.translate(&"DEBUG_BAD_STATE_RETURNED_BY_INIT")
+						.format([init, init_index]))
+					breakpoint
