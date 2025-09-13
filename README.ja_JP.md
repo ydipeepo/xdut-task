@@ -6,7 +6,7 @@
 
 # ![XDUT Task](assets/texture/icon.png) XDUT Task
 
-[![1.5.0](https://badgen.net/github/release/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/releases) [![MIT](https://badgen.net/github/license/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/LICENSE)
+[![Release](https://badgen.net/github/release/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/releases) [![MIT](https://badgen.net/github/license/ydipeepo/xdut-task)](https://github.com/ydipeepo/xdut-task/LICENSE)
 
 将来決まる値を共通のインターフェイスを通して扱うためのクラスセットを含む、GDScript 非同期的スクリプティングを補助するためのアドオンです。
 
