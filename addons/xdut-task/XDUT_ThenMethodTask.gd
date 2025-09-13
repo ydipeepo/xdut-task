@@ -5,7 +5,7 @@ class_name XDUT_ThenMethodTask extends MonitoredTaskBase
 #-------------------------------------------------------------------------------
 
 static func create(
-	source: Awaitable,
+	antecedent: Awaitable,
 	method: Callable,
 	cancel: Cancel,
 	skip_pre_validation: bool,
@@ -14,7 +14,7 @@ static func create(
 	if not is_instance_valid(cancel):
 		cancel = null
 	if not skip_pre_validation:
-		if not is_instance_valid(source) or source.is_canceled:
+		if not is_instance_valid(antecedent) or antecedent.is_canceled:
 			return XDUT_CanceledTask.new(name)
 		if cancel != null and cancel.is_requested:
 			return XDUT_CanceledTask.new(name)
@@ -32,7 +32,7 @@ static func create(
 				.format([method.get_method(), method_argc]))
 			return XDUT_CanceledTask.new(name)
 	return new(
-		source,
+		antecedent,
 		method,
 		method_argc,
 		cancel,
@@ -46,7 +46,7 @@ func is_indefinitely_pending() -> bool:
 var _method: Callable
 
 func _init(
-	source: Awaitable,
+	antecedent: Awaitable,
 	method: Callable,
 	method_argc: int,
 	cancel: Cancel,
@@ -54,15 +54,15 @@ func _init(
 
 	super(cancel, name)
 	_method = method
-	_perform(source, method_argc, cancel)
+	_perform(antecedent, method_argc, cancel)
 
-func _perform(source: Awaitable, method_argc: int, cancel: Cancel) -> void:
-	var result: Variant = await source.wait(cancel)
+func _perform(antecedent: Awaitable, method_argc: int, cancel: Cancel) -> void:
+	var result: Variant = await antecedent.wait(cancel)
 
 	match get_state():
 		STATE_PENDING, \
 		STATE_PENDING_WITH_WAITERS:
-			match source.get_state():
+			match antecedent.get_state():
 				STATE_COMPLETED:
 					if _method.is_valid():
 						match method_argc:
@@ -78,6 +78,7 @@ func _perform(source: Awaitable, method_argc: int, cancel: Cancel) -> void:
 				STATE_CANCELED:
 					release_cancel()
 				_:
-					assert(false, internal_get_task_canonical()
-						.translate(&"ERROR_BAD_STATE")
-						.format([source]))
+					print_debug(internal_get_task_canonical()
+						.translate(&"DEBUG_BAD_STATE_RETURNED_BY_ANTECEDENT")
+						.format([antecedent]))
+					breakpoint

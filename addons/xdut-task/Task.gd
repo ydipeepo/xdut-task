@@ -756,47 +756,47 @@ static func wait_race(...init_array_with_cancel: Array) -> Variant:
 
 ## 結果を受け取り継続させる [Task] を作成します。
 static func create_then_v(
-	source: Awaitable,
+	antecedent: Awaitable,
 	init: Variant,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_ThenTask.create(
-		source,
+		antecedent,
 		init,
 		cancel,
 		false)
 
 ## 結果を受け取り継続させる [Task] を作成します。
 static func create_then(
-	source: Awaitable,
+	antecedent: Awaitable,
 	init_with_cancel: Array) -> Task:
 
 	return XDUT_ThenTask.create_with_extract_cancel(
-		source,
+		antecedent,
 		init_with_cancel,
 		false)
 
 ## 結果をコールバックで受け取り継続させる [Task] を作成します。
 static func create_then_callback(
-	source: Awaitable,
+	antecedent: Awaitable,
 	method: Callable,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_ThenCallbackTask.create(
-		source,
+		antecedent,
 		method,
 		cancel,
 		false)
 
 ## 結果をオブジェクトに定義されているコールバックで受け取り継続させる [Task] を作成します。
 static func create_then_callback_name(
-	source: Awaitable,
+	antecedent: Awaitable,
 	object: Object,
 	method_name: StringName,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_ThenCallbackNameTask.create(
-		source,
+		antecedent,
 		object,
 		method_name,
 		cancel,
@@ -804,25 +804,25 @@ static func create_then_callback_name(
 
 ## 結果をメソッドで受け取り継続させる [Task] を作成します。
 static func create_then_method(
-	source: Awaitable,
+	antecedent: Awaitable,
 	method: Callable,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_ThenMethodTask.create(
-		source,
+		antecedent,
 		method,
 		cancel,
 		false)
 
 ## 結果をオブジェクトに定義されているメソッドで受け取り継続させる [Task] を作成します。
 static func create_then_method_name(
-	source: Awaitable,
+	antecedent: Awaitable,
 	object: Object,
 	method_name: StringName,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_ThenMethodNameTask.create(
-		source,
+		antecedent,
 		object,
 		method_name,
 		cancel,
@@ -830,13 +830,13 @@ static func create_then_method_name(
 
 ## メソッドに引数を束縛し結果を受け取り継続させる [Task] を作成します。
 static func create_then_bound_method(
-	source: Awaitable,
+	antecedent: Awaitable,
 	method: Callable,
 	method_args: Array,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_ThenBoundMethodTask.create(
-		source,
+		antecedent,
 		method,
 		method_args,
 		cancel,
@@ -844,14 +844,14 @@ static func create_then_bound_method(
 
 ## オブジェクトに定義されているメソッドに引数を束縛し結果を受け取り継続させる [Task] を作成します。
 static func create_then_bound_method_name(
-	source: Awaitable,
+	antecedent: Awaitable,
 	object: Object,
 	method_name: StringName,
 	method_args: Array,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_ThenBoundMethodNameTask.create(
-		source,
+		antecedent,
 		object,
 		method_name,
 		method_args,
@@ -860,12 +860,12 @@ static func create_then_bound_method_name(
 
 ## 結果をアンラップする [Task] を作成します。
 static func create_unwrap(
-	source: Awaitable,
+	antecedent: Awaitable,
 	depth := 1,
 	cancel: Cancel = null) -> Task:
 
 	return XDUT_UnwrapTask.create(
-		source,
+		antecedent,
 		depth,
 		cancel,
 		false)

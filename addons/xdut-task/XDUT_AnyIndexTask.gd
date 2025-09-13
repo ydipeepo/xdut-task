@@ -40,12 +40,12 @@ func cleanup() -> void:
 #-------------------------------------------------------------------------------
 
 var _init_array: Array[Awaitable]
-var _remaining: int
+var _num_pending: int
 
 func _init(init_array: Array, cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
-	_remaining = init_array.size()
 	_init_array.resize(init_array.size())
+	_num_pending = init_array.size()
 	for init_index: int in init_array.size():
 		_init_array[init_index] = XDUT_FromTask.create(
 			init_array[init_index],
@@ -68,10 +68,11 @@ func _perform(init: Awaitable, init_index: int, cancel: Cancel) -> void:
 				STATE_COMPLETED:
 					release_complete(init_index)
 				STATE_CANCELED:
-					_remaining -= 1
-					if _remaining == 0:
+					_num_pending -= 1
+					if _num_pending == 0:
 						release_cancel()
 				_:
-					assert(false, internal_get_task_canonical()
-						.translate(&"ERROR_BAD_STATE_WITH_ORDINAL")
+					print_debug(internal_get_task_canonical()
+						.translate(&"DEBUG_BAD_STATE_RETURNED_BY_INIT")
 						.format([init, init_index]))
+					breakpoint

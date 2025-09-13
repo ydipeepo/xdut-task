@@ -16,8 +16,8 @@ static func create(
 		if cancel != null and cancel.is_requested:
 			return XDUT_CanceledTask.new(name)
 	if init_array.is_empty():
-		push_warning(internal_get_task_canonical()
-			.translate(&"WARNING_BAD_INPUTS"))
+		push_error(internal_get_task_canonical()
+			.translate(&"ERROR_EMPTY_INIT_ARRAY"))
 		return XDUT_NeverTask.create(cancel, true, name)
 	return new(init_array, cancel, name)
 
@@ -71,6 +71,7 @@ func _perform(init: Awaitable, init_index: int, cancel: Cancel) -> void:
 				STATE_CANCELED:
 					release_complete(XDUT_CanceledTask.new())
 				_:
-					assert(false, internal_get_task_canonical()
-						.translate(&"ERROR_BAD_STATE_WITH_ORDINAL")
+					print_debug(internal_get_task_canonical()
+						.translate(&"DEBUG_BAD_STATE_RETURNED_BY_INIT")
 						.format([init, init_index]))
+					breakpoint

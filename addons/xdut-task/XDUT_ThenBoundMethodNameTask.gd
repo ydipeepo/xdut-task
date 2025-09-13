@@ -5,7 +5,7 @@ class_name XDUT_ThenBoundMethodNameTask extends TaskBase
 #-------------------------------------------------------------------------------
 
 static func create(
-	source: Awaitable,
+	antecedent: Awaitable,
 	object: Object,
 	method_name: StringName,
 	method_args: Array,
@@ -16,13 +16,13 @@ static func create(
 	if not is_instance_valid(cancel):
 		cancel = null
 	if not skip_pre_validation:
-		if not is_instance_valid(source) or source.is_canceled:
+		if not is_instance_valid(antecedent) or antecedent.is_canceled:
 			return XDUT_CanceledTask.new(name)
 		if cancel != null and cancel.is_requested:
 			return XDUT_CanceledTask.new(name)
 	if method_args.is_empty():
 		return XDUT_ThenMethodNameTask.create(
-			source,
+			antecedent,
 			object,
 			method_name,
 			cancel,
@@ -47,7 +47,7 @@ static func create(
 				.format([method_name, method_argc]))
 			return XDUT_CanceledTask.new(name)
 	return new(
-		source,
+		antecedent,
 		object,
 		method_name,
 		method_argc,
@@ -60,7 +60,7 @@ static func create(
 var _object: Object
 
 func _init(
-	source: Awaitable,
+	antecedent: Awaitable,
 	object: Object,
 	method_name: StringName,
 	method_argc: int,
@@ -70,21 +70,21 @@ func _init(
 
 	super(cancel, name)
 	_object = object
-	_perform(source, method_name, method_argc, method_args, cancel)
+	_perform(antecedent, method_name, method_argc, method_args, cancel)
 
 func _perform(
-	source: Awaitable,
+	antecedent: Awaitable,
 	method_name: StringName,
 	method_argc: int,
 	method_args: Array,
 	cancel: Cancel) -> void:
 
-	var result: Variant = await source.wait(cancel)
+	var result: Variant = await antecedent.wait(cancel)
 
 	match get_state():
 		STATE_PENDING, \
 		STATE_PENDING_WITH_WAITERS:
-			match source.get_state():
+			match antecedent.get_state():
 				STATE_COMPLETED:
 					if is_instance_valid(_object):
 						match method_argc - method_args.size():
@@ -97,6 +97,7 @@ func _perform(
 				STATE_CANCELED:
 					release_cancel()
 				_:
-					assert(false, internal_get_task_canonical()
-						.translate(&"ERROR_BAD_STATE")
-						.format([source]))
+					print_debug(internal_get_task_canonical()
+						.translate(&"DEBUG_BAD_STATE_RETURNED_BY_ANTECEDENT")
+						.format([antecedent]))
+					breakpoint

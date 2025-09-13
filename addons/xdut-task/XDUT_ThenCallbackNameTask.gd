@@ -77,6 +77,7 @@ func _perform(source: Awaitable, cancel: Cancel) -> void:
 				STATE_CANCELED:
 					release_cancel()
 				_:
-					assert(false, internal_get_task_canonical()
-						.translate(&"ERROR_BAD_STATE")
+					print_debug(internal_get_task_canonical()
+						.translate(&"DEBUG_BAD_STATE_RETURNED_BY_ANTECEDENT")
 						.format([source]))
+					breakpoint

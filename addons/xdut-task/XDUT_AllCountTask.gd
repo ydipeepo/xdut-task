@@ -31,12 +31,12 @@ static func create_with_extract_cancel(
 
 #-------------------------------------------------------------------------------
 
-var _remaining: int
-var _count: int
+var _num_pending_init: int
+var _num_completed_init: int
 
 func _init(init_array: Array, cancel: Cancel, name: StringName) -> void:
 	super(cancel, name)
-	_remaining = init_array.size()
+	_num_pending_init = init_array.size()
 	for init_index: int in init_array.size():
 		var init := XDUT_FromTask.create(
 			init_array[init_index],
@@ -52,15 +52,16 @@ func _perform(init: Awaitable, init_index: int, cancel: Cancel) -> void:
 		STATE_PENDING_WITH_WAITERS:
 			match init.get_state():
 				STATE_COMPLETED:
-					_remaining -= 1
-					_count += 1
-					if _remaining == 0:
-						release_complete(_count)
+					_num_pending_init -= 1
+					_num_completed_init += 1
+					if _num_pending_init == 0:
+						release_complete(_num_completed_init)
 				STATE_CANCELED:
-					_remaining -= 1
-					if _remaining == 0:
-						release_complete(_count)
+					_num_pending_init -= 1
+					if _num_pending_init == 0:
+						release_complete(_num_completed_init)
 				_:
-					assert(false, internal_get_task_canonical()
-						.translate(&"ERROR_BAD_STATE_WITH_ORDINAL")
+					print_debug(internal_get_task_canonical()
+						.translate(&"DEBUG_BAD_STATE_RETURNED_BY_INIT")
 						.format([init, init_index]))
+					breakpoint
