@@ -41,7 +41,7 @@ It was created for the following purposes:
 
 #### Reference
 
-📖 [Wiki](https://github-com.translate.goog/ydipeepo/xdut-task/wiki?_x_tr_sl=ja&_x_tr_tl=en) (Google Translated)
+📖 [Wiki](https://translate.kagi.com/github.com/ydipeepo/xdut-task/wiki) (Kagi Translated)
 
 <br />
 
