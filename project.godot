@@ -14,9 +14,8 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="GDUT Task"
-config/description="This add-on helps GDScript pseudo-asynchronous scripting, including a set of classes to handle future-determined values through a shared interface."
-config/tags=PackedStringArray("gdut")
+config/name="Godot Task"
+config/tags=PackedStringArray("addon")
 run/main_scene="uid://bwdkiuyvrmueg"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/bg_color=Color(0.933333, 0.933333, 0.933333, 1)
@@ -27,7 +26,7 @@ config/icon="uid://cymk7r2khxnvl"
 
 [autoload]
 
-GDUT_TaskCanonical="*uid://d4ixdr1hdia5t"
+_TaskAutoload="*uid://d4ixdr1hdia5t"
 
 [display]
 
@@ -40,12 +39,13 @@ window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gdut-task/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-task/plugin.cfg")
 
 [file_customization]
 
 folder_colors={
-"res://addons/gdut-task/": "pink"
+"res://addons/gdut-task/": "pink",
+"res://addons/godot-task/": "pink"
 }
 
 [filesystem]
@@ -53,12 +53,11 @@ folder_colors={
 import/fbx2gltf/enabled=false
 import/blender/enabled=false
 
-[gdut]
+[godot_task]
 
-task/debug/suppress_error_message=true
-task/debug/suppress_fatal_message=true
-task/debug/enable_strict_method_validation=true
-task/debug/enable_strict_signal_validation=true
+debug/suppress_error_message=true
+debug/enable_strict_method_validation=true
+debug/enable_strict_signal_validation=true
 
 [physics]
 

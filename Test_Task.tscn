@@ -56,7 +56,7 @@ layout_mode = 2
 localize_numeral_system = false
 theme_override_fonts/font = SubResource("SystemFont_lrpg4")
 theme_override_font_sizes/font_size = 18
-text = "GDUT Task"
+text = "Godot Task"
 vertical_alignment = 1
 
 [node name="Description" type="HBoxContainer" parent="Container/Header" unique_id=1110989436]

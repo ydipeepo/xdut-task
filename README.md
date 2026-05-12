@@ -1,8 +1,8 @@
 <br />
 
-# ![GDUT Task](assets/texture/icon.png) GDUT Task
+# Godot Task
 
-[![Release](https://badgen.net/github/release/ydipeepo/gdut-task)](https://github.com/ydipeepo/gdut-task/releases) [![MIT](https://badgen.net/github/license/ydipeepo/gdut-task)](https://github.com/ydipeepo/gdut-task/LICENSE)
+[![Release](https://badgen.net/github/release/ydipeepo/godot-task)](https://github.com/ydipeepo/godot-task/releases) [![MIT](https://badgen.net/github/license/ydipeepo/godot-task)](https://github.com/ydipeepo/godot-task/LICENSE)
 
 This add-on helps GDScript pseudo-asynchronous scripting, including a set of classes to handle future-determined values through a shared interface.
 
@@ -27,19 +27,9 @@ It was created for the following purposes:
 
 <br />
 
-## Quick start
-
-#### Installation
-
-1. `git clone https://github.com/ydipeepo/gdut-task.git` or [download release](https://github.com/ydipeepo/gdut-task/releases).
-2. Then copy `addons/gdut-task` directory into your project.
-3. And enable GDUT Task from your project settings.
-
-<br />
-
 ## License
 
-All contents of this project are licensed under the attached 🔗 [MIT](https://github.com/ydipeepo/gdut-task/blob/main/LICENSE) license.
+All contents of this project are licensed under the attached 🔗 [MIT](https://github.com/ydipeepo/godot-task/blob/main/LICENSE) license.
 
 #### Attribution
 

@@ -24,106 +24,106 @@ func 状態遷移_空() -> void:
 	var task := Task.from_method(Callable())
 	if not is_not_null(task):
 		return
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait())
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_空_キャンセルあり_即時() -> void:
 	var task := Task.from_method(Callable())
 	if not is_not_null(task):
 		return
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_空_キャンセルあり_遅延() -> void:
 	var task := Task.from_method(Callable())
 	if not is_not_null(task):
 		return
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_ラムダ() -> void:
 	var task := Task.from_method(func() -> void:
 		pass)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	is_null(await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_ラムダ_キャンセルあり_即時() -> void:
 	var task := Task.from_method(func() -> void:
 		pass)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_ラムダ_キャンセルあり_遅延() -> void:
 	var task := Task.from_method(func() -> void:
 		pass)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_ラムダ() -> void:
 	var task := Task.from_method(func() -> void:
 		await wait_defer())
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_ラムダ_キャンセルあり_即時() -> void:
 	var task := Task.from_method(func() -> void:
 		await wait_defer())
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_フォーク_ラムダ_キャンセルあり_遅延() -> void:
 	var task := Task.from_method(func() -> void:
 		await wait_defer())
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_ラムダ_待機_リテラル() -> void:
 	var task := Task.from_method(func() -> int:
 		return 123)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	are_equal(123, await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_ラムダ_待機_リテラル_キャンセルあり_即時() -> void:
 	var task := Task.from_method(func() -> int:
 		return 123)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	are_equal(123, await task.wait(Cancel.canceled()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_ラムダ_待機_リテラル_キャンセルあり_遅延() -> void:
 	var task := Task.from_method(func() -> int:
 		return 123)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	are_equal(123, await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_ラムダ_待機_リテラル() -> void:
 	var task := Task.from_method(func() -> int:
@@ -131,9 +131,9 @@ func 状態遷移_フォーク_ラムダ_待機_リテラル() -> void:
 		return 123)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	are_equal(123, await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_ラムダ_待機_リテラル_キャンセルあり_即時() -> void:
 	var task := Task.from_method(func() -> int:
@@ -141,9 +141,9 @@ func 状態遷移_フォーク_ラムダ_待機_リテラル_キャンセルあ�
 		return 123)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_フォーク_ラムダ_待機_リテラル_キャンセルあり_遅延() -> void:
 	var task := Task.from_method(func() -> int:
@@ -151,9 +151,9 @@ func 状態遷移_フォーク_ラムダ_待機_リテラル_キャンセルあ�
 		return 123)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	are_equal(123, await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 #
 # NOTE:
@@ -213,12 +213,12 @@ func スコープ_ラムダ_待機_参照() -> void:
 			if not is_not_null(task):
 				return
 			are_equal(3, ref.get_reference_count())
-			is_true(task.is_completed)
+			is_true(task.is_completed())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 		await task.wait()
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 	are_equal(2, ref.get_reference_count())
 
 func スコープ_ラムダ_待機_参照_キャンセルあり_即時() -> void:
@@ -232,12 +232,12 @@ func スコープ_ラムダ_待機_参照_キャンセルあり_即時() -> void
 			if not is_not_null(task):
 				return
 			are_equal(3, ref.get_reference_count())
-			is_true(task.is_completed)
+			is_true(task.is_completed())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 		await task.wait(Cancel.canceled())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 	are_equal(2, ref.get_reference_count())
 
 func スコープ_ラムダ_待機_参照_キャンセルあり_遅延() -> void:
@@ -251,12 +251,12 @@ func スコープ_ラムダ_待機_参照_キャンセルあり_遅延() -> void
 			if not is_not_null(task):
 				return
 			are_equal(3, ref.get_reference_count())
-			is_true(task.is_completed)
+			is_true(task.is_completed())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 		await task.wait(Cancel.deferred())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 	are_equal(2, ref.get_reference_count())
 
 func スコープ_フォーク_ラムダ_待機_参照() -> void:
@@ -272,9 +272,9 @@ func スコープ_フォーク_ラムダ_待機_参照() -> void:
 			if not is_not_null(task):
 				return
 			are_equal(3, ref.get_reference_count())
-			is_true(task.is_pending)
+			is_true(task.is_pending())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_pending)
+		is_true(task.is_pending())
 
 		#
 		# NOTE:
@@ -284,15 +284,15 @@ func スコープ_フォーク_ラムダ_待機_参照() -> void:
 		#
 		#  1. CustomTask.wait call
 		#  2. Wait for CustomTask._release inside CustomTask.wait
-		#  3. method completion inside GDUT_FromMethodTask._fork
+		#  3. method completion inside _FromMethodTask._fork
 		#  4. CustomTask.release_complete call
 		#  5. CustomTask._release.emit call
 		#  6. CustomTask._release release inside CustomTask.wait
 		#  7. CustomTask.wait return
 		#
-		# At this point, the stack from GDUT_FromMethodTask._fork still remains,
+		# At this point, the stack from _FromMethodTask._fork still remains,
 		# and it is necessary to release the stack to obtain an accurate reference count.
-		# Here, the process is yielded once to allow the GDUT_FromMethodTask._fork trailer
+		# Here, the process is yielded once to allow the _FromMethodTask._fork trailer
 		# to process and revert the reference increment from the stack.
 		#
 		#   * Normally, this is not necessary! This is solely for testing purposes.
@@ -300,7 +300,7 @@ func スコープ_フォーク_ラムダ_待機_参照() -> void:
 
 		await task.wait(); await wait_defer()
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 	are_equal(2, ref.get_reference_count())
 
 func スコープ_フォーク_ラムダ_待機_参照_キャンセルあり_即時() -> void:
@@ -316,12 +316,12 @@ func スコープ_フォーク_ラムダ_待機_参照_キャンセルあり_即
 			if not is_not_null(task):
 				return
 			are_equal(3, ref.get_reference_count())
-			is_true(task.is_pending)
+			is_true(task.is_pending())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_pending)
+		is_true(task.is_pending())
 		await task.wait(Cancel.canceled()); await wait_defer()
 		are_equal(2, ref.get_reference_count())
-		is_true(task.is_canceled)
+		is_true(task.is_canceled())
 	are_equal(2, ref.get_reference_count())
 
 func スコープ_フォーク_ラムダ_待機_参照_キャンセルあり_遅延() -> void:
@@ -337,12 +337,12 @@ func スコープ_フォーク_ラムダ_待機_参照_キャンセルあり_遅
 			if not is_not_null(task):
 				return
 			are_equal(3, ref.get_reference_count())
-			is_true(task.is_pending)
+			is_true(task.is_pending())
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_pending)
+		is_true(task.is_pending())
 		await task.wait(Cancel.deferred()); await wait_defer()
 		are_equal(3, ref.get_reference_count())
-		is_true(task.is_completed)
+		is_true(task.is_completed())
 	are_equal(2, ref.get_reference_count())
 
 func 状態遷移_メソッド() -> void:
@@ -350,108 +350,108 @@ func 状態遷移_メソッド() -> void:
 	var task := Task.from_method(callsite.noop)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	is_null(await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_メソッド_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.noop)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_メソッド_キャンセルあり_遅延() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.noop)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_メソッド() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.fork)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_メソッド_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.fork)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_フォーク_メソッド_キャンセルあり_遅延() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.fork)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_メソッド_待機_リテラル() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.noop_return)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	are_equal(123, await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_メソッド_待機_リテラル_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.noop_return)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	are_equal(123, await task.wait(Cancel.canceled()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_メソッド_待機_リテラル_キャンセルあり_遅延() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.noop_return)
 	if not is_not_null(task):
 		return
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	are_equal(123, await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_メソッド_待機_リテラル() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.fork_return)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	are_equal(123, await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func 状態遷移_フォーク_メソッド_待機_リテラル_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.fork_return)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_フォーク_メソッド_待機_リテラル_キャンセルあり_遅延() -> void:
 	var callsite := Callsite.new(self)
 	var task := Task.from_method(callsite.fork_return)
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	are_equal(123, await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func スコープ_メソッド() -> void:
 	var task: Task
@@ -460,10 +460,10 @@ func スコープ_メソッド() -> void:
 		task = Task.from_method(callsite.noop)
 		if not is_not_null(task):
 			return
-		is_true(task.is_completed)
-	is_true(task.is_completed)
+		is_true(task.is_completed())
+	is_true(task.is_completed())
 	is_null(await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func スコープ_メソッド_キャンセルあり_即時() -> void:
 	var task: Task
@@ -472,10 +472,10 @@ func スコープ_メソッド_キャンセルあり_即時() -> void:
 		task = Task.from_method(callsite.noop)
 		if not is_not_null(task):
 			return
-		is_true(task.is_completed)
-	is_true(task.is_completed)
+		is_true(task.is_completed())
+	is_true(task.is_completed())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func スコープ_メソッド_キャンセルあり_遅延() -> void:
 	var task: Task
@@ -484,10 +484,10 @@ func スコープ_メソッド_キャンセルあり_遅延() -> void:
 		task = Task.from_method(callsite.noop)
 		if not is_not_null(task):
 			return
-		is_true(task.is_completed)
-	is_true(task.is_completed)
+		is_true(task.is_completed())
+	is_true(task.is_completed())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func スコープ_フォーク_メソッド() -> void:
 	var task: Task
@@ -496,12 +496,12 @@ func スコープ_フォーク_メソッド() -> void:
 		task = Task.from_method(callsite.fork)
 		if not is_not_null(task):
 			return
-		is_true(task.is_pending)
-	is_true(task.is_pending)
+		is_true(task.is_pending())
+	is_true(task.is_pending())
 	await wait_delay(0.1)
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait())
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func スコープ_フォーク_メソッド_キャンセルあり_即時() -> void:
 	var task: Task
@@ -510,12 +510,12 @@ func スコープ_フォーク_メソッド_キャンセルあり_即時() -> vo
 		task = Task.from_method(callsite.fork)
 		if not is_not_null(task):
 			return
-		is_true(task.is_pending)
-	is_true(task.is_pending)
+		is_true(task.is_pending())
+	is_true(task.is_pending())
 	await wait_delay(0.1)
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func スコープ_フォーク_メソッド_キャンセルあり_遅延() -> void:
 	var task: Task
@@ -524,12 +524,12 @@ func スコープ_フォーク_メソッド_キャンセルあり_遅延() -> vo
 		task = Task.from_method(callsite.fork)
 		if not is_not_null(task):
 			return
-		is_true(task.is_pending)
-	is_true(task.is_pending)
+		is_true(task.is_pending())
+	is_true(task.is_pending())
 	await wait_delay(0.1)
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func スコープ_メソッド_待機_リテラル() -> void:
 	var task: Task
@@ -538,10 +538,10 @@ func スコープ_メソッド_待機_リテラル() -> void:
 		task = Task.from_method(callsite.noop_return)
 		if not is_not_null(task):
 			return
-		is_true(task.is_completed)
-	is_true(task.is_completed)
+		is_true(task.is_completed())
+	is_true(task.is_completed())
 	are_equal(123, await task.wait())
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func スコープ_メソッド_待機_リテラル_キャンセルあり_即時() -> void:
 	var task: Task
@@ -550,10 +550,10 @@ func スコープ_メソッド_待機_リテラル_キャンセルあり_即時(
 		task = Task.from_method(callsite.noop_return)
 		if not is_not_null(task):
 			return
-		is_true(task.is_completed)
-	is_true(task.is_completed)
+		is_true(task.is_completed())
+	is_true(task.is_completed())
 	are_equal(123, await task.wait(Cancel.canceled()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func スコープ_メソッド_待機_リテラル_キャンセルあり_遅延() -> void:
 	var task: Task
@@ -562,10 +562,10 @@ func スコープ_メソッド_待機_リテラル_キャンセルあり_遅延(
 		task = Task.from_method(callsite.noop_return)
 		if not is_not_null(task):
 			return
-		is_true(task.is_completed)
-	is_true(task.is_completed)
+		is_true(task.is_completed())
+	is_true(task.is_completed())
 	are_equal(123, await task.wait(Cancel.deferred()))
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 
 func スコープ_フォーク_メソッド_待機_リテラル() -> void:
 	var task: Task
@@ -574,12 +574,12 @@ func スコープ_フォーク_メソッド_待機_リテラル() -> void:
 		task = Task.from_method(callsite.fork_return)
 		if not is_not_null(task):
 			return
-		is_true(task.is_pending)
-	is_true(task.is_pending)
+		is_true(task.is_pending())
+	is_true(task.is_pending())
 	await wait_delay(0.1)
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait())
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func スコープ_フォーク_メソッド_待機_リテラル_キャンセルあり_即時() -> void:
 	var task: Task
@@ -588,12 +588,12 @@ func スコープ_フォーク_メソッド_待機_リテラル_キャンセル�
 		task = Task.from_method(callsite.fork_return)
 		if not is_not_null(task):
 			return
-		is_true(task.is_pending)
-	is_true(task.is_pending)
+		is_true(task.is_pending())
+	is_true(task.is_pending())
 	await wait_delay(0.1)
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func スコープ_フォーク_メソッド_待機_リテラル_キャンセルあり_遅延() -> void:
 	var task: Task
@@ -602,9 +602,9 @@ func スコープ_フォーク_メソッド_待機_リテラル_キャンセル�
 		task = Task.from_method(callsite.fork_return)
 		if not is_not_null(task):
 			return
-		is_true(task.is_pending)
-	is_true(task.is_pending)
+		is_true(task.is_pending())
+	is_true(task.is_pending())
 	await wait_delay(0.1)
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 	is_null(await task.wait(Cancel.deferred()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())

@@ -14,8 +14,8 @@ func 状態遷移() -> void:
 		return
 	are_equal(2, opers.size())
 	opers[0].requested.connect(callsite.on_requested)
-	is_false(opers[0].is_requested)
+	is_false(opers[0].is_requested())
 	are_equal(0, callsite.requested_count)
 	opers[1].call()
-	is_true(opers[0].is_requested)
+	is_true(opers[0].is_requested())
 	are_equal(1, callsite.requested_count)

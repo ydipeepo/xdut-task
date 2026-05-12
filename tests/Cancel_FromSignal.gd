@@ -15,14 +15,14 @@ func 状態遷移() -> void:
 	if not is_not_null(cancel):
 		return
 	cancel.requested.connect(callsite.on_requested)
-	is_false(cancel.is_requested)
+	is_false(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 	callsite.completed.emit()
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(1, callsite.requested_count)
 
 func 状態遷移_空() -> void:
 	var cancel := Cancel.from_signal(Signal())
 	if not is_not_null(cancel):
 		return
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())

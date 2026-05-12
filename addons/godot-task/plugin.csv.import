@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dvxcwvm8igcyq"
+
+[deps]
+
+files=["res://addons/godot-task/plugin.ja.translation", "res://addons/godot-task/plugin.en.translation"]
+
+source_file="res://addons/godot-task/plugin.csv"
+dest_files=["res://addons/godot-task/plugin.ja.translation", "res://addons/godot-task/plugin.en.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

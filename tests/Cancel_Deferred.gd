@@ -13,8 +13,8 @@ func 状態遷移() -> void:
 	if not is_not_null(cancel):
 		return
 	cancel.requested.connect(callsite.on_requested)
-	is_false(cancel.is_requested)
+	is_false(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 	await wait_defer()
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(1, callsite.requested_count)

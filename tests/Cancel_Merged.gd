@@ -13,10 +13,10 @@ func 状態遷移_空() -> void:
 	if not is_not_null(cancel):
 		return
 	cancel.requested.connect(callsite.on_requested)
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 	await wait_defer()
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 
 func 状態遷移_複合() -> void:
@@ -28,10 +28,10 @@ func 状態遷移_複合() -> void:
 	if not is_not_null(cancel):
 		return
 	cancel.requested.connect(callsite.on_requested)
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 	await wait_defer()
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 
 func 状態遷移_即時() -> void:
@@ -43,10 +43,10 @@ func 状態遷移_即時() -> void:
 	if not is_not_null(cancel):
 		return
 	cancel.requested.connect(callsite.on_requested)
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 	await wait_defer()
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 
 func 状態遷移_遅延() -> void:
@@ -58,8 +58,8 @@ func 状態遷移_遅延() -> void:
 	if not is_not_null(cancel):
 		return
 	cancel.requested.connect(callsite.on_requested)
-	is_false(cancel.is_requested)
+	is_false(cancel.is_requested())
 	are_equal(0, callsite.requested_count)
 	await wait_defer()
-	is_true(cancel.is_requested)
+	is_true(cancel.is_requested())
 	are_equal(1, callsite.requested_count)

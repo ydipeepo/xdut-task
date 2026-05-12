@@ -4,17 +4,17 @@ func 状態遷移_無効() -> void:
 	var task := Task.load("res://scenes/Dummy_NOT_FOUND.tscn", &"PackedScene")
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait())
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_単一() -> void:
 	var task := Task.load("res://scenes/Dummy.tscn", &"PackedScene")
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	var result: Variant = await task.wait()
-	is_true(task.is_completed)
+	is_true(task.is_completed())
 	if not is_instance_of_type(result, PackedScene):
 		return
 	var dummy: Variant = result.instantiate()
@@ -28,9 +28,9 @@ func 状態遷移_単一_キャンセルあり_即時() -> void:
 	var task := Task.load("res://scenes/Dummy.tscn", &"PackedScene")
 	if not is_not_null(task):
 		return
-	is_true(task.is_pending)
+	is_true(task.is_pending())
 	is_null(await task.wait(Cancel.canceled()))
-	is_true(task.is_canceled)
+	is_true(task.is_canceled())
 
 func 状態遷移_複数() -> void:
 	var task1 := Task.load("res://scenes/Dummy.tscn", &"PackedScene")
@@ -42,15 +42,15 @@ func 状態遷移_複数() -> void:
 	var task3 := Task.load("res://scenes/Dummy.tscn", &"PackedScene")
 	if not is_not_null(task3):
 		return
-	is_true(task1.is_pending)
-	is_true(task2.is_pending)
-	is_true(task3.is_pending)
+	is_true(task1.is_pending())
+	is_true(task2.is_pending())
+	is_true(task3.is_pending())
 	var result1: Variant = await task1.wait()
 	var result2: Variant = await task2.wait()
 	var result3: Variant = await task3.wait()
-	is_true(task1.is_completed)
-	is_true(task2.is_completed)
-	is_true(task3.is_completed)
+	is_true(task1.is_completed())
+	is_true(task2.is_completed())
+	is_true(task3.is_completed())
 	if not is_instance_of_type(result1, PackedScene):
 		return
 	if not is_instance_of_type(result2, PackedScene):

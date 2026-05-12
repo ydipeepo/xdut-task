@@ -47,8 +47,8 @@ func _ready() -> void:
 	]
 
 	if false:
-		# These tests are experimental and will access the network.
-		# When testing, please change the above condition.
+		# これらのテストは実験的であり、ネットワークにアクセスします。
+		# テスト時には上の条件を変更してください。
 		test_set.append_array([
 			Task_HTTPGet,
 			Task_HTTPHead,
