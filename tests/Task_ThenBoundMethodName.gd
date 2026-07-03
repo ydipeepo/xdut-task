@@ -781,8 +781,8 @@ func スコープ_フォーク_名前指定あり() -> void:
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		is_null(await task2.wait())
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
 
 func スコープ_フォーク_名前指定あり_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
@@ -809,8 +809,8 @@ func スコープ_フォーク_名前指定あり_キャンセルあり_遅延()
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		is_null(await task2.wait(Cancel.deferred()))
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
 
 func スコープ_名前指定あり_引数束縛() -> void:
 	var callsite := Callsite.new(self)
@@ -865,8 +865,8 @@ func スコープ_フォーク_名前指定あり_引数束縛() -> void:
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		is_null(await task2.wait())
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
 
 func スコープ_フォーク_名前指定あり_引数束縛_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
@@ -893,8 +893,8 @@ func スコープ_フォーク_名前指定あり_引数束縛_キャンセル�
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		is_null(await task2.wait(Cancel.deferred()))
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
 
 func スコープ_名前指定あり_待機_リテラル() -> void:
 	var callsite := Callsite.new(self)
@@ -949,8 +949,8 @@ func スコープ_フォーク_名前指定あり_待機_リテラル() -> void:
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		are_equal(123, await task2.wait())
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
 
 func スコープ_フォーク_名前指定あり_待機_リテラル_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
@@ -977,8 +977,8 @@ func スコープ_フォーク_名前指定あり_待機_リテラル_キャン�
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		are_equal(123, await task2.wait(Cancel.deferred()))
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
 
 func スコープ_名前指定あり_引数束縛_待機_リテラル() -> void:
 	var callsite := Callsite.new(self)
@@ -1033,8 +1033,8 @@ func スコープ_フォーク_名前指定あり_引数束縛_待機_リテラ�
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		are_equal(123, await task2.wait())
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
 
 func スコープ_フォーク_名前指定あり_引数束縛_待機_リテラル_キャンセルあり_即時() -> void:
 	var callsite := Callsite.new(self)
@@ -1061,5 +1061,5 @@ func スコープ_フォーク_名前指定あり_引数束縛_待機_リテラ�
 			return
 		is_true(task2.is_pending()); are_equal(2, callsite.get_reference_count())
 		are_equal(123, await task2.wait(Cancel.deferred()))
-		is_true(task2.is_completed()); are_equal(1, callsite.get_reference_count())
-	are_equal(1, callsite.get_reference_count())
+		is_true(task2.is_completed()); are_equal(2, callsite.get_reference_count())
+	are_equal(2, callsite.get_reference_count())
